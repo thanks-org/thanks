@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thanks API Documentation</title>
+<style>
+  :root {
+    --green: #2D9B5A;
+    --green-light: #E8F5EE;
+    --green-dark: #1e6e3f;
+    --bg: #F7F8FA;
+    --sidebar-bg: #1a1a2e;
+    --sidebar-text: #c8cdd8;
+    --sidebar-active: #2D9B5A;
+    --card: #ffffff;
+    --border: #e5e7eb;
+    --text: #1a1a1a;
+    --text-muted: #6b7280;
+    --GET: #2D9B5A;
+    --POST: #3b82f6;
+    --PUT: #f59e0b;
+    --DELETE: #ef4444;
+    --PATCH: #8b5cf6;
+    --GET-bg: #E8F5EE;
+    --POST-bg: #eff6ff;
+    --PUT-bg: #fffbeb;
+    --DELETE-bg: #fef2f2;
+    --PATCH-bg: #f5f3ff;
+    --code-bg: #1e293b;
+    --code-text: #e2e8f0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar { width: 260px; min-height: 100vh; background: var(--sidebar-bg); position: fixed; top: 0; left: 0; overflow-y: auto; z-index: 100; }
+  .sidebar-logo { padding: 20px 20px 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .sidebar-logo h1 { color: #fff; font-size: 20px; font-weight: 800; }
+  .sidebar-logo span { color: var(--green); }
+  .sidebar-logo p { color: var(--sidebar-text); font-size: 11px; margin-top: 4px; }
+  .sidebar-section { padding: 16px 0 4px; }
+  .sidebar-section-title { padding: 0 20px 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.3); }
+  .sidebar a { display: block; padding: 7px 20px; color: var(--sidebar-text); text-decoration: none; font-size: 13px; border-left: 3px solid transparent; transition: all 0.15s; }
+  .sidebar a:hover, .sidebar a.active { color: #fff; background: rgba(45,155,90,0.12); border-left-color: var(--green); }
+  .sidebar a .method-badge { display: inline-block; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-right: 6px; min-width: 38px; text-align: center; }
+  .m-GET    { background: var(--GET-bg);    color: var(--GET);    }
+  .m-POST   { background: var(--POST-bg);   color: var(--POST);   }
+  .m-PUT    { background: var(--PUT-bg);    color: var(--PUT);    }
+  .m-DELETE { background: var(--DELETE-bg); color: var(--DELETE); }
+  .m-PATCH  { background: var(--PATCH-bg);  color: var(--PATCH);  }
+
+  /* Main */
+  .main { margin-left: 260px; flex: 1; padding: 40px 48px; max-width: calc(100vw - 260px); }
+
+  /* Hero */
+  .hero { background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%); color: white; border-radius: 16px; padding: 36px 40px; margin-bottom: 36px; }
+  .hero h2 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+  .hero p { opacity: 0.85; font-size: 15px; max-width: 560px; line-height: 1.6; }
+  .hero-meta { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+  .hero-meta-item { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 14px; font-size: 13px; }
+  .hero-meta-item strong { display: block; font-size: 11px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Section heading */
+  .section-block { margin-bottom: 48px; }
+  .section-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; padding-bottom: 10px; border-bottom: 2px solid var(--green-light); display: flex; align-items: center; gap: 10px; }
+  .section-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
+  .section-icon { width: 32px; height: 32px; background: var(--green-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+  /* Endpoint card */
+  .endpoint { background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
+  .endpoint-header { display: flex; align-items: center; gap: 12px; padding: 14px 20px; cursor: pointer; user-select: none; }
+  .endpoint-header:hover { background: var(--bg); }
+  .method { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 6px; min-width: 60px; text-align: center; }
+  .method-GET    { background: var(--GET-bg);    color: var(--GET);    }
+  .method-POST   { background: var(--POST-bg);   color: var(--POST);   }
+  .method-PUT    { background: var(--PUT-bg);     color: var(--PUT);   }
+  .method-DELETE { background: var(--DELETE-bg); color: var(--DELETE); }
+  .method-PATCH  { background: var(--PATCH-bg);  color: var(--PATCH);  }
+  .endpoint-path { font-family: 'SFMono-Regular', Consolas, monospace; font-size: 14px; font-weight: 600; flex: 1; }
+  .endpoint-summary { color: var(--text-muted); font-size: 13px; }
+  .auth-badge { background: #fef3c7; color: #92400e; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+
+  .endpoint-body { padding: 0 20px 20px; border-top: 1px solid var(--border); }
+  .endpoint-desc { color: var(--text-muted); font-size: 13.5px; line-height: 1.7; margin-bottom: 16px; padding-top: 14px; }
+
+  /* Params / Fields */
+  .params-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 8px; margin-top: 14px; }
+  .param-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .param-table th { text-align: left; padding: 7px 10px; background: var(--bg); color: var(--text-muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+  .param-table td { padding: 8px 10px; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
+  .param-table tr:last-child td { border-bottom: none; }
+  .param-name { font-family: monospace; font-weight: 600; color: var(--green-dark); }
+  .param-type { font-family: monospace; font-size: 12px; color: #6366f1; }
+  .required { color: #ef4444; font-size: 10px; font-weight: 700; }
+  .optional { color: var(--text-muted); font-size: 10px; }
+
+  /* Code block */
+  .code-block { background: var(--code-bg); color: var(--code-text); border-radius: 8px; padding: 16px 18px; font-family: 'SFMono-Regular', Consolas, monospace; font-size: 12.5px; line-height: 1.7; overflow-x: auto; margin-top: 8px; }
+  .code-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-top: 14px; margin-bottom: 4px; }
+  .k  { color: #c792ea; } /* key */
+  .s  { color: #c3e88d; } /* string */
+  .n  { color: #f78c6c; } /* number */
+  .b  { color: #82aaff; } /* bool */
+  .c  { color: #546e7a; } /* comment */
+
+  /* Info box */
+  .info-box { background: var(--green-light); border-left: 4px solid var(--green); border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 13px; color: var(--green-dark); margin: 12px 0; line-height: 1.6; }
+
+  /* Enum values */
+  .enum-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .enum-val { background: #f3f4f6; color: #374151; font-family: monospace; font-size: 12px; padding: 2px 8px; border-radius: 4px; }
+
+  /* Screen source note */
+  .screen-source { font-size: 11px; color: var(--text-muted); background: var(--bg); padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 16px; }
+
+  /* Scroll offset for fixed sidebar */
+  [id] { scroll-margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h1>thanks<span>!</span></h1>
+    <p>API Documentation v1.0</p>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Overview</div>
+    <a href="#overview">Introduction</a>
+    <a href="#auth-overview">Authentication</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">🔓 Non-Logged In</div>
+    <a href="#auth-otp-send"><span class="method-badge m-POST">POST</span>Send OTP</a>
+    <a href="#auth-otp-verify"><span class="method-badge m-POST">POST</span>Verify OTP</a>
+    <a href="#auth-social"><span class="method-badge m-POST">POST</span>Social Login</a>
+    <a href="#posts-list"><span class="method-badge m-GET">GET</span>Browse Posts</a>
+    <a href="#posts-get"><span class="method-badge m-GET">GET</span>Post Detail</a>
+    <a href="#leaderboard"><span class="method-badge m-GET">GET</span>Leaderboard</a>
+    <a href="#users-public"><span class="method-badge m-GET">GET</span>Public Profile</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">🎁 Giver</div>
+    <a href="#posts-create"><span class="method-badge m-POST">POST</span>Create Post</a>
+    <a href="#posts-update"><span class="method-badge m-PUT">PUT</span>Update Post</a>
+    <a href="#posts-delete"><span class="method-badge m-DELETE">DEL</span>Delete Post</a>
+    <a href="#posts-claimants"><span class="method-badge m-GET">GET</span>Claimants List</a>
+    <a href="#me-posts"><span class="method-badge m-GET">GET</span>My Posts</a>
+    <a href="#uploads"><span class="method-badge m-POST">POST</span>Upload File</a>
+    <a href="#businesses-list"><span class="method-badge m-GET">GET</span>My Businesses</a>
+    <a href="#businesses-create"><span class="method-badge m-POST">POST</span>Add Business</a>
+    <a href="#businesses-update"><span class="method-badge m-PUT">PUT</span>Update Business</a>
+    <a href="#impact"><span class="method-badge m-GET">GET</span>My Impact</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">📦 Receiver</div>
+    <a href="#claims-create"><span class="method-badge m-POST">POST</span>Claim Item</a>
+    <a href="#claims-cancel"><span class="method-badge m-DELETE">DEL</span>Cancel Claim</a>
+    <a href="#me-claims"><span class="method-badge m-GET">GET</span>My Claims</a>
+    <a href="#orgs-list"><span class="method-badge m-GET">GET</span>My Orgs</a>
+    <a href="#orgs-create"><span class="method-badge m-POST">POST</span>Add Org</a>
+    <a href="#orgs-update"><span class="method-badge m-PUT">PUT</span>Update Org</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">💬 Shared</div>
+    <a href="#me-get"><span class="method-badge m-GET">GET</span>My Profile</a>
+    <a href="#me-update"><span class="method-badge m-PUT">PUT</span>Update Profile</a>
+    <a href="#messages-list"><span class="method-badge m-GET">GET</span>Conversations</a>
+    <a href="#messages-thread"><span class="method-badge m-GET">GET</span>Message Thread</a>
+    <a href="#messages-send"><span class="method-badge m-POST">POST</span>Send Message</a>
+    <a href="#ratings-create"><span class="method-badge m-POST">POST</span>Rate After Pickup</a>
+    <a href="#auth-logout"><span class="method-badge m-POST">POST</span>Logout</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- Hero -->
+  <div class="hero" id="overview">
+    <h2>Thanks! API Documentation</h2>
+    <p>REST API for the Thanks community item-sharing platform. Allows givers to post free items and receivers to discover and claim them across Vietnam.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><strong>Base URL</strong>https://api.thanks.vn/v1</div>
+      <div class="hero-meta-item"><strong>Format</strong>JSON</div>
+      <div class="hero-meta-item"><strong>Auth</strong>Bearer JWT</div>
+      <div class="hero-meta-item"><strong>Version</strong>1.0.0</div>
+    </div>
+  </div>
+
+  <!-- Auth Overview -->
+  <div class="section-block" id="auth-overview">
+    <div class="section-title"><div class="section-icon">🔑</div>Authentication</div>
+    <p class="section-subtitle">
+      All protected endpoints require a <strong>Bearer token</strong> in the Authorization header:<br>
+      <code style="background:#e5e7eb;padding:2px 6px;border-radius:4px;font-size:13px;">Authorization: Bearer &lt;token&gt;</code><br><br>
+      Tokens are returned by the <code>/auth/otp/verify</code> or <code>/auth/social</code> endpoints. Token lifetime is 30 days.
+      Endpoints marked <span class="auth-badge">AUTH</span> require a valid token.
+    </p>
+  </div>
+
+  <!-- ────────────────────────────────────────────
+       SECTION: NON-LOGGED IN
+  ──────────────────────────────────────────── -->
+  <div class="section-block">
+    <div class="section-title"><div class="section-icon">🔓</div>Non-Logged In</div>
+    <p class="section-subtitle">These endpoints are publicly accessible. They power the unauthenticated browse experience and the sign-up / login flow (screens 2.1.5 and 2.1.6).</p>
+
+    <!-- Send OTP -->
+    <div class="endpoint" id="auth-otp-send">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/auth/otp/send</span>
+        <span class="endpoint-summary">Send OTP to phone number</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.1.6 — Sign Up / Login</div>
+        <p class="endpoint-desc">Sends a 6-digit one-time password via SMS to the given phone number. Works for both new sign-ups and returning users.</p>
+        <div class="params-title">Request Body</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">phone</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Vietnamese phone number, e.g. <code>0901234567</code></td></tr>
+        </table>
+        <div class="code-label">Example Request</div>
+        <div class="code-block">{ <span class="k">"phone"</span>: <span class="s">"0901234567"</span> }</div>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{ <span class="k">"message"</span>: <span class="s">"OTP sent"</span>, <span class="k">"expires_in"</span>: <span class="n">300</span> }</div>
+      </div>
+    </div>
+
+    <!-- Verify OTP -->
+    <div class="endpoint" id="auth-otp-verify">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/auth/otp/verify</span>
+        <span class="endpoint-summary">Verify OTP and receive JWT</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.1.6 — Sign Up / Login</div>
+        <p class="endpoint-desc">Verifies the OTP entered by the user. On success, returns a JWT access token and the user object. Creates a new account if the phone number is new.</p>
+        <div class="params-title">Request Body</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">phone</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Same phone number from send-OTP step</td></tr>
+          <tr><td class="param-name">otp</td><td class="param-type">string</td><td><span class="required">required</span></td><td>6-digit code received via SMS</td></tr>
+          <tr><td class="param-name">role</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td><code>giver</code> or <code>receiver</code> — only needed on first sign-up</td></tr>
+        </table>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"token"</span>: <span class="s">"eyJhbGci..."</span>,
+  <span class="k">"user"</span>: {
+    <span class="k">"id"</span>: <span class="s">"uuid-123"</span>,
+    <span class="k">"phone"</span>: <span class="s">"0901234567"</span>,
+    <span class="k">"name"</span>: <span class="b">null</span>,
+    <span class="k">"is_new_user"</span>: <span class="b">true</span>
+  }
+}</div>
+      </div>
+    </div>
+
+    <!-- Social Login -->
+    <div class="endpoint" id="auth-social">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/auth/social</span>
+        <span class="endpoint-summary">Login with Zalo / Google / Facebook / Apple</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.1.6 — Sign Up</div>
+        <p class="endpoint-desc">Authenticates the user using an OAuth access token from a social provider. Returns a JWT on success.</p>
+        <div class="params-title">Request Body</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">provider</td><td class="param-type">string</td><td><span class="required">required</span></td><td><div class="enum-list"><span class="enum-val">zalo</span><span class="enum-val">google</span><span class="enum-val">facebook</span><span class="enum-val">apple</span></div></td></tr>
+          <tr><td class="param-name">access_token</td><td class="param-type">string</td><td><span class="required">required</span></td><td>OAuth token from the provider's SDK</td></tr>
+          <tr><td class="param-name">role</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td><code>giver</code> or <code>receiver</code> — only for first sign-up</td></tr>
+        </table>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"token"</span>: <span class="s">"eyJhbGci..."</span>,
+  <span class="k">"user"</span>: { <span class="k">"id"</span>: <span class="s">"uuid-456"</span>, <span class="k">"name"</span>: <span class="s">"Nguyễn Văn A"</span>, <span class="k">"is_new_user"</span>: <span class="b">false</span> }
+}</div>
+      </div>
+    </div>
+
+    <!-- Browse Posts -->
+    <div class="endpoint" id="posts-list">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/posts</span>
+        <span class="endpoint-summary">Browse free items near a location</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.1.1 — Home Feed</div>
+        <p class="endpoint-desc">Returns a paginated list of active posts. Supports filtering by category and sorting by proximity. Works without authentication (unauthenticated users see items but cannot claim).</p>
+        <div class="params-title">Query Parameters</div>
+        <table class="param-table">
+          <tr><th>Param</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">lat</td><td class="param-type">float</td><td><span class="optional">optional</span></td><td>User latitude for proximity sorting</td></tr>
+          <tr><td class="param-name">lng</td><td class="param-type">float</td><td><span class="optional">optional</span></td><td>User longitude</td></tr>
+          <tr><td class="param-name">radius_km</td><td class="param-type">float</td><td><span class="optional">optional</span></td><td>Search radius in km (default: 10)</td></tr>
+          <tr><td class="param-name">category</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td><div class="enum-list"><span class="enum-val">food</span><span class="enum-val">clothes</span><span class="enum-val">furniture</span><span class="enum-val">tech</span><span class="enum-val">books</span></div></td></tr>
+          <tr><td class="param-name">limit</td><td class="param-type">int</td><td><span class="optional">optional</span></td><td>Items per page (default: 20, max: 50)</td></tr>
+          <tr><td class="param-name">offset</td><td class="param-type">int</td><td><span class="optional">optional</span></td><td>Pagination offset (default: 0)</td></tr>
+        </table>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"total"</span>: <span class="n">84</span>,
+  <span class="k">"posts"</span>: [
+    {
+      <span class="k">"id"</span>: <span class="s">"uuid-789"</span>,
+      <span class="k">"title"</span>: <span class="s">"Bánh mì thịt"</span>,
+      <span class="k">"category"</span>: <span class="s">"food"</span>,
+      <span class="k">"quantity_remaining"</span>: <span class="n">5</span>,
+      <span class="k">"quantity_total"</span>: <span class="n">10</span>,
+      <span class="k">"distance_km"</span>: <span class="n">0.3</span>,
+      <span class="k">"district"</span>: <span class="s">"Quận 1"</span>,
+      <span class="k">"pickup_window"</span>: <span class="s">"Mon-Fri 08:00-10:00"</span>,
+      <span class="k">"images"</span>: [<span class="s">"https://cdn.thanks.vn/..."</span>],
+      <span class="k">"giver"</span>: {
+        <span class="k">"id"</span>: <span class="s">"uuid-giver"</span>,
+        <span class="k">"name"</span>: <span class="s">"Bento Cooky"</span>,
+        <span class="k">"is_verified"</span>: <span class="b">true</span>,
+        <span class="k">"avatar_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>
+      }
+    }
+  ]
+}</div>
+      </div>
+    </div>
+
+    <!-- Post Detail -->
+    <div class="endpoint" id="posts-get">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/posts/:id</span>
+        <span class="endpoint-summary">Get full item detail</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.4.1 — Item Detail</div>
+        <p class="endpoint-desc">Returns complete details of a single post including description, full pickup address, image carousel, and giver profile card.</p>
+        <div class="params-title">Path Parameters</div>
+        <table class="param-table">
+          <tr><th>Param</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">id</td><td class="param-type">uuid</td><td><span class="required">required</span></td><td>Post UUID</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="endpoint" id="leaderboard">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/leaderboard</span>
+        <span class="endpoint-summary">Top givers leaderboard</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.1.2 — Givers Leaderboard</div>
+        <p class="endpoint-desc">Returns a ranked list of the top givers for a given city. Supports filtering by account type.</p>
+        <div class="params-title">Query Parameters</div>
+        <table class="param-table">
+          <tr><th>Param</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">city</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>City slug (default: <code>hcmc</code>)</td></tr>
+          <tr><td class="param-name">type</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td><div class="enum-list"><span class="enum-val">all</span><span class="enum-val">business</span><span class="enum-val">personal</span></div></td></tr>
+          <tr><td class="param-name">limit</td><td class="param-type">int</td><td><span class="optional">optional</span></td><td>Number of results (default: 10, max: 50)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Public User Profile -->
+    <div class="endpoint" id="users-public">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/users/:id</span>
+        <span class="endpoint-summary">Get public user/business/org profile</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screens 2.2.1, 2.2.2, 2.3.1, 2.3.2 — Public Profiles</div>
+        <p class="endpoint-desc">Returns the public profile of any user. Includes their recent/available/completed posts and stats. Private data (exact address) is hidden unless the viewer has an active claim from this user.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────
+       SECTION: GIVER
+  ──────────────────────────────────────────── -->
+  <div class="section-block">
+    <div class="section-title"><div class="section-icon">🎁</div>Giver</div>
+    <p class="section-subtitle">Endpoints for logged-in users acting as Givers — creating posts, managing their items, and tracking impact. All require <span class="auth-badge">AUTH</span>.</p>
+
+    <!-- Create Post -->
+    <div class="endpoint" id="posts-create">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/posts</span>
+        <span class="endpoint-summary">Create a new free item post</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screens 2.2.7 + 2.2.8 — Submit Item (Step 1 + Step 2)</div>
+        <p class="endpoint-desc">Creates a new post. The request body covers both steps of the submit flow: Step 1 (photos, title, description) and Step 2 (category, quantity, pickup window, location, duration).</p>
+        <div class="params-title">Request Body</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">title</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Item name, max 200 chars</td></tr>
+          <tr><td class="param-name">description</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Item description (may be AI-generated on client)</td></tr>
+          <tr><td class="param-name">category</td><td class="param-type">string</td><td><span class="required">required</span></td><td><div class="enum-list"><span class="enum-val">food</span><span class="enum-val">clothes</span><span class="enum-val">furniture</span><span class="enum-val">tech</span><span class="enum-val">books</span><span class="enum-val">other</span></div></td></tr>
+          <tr><td class="param-name">image_urls</td><td class="param-type">string[]</td><td><span class="required">required</span></td><td>Ordered list of uploaded image URLs (min 1). Upload files first via <code>POST /uploads</code></td></tr>
+          <tr><td class="param-name">quantity</td><td class="param-type">int</td><td><span class="required">required</span></td><td>Total quantity available</td></tr>
+          <tr><td class="param-name">quantity_per_receiver</td><td class="param-type">int</td><td><span class="optional">optional</span></td><td>Max a single receiver can claim (default: 1)</td></tr>
+          <tr><td class="param-name">pickup_days</td><td class="param-type">string[]</td><td><span class="required">required</span></td><td>e.g. <code>["mon","tue","fri"]</code></td></tr>
+          <tr><td class="param-name">pickup_start_time</td><td class="param-type">string</td><td><span class="required">required</span></td><td>HH:MM format, e.g. <code>"08:00"</code></td></tr>
+          <tr><td class="param-name">pickup_end_time</td><td class="param-type">string</td><td><span class="required">required</span></td><td>HH:MM format, e.g. <code>"10:00"</code></td></tr>
+          <tr><td class="param-name">lat</td><td class="param-type">float</td><td><span class="required">required</span></td><td>Pickup location latitude</td></tr>
+          <tr><td class="param-name">lng</td><td class="param-type">float</td><td><span class="required">required</span></td><td>Pickup location longitude</td></tr>
+          <tr><td class="param-name">address</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Human-readable pickup address</td></tr>
+          <tr><td class="param-name">duration_days</td><td class="param-type">int</td><td><span class="required">required</span></td><td>Post lifespan in days (1 / 3 / 7 / 14 / 30)</td></tr>
+          <tr><td class="param-name">business_id</td><td class="param-type">uuid</td><td><span class="optional">optional</span></td><td>If posting on behalf of a business identity</td></tr>
+        </table>
+        <div class="code-label">Example Response — 201 Created</div>
+        <div class="code-block">{
+  <span class="k">"id"</span>: <span class="s">"uuid-post-new"</span>,
+  <span class="k">"status"</span>: <span class="s">"active"</span>,
+  <span class="k">"closes_at"</span>: <span class="s">"2026-05-04T00:00:00Z"</span>
+}</div>
+      </div>
+    </div>
+
+    <!-- Update Post -->
+    <div class="endpoint" id="posts-update">
+      <div class="endpoint-header">
+        <span class="method method-PUT">PUT</span>
+        <span class="endpoint-path">/posts/:id</span>
+        <span class="endpoint-summary">Update an existing post</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <p class="endpoint-desc">Updates editable fields of an owned post. Cannot update if post has active claims (except <code>pickup_window</code> and <code>description</code>).</p>
+      </div>
+    </div>
+
+    <!-- Delete Post -->
+    <div class="endpoint" id="posts-delete">
+      <div class="endpoint-header">
+        <span class="method method-DELETE">DELETE</span>
+        <span class="endpoint-path">/posts/:id</span>
+        <span class="endpoint-summary">Cancel and delete a post</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <p class="endpoint-desc">Cancels an active post. All associated pending claims are automatically cancelled and claimants are notified.</p>
+      </div>
+    </div>
+
+    <!-- Claimants List -->
+    <div class="endpoint" id="posts-claimants">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/posts/:id/claimants</span>
+        <span class="endpoint-summary">List all claimants for a post</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.4.3 — Claimants List</div>
+        <p class="endpoint-desc">Returns all claimants for the authenticated giver's post. Each entry includes the claimant's profile, status, pickup code, and quantity claimed.</p>
+        <div class="params-title">Response Fields per Claimant</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td class="param-name">claim_id</td><td class="param-type">uuid</td><td>Claim identifier</td></tr>
+          <tr><td class="param-name">user</td><td class="param-type">object</td><td>Name, avatar, rating, claim history count</td></tr>
+          <tr><td class="param-name">quantity</td><td class="param-type">int</td><td>How many the receiver claimed</td></tr>
+          <tr><td class="param-name">pickup_code</td><td class="param-type">string</td><td>4-digit code receiver must show at pickup</td></tr>
+          <tr><td class="param-name">status</td><td class="param-type">string</td><td><div class="enum-list"><span class="enum-val">pending</span><span class="enum-val">confirmed</span><span class="enum-val">completed</span><span class="enum-val">cancelled</span></div></td></tr>
+          <tr><td class="param-name">claimed_at</td><td class="param-type">datetime</td><td>When the claim was made</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- My Posts -->
+    <div class="endpoint" id="me-posts">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/me/posts</span>
+        <span class="endpoint-summary">Get my posts as giver</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screens 2.2.3, 2.2.4 — My Items</div>
+        <p class="endpoint-desc">Returns all posts created by the authenticated user, optionally filtered by status.</p>
+        <div class="params-title">Query Parameters</div>
+        <table class="param-table">
+          <tr><th>Param</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">status</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td><div class="enum-list"><span class="enum-val">active</span><span class="enum-val">completed</span><span class="enum-val">cancelled</span></div></td></tr>
+          <tr><td class="param-name">business_id</td><td class="param-type">uuid</td><td><span class="optional">optional</span></td><td>Filter to a specific business identity</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Upload -->
+    <div class="endpoint" id="uploads">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/uploads</span>
+        <span class="endpoint-summary">Upload a file (photo/document)</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screens 2.2.7, 2.2.6, 2.3.4 — Anywhere with photo upload</div>
+        <p class="endpoint-desc">Uploads a file to cloud storage. Returns a CDN URL. Use this before <code>POST /posts</code>, <code>POST /businesses</code>, or <code>POST /organizations</code>. Accepted: JPG, PNG, HEIC, WebP, PDF. Max 10 MB per file.</p>
+        <div class="params-title">Request</div>
+        <div class="info-box">Send as <code>multipart/form-data</code> with field name <code>file</code>.</div>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"url"</span>: <span class="s">"https://cdn.thanks.vn/uploads/abc123.jpg"</span>,
+  <span class="k">"size_bytes"</span>: <span class="n">204800</span>
+}</div>
+      </div>
+    </div>
+
+    <!-- Businesses -->
+    <div class="endpoint" id="businesses-list">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/me/businesses</span>
+        <span class="endpoint-summary">Get my businesses</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.2.5 — Manage Businesses</div>
+        <p class="endpoint-desc">Returns all business identities owned by the authenticated user, with verification status.</p>
+      </div>
+    </div>
+
+    <div class="endpoint" id="businesses-create">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/businesses</span>
+        <span class="endpoint-summary">Register a new business for review</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.2.6 — Add Business</div>
+        <p class="endpoint-desc">Submits a new business identity for admin review. Status starts as <code>pending</code>. Review takes 1–3 business days.</p>
+        <div class="params-title">Request Body</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">name</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Business name</td></tr>
+          <tr><td class="param-name">category</td><td class="param-type">string</td><td><span class="required">required</span></td><td>e.g. <code>food_beverage</code>, <code>retail</code>, <code>services</code></td></tr>
+          <tr><td class="param-name">address</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Business address</td></tr>
+          <tr><td class="param-name">phone</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Business phone number</td></tr>
+          <tr><td class="param-name">logo_url</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>URL from <code>POST /uploads</code></td></tr>
+          <tr><td class="param-name">description</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>About the business</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="endpoint" id="businesses-update">
+      <div class="endpoint-header">
+        <span class="method method-PUT">PUT</span>
+        <span class="endpoint-path">/businesses/:id</span>
+        <span class="endpoint-summary">Update business info</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <p class="endpoint-desc">Updates an owned business. Note: changes to <code>name</code> or <code>address</code> will reset verification status to <code>pending</code>.</p>
+      </div>
+    </div>
+
+    <!-- Impact -->
+    <div class="endpoint" id="impact">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/me/impact</span>
+        <span class="endpoint-summary">Get giver impact stats and thank-you notes</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.2.9 — Thanks &amp; Ratings</div>
+        <p class="endpoint-desc">Returns aggregate impact metrics and recent thank-you notes received by the authenticated giver.</p>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"stats"</span>: {
+    <span class="k">"items_given"</span>: <span class="n">45</span>,
+    <span class="k">"people_helped"</span>: <span class="n">120</span>,
+    <span class="k">"weight_saved_kg"</span>: <span class="n">18.4</span>,
+    <span class="k">"rating_avg"</span>: <span class="n">4.7</span>,
+    <span class="k">"rating_count"</span>: <span class="n">23</span>,
+    <span class="k">"percentile_rank"</span>: <span class="n">90</span>
+  },
+  <span class="k">"thanks_notes"</span>: [
+    {
+      <span class="k">"from_user"</span>: { <span class="k">"name"</span>: <span class="s">"Minh Tuấn"</span>, <span class="k">"avatar_url"</span>: <span class="s">"..."</span> },
+      <span class="k">"message"</span>: <span class="s">"Cảm ơn bạn rất nhiều..."</span>,
+      <span class="k">"item_title"</span>: <span class="s">"Bánh mì thịt"</span>,
+      <span class="k">"created_at"</span>: <span class="s">"2026-04-20T08:00:00Z"</span>
+    }
+  ]
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────
+       SECTION: RECEIVER
+  ──────────────────────────────────────────── -->
+  <div class="section-block">
+    <div class="section-title"><div class="section-icon">📦</div>Receiver</div>
+    <p class="section-subtitle">Endpoints for logged-in users acting as Receivers — claiming items, managing claim history, and managing organisations. All require <span class="auth-badge">AUTH</span>.</p>
+
+    <!-- Claim -->
+    <div class="endpoint" id="claims-create">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/posts/:id/claims</span>
+        <span class="endpoint-summary">Claim a free item</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.4.1 → 2.4.2 — Item Detail → Claim Confirmed</div>
+        <p class="endpoint-desc">Creates a claim on a post. Decrements <code>quantity_remaining</code>. Returns a 4-digit pickup code. Giver is notified via push notification.</p>
+        <div class="params-title">Request Body</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">quantity</td><td class="param-type">int</td><td><span class="optional">optional</span></td><td>How many to claim (default: 1, max: post's <code>quantity_per_receiver</code>)</td></tr>
+        </table>
+        <div class="code-label">Example Response — 201 Created</div>
+        <div class="code-block">{
+  <span class="k">"claim_id"</span>: <span class="s">"uuid-claim"</span>,
+  <span class="k">"pickup_code"</span>: <span class="s">"4286"</span>,
+  <span class="k">"status"</span>: <span class="s">"confirmed"</span>,
+  <span class="k">"post"</span>: {
+    <span class="k">"title"</span>: <span class="s">"Bánh mì thịt"</span>,
+    <span class="k">"pickup_window"</span>: <span class="s">"Mon-Fri 08:00-10:00"</span>,
+    <span class="k">"address"</span>: <span class="s">"123 Lê Lợi, Quận 1"</span>
+  },
+  <span class="k">"giver"</span>: {
+    <span class="k">"name"</span>: <span class="s">"Bento Cooky"</span>,
+    <span class="k">"response_time_estimate"</span>: <span class="s">"Usually responds within 1 hour"</span>
+  }
+}</div>
+      </div>
+    </div>
+
+    <!-- Cancel Claim -->
+    <div class="endpoint" id="claims-cancel">
+      <div class="endpoint-header">
+        <span class="method method-DELETE">DELETE</span>
+        <span class="endpoint-path">/claims/:id</span>
+        <span class="endpoint-summary">Cancel a claim</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.4.2 — Claim Confirmed (Cancel claim link)</div>
+        <p class="endpoint-desc">Cancels the authenticated receiver's claim. Restores <code>quantity_remaining</code> on the post. Only allowed while status is <code>pending</code> or <code>confirmed</code>.</p>
+      </div>
+    </div>
+
+    <!-- My Claims -->
+    <div class="endpoint" id="me-claims">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/me/claims</span>
+        <span class="endpoint-summary">Get my claims as receiver</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.1.3a — Messages (Receiver View)</div>
+        <p class="endpoint-desc">Returns the authenticated user's claim history, filterable by status.</p>
+        <div class="params-title">Query Parameters</div>
+        <table class="param-table">
+          <tr><th>Param</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">status</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td><div class="enum-list"><span class="enum-val">active</span><span class="enum-val">completed</span><span class="enum-val">cancelled</span></div></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Orgs -->
+    <div class="endpoint" id="orgs-list">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/me/organizations</span>
+        <span class="endpoint-summary">Get my organizations</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.3.3 — Manage Organizations</div>
+        <p class="endpoint-desc">Returns all non-profit/mutual-aid organisations managed by the authenticated user.</p>
+      </div>
+    </div>
+
+    <div class="endpoint" id="orgs-create">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/organizations</span>
+        <span class="endpoint-summary">Register a new organization for review</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.3.4 — Add Organization</div>
+        <p class="endpoint-desc">Submits a new organisation for admin review. Status starts as <code>pending</code>. Review takes 1–3 business days.</p>
+        <div class="params-title">Request Body</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">name</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Organisation name</td></tr>
+          <tr><td class="param-name">type</td><td class="param-type">string</td><td><span class="required">required</span></td><td><div class="enum-list"><span class="enum-val">food_bank</span><span class="enum-val">mutual_aid</span><span class="enum-val">shelter</span><span class="enum-val">other</span></div></td></tr>
+          <tr><td class="param-name">mission</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Mission statement / description</td></tr>
+          <tr><td class="param-name">address</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Operating address</td></tr>
+          <tr><td class="param-name">phone</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Contact phone</td></tr>
+          <tr><td class="param-name">logo_url</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>URL from <code>POST /uploads</code></td></tr>
+          <tr><td class="param-name">photo_urls</td><td class="param-type">string[]</td><td><span class="optional">optional</span></td><td>Operational photos (proof of legitimacy)</td></tr>
+          <tr><td class="param-name">registration_doc_url</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>PDF registration document</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="endpoint" id="orgs-update">
+      <div class="endpoint-header">
+        <span class="method method-PUT">PUT</span>
+        <span class="endpoint-path">/organizations/:id</span>
+        <span class="endpoint-summary">Update organization info</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <p class="endpoint-desc">Updates an owned organisation. Changes to <code>name</code> or <code>address</code> reset verification status to <code>pending</code>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────
+       SECTION: SHARED
+  ──────────────────────────────────────────── -->
+  <div class="section-block">
+    <div class="section-title"><div class="section-icon">💬</div>Shared (Giver + Receiver)</div>
+    <p class="section-subtitle">Endpoints used by both Givers and Receivers — profile management, messaging, and ratings.</p>
+
+    <!-- My Profile -->
+    <div class="endpoint" id="me-get">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/me</span>
+        <span class="endpoint-summary">Get current user profile</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screens 2.1.4a, 2.1.4c — Profile</div>
+        <p class="endpoint-desc">Returns the authenticated user's full profile including stats, rating, and identity list (personal + businesses + organisations).</p>
+      </div>
+    </div>
+
+    <div class="endpoint" id="me-update">
+      <div class="endpoint-header">
+        <span class="method method-PUT">PUT</span>
+        <span class="endpoint-path">/me</span>
+        <span class="endpoint-summary">Update profile</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.1.4d — Settings</div>
+        <p class="endpoint-desc">Updates the authenticated user's profile fields.</p>
+        <div class="params-title">Request Body (all optional)</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td class="param-name">name</td><td class="param-type">string</td><td>Display name</td></tr>
+          <tr><td class="param-name">avatar_url</td><td class="param-type">string</td><td>URL from <code>POST /uploads</code></td></tr>
+          <tr><td class="param-name">bio</td><td class="param-type">string</td><td>Short bio</td></tr>
+          <tr><td class="param-name">address</td><td class="param-type">string</td><td>Home area (not exact, used for proximity)</td></tr>
+          <tr><td class="param-name">email</td><td class="param-type">string</td><td>Email address</td></tr>
+          <tr><td class="param-name">language</td><td class="param-type">string</td><td><div class="enum-list"><span class="enum-val">vi</span><span class="enum-val">en</span></div></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="endpoint" id="messages-list">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/messages</span>
+        <span class="endpoint-summary">List all conversations</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screens 2.1.3a, 2.1.3b — Messages (Receiver + Giver Views)</div>
+        <p class="endpoint-desc">Returns a list of all message threads for the current user, grouped by claim. Each thread shows the last message preview and unread count. Response adapts based on whether the user is the giver or receiver in each claim.</p>
+      </div>
+    </div>
+
+    <div class="endpoint" id="messages-thread">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/messages/claims/:claim_id</span>
+        <span class="endpoint-summary">Get full message thread for a claim</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <p class="endpoint-desc">Returns all messages in a claim's chat thread, ordered by <code>created_at</code> ascending. User must be either the giver or the receiver of the claim.</p>
+        <div class="info-box">For real-time messaging, connect to the WebSocket endpoint: <code>wss://api.thanks.vn/ws/claims/:claim_id?token=&lt;jwt&gt;</code></div>
+      </div>
+    </div>
+
+    <div class="endpoint" id="messages-send">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/messages/claims/:claim_id</span>
+        <span class="endpoint-summary">Send a message in a claim thread</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.4.2 — Claim Confirmed (Message button)</div>
+        <p class="endpoint-desc">Sends a message to the other party in a claim. Triggers a push notification to the recipient.</p>
+        <div class="params-title">Request Body</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">content</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Message text, max 1000 chars</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Rating -->
+    <div class="endpoint" id="ratings-create">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/claims/:id/ratings</span>
+        <span class="endpoint-summary">Rate the other party after pickup</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Post-pickup flow</div>
+        <p class="endpoint-desc">Submits a star rating and optional comment for the other party in a completed claim. Givers rate receivers; receivers rate givers. Only allowed once per claim per user. Updates the rated user's <code>rating_avg</code>.</p>
+        <div class="params-title">Request Body</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">score</td><td class="param-type">int</td><td><span class="required">required</span></td><td>1–5 star rating</td></tr>
+          <tr><td class="param-name">comment</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Optional written note, max 500 chars</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Logout -->
+    <div class="endpoint" id="auth-logout">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/auth/logout</span>
+        <span class="endpoint-summary">Logout and invalidate token</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.1.4a/c — Profile (Sign out)</div>
+        <p class="endpoint-desc">Invalidates the current JWT token server-side (adds it to a denylist). The client should also delete the token locally.</p>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{ <span class="k">"message"</span>: <span class="s">"logged out"</span> }</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</body>
+</html>

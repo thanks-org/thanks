@@ -1,0 +1,10 @@
+# Các repo riêng — không track vào repo này
+thanks-backend/
+thanks-app/
+thanks-infra/
+
+# Claude Code local settings
+.claude/
+
+# OS
+.DS_Store
