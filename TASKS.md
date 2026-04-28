@@ -90,7 +90,7 @@
 | B4-4 | `DELETE /posts/:id` — cancel post, notify claimants | TrungVT | [x] | [a73c055](https://github.com/thanks-org/thanks-backend/commit/a73c055) — set status='cancelled', idempotent, 409 nếu đã completed. Push notification cho claimants skip Phase 1 (chờ I4-1) |
 | B4-5 | `GET /posts/:id/claimants` — list tất cả người đã claim | TrungVT (reassign từ Hiếu) | [x] | [a73c055](https://github.com/thanks-org/thanks-backend/commit/a73c055) — owner-only, JOIN users, trả pickup_code |
 | B4-6 | `GET /me/posts` — my items với filter status | TrungVT (reassign từ Quang) | [x] | [a73c055](https://github.com/thanks-org/thanks-backend/commit/a73c055) — query param `status` validate vs `AllowedPostStatuses`, reuse PostSummary với optional `status` field |
-| B4-7 | `GET /me/posts?business_id=` — filter posts theo business | TrungVT | [~] | Handler hiện bỏ qua param `business_id`; cần thêm WHERE clause + verify caller owns business (403 nếu không). Phụ thuộc: không. Unblocks: F2-5 My Items Business screen. |
+| B4-7 | `GET /me/posts?business_id=` — filter posts theo business | TrungVT | [x] | [790a602](https://github.com/thanks-org/thanks-backend/commit/790a602) — UUID validate (400), ownership check (403 nếu không own), WHERE p.business_id = $N. Smoke pass: own→200, other→403, bad UUID→400. |
 
 ### Flutter — Phase 2
 
@@ -121,8 +121,8 @@
 | B5-8 | `GET /messages/claims/:claim_id` — message thread | TrungVT | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
 | B5-9 | `POST /messages/claims/:claim_id` — send message | TrungVT | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3); notification row đã ghi, FCM push chờ I4-1 |
 | B5-10 | `POST /claims/:id/ratings` — rate sau khi pickup | TrungVT (reassign từ Hiếu) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3); in-TX rating_avg recompute, UNIQUE(claim_id, rater_id)→409 |
-| B5-11 | Fix `avatar_url` thiếu trong repository SELECT | TrungVT | [~] | Cột `avatar_url` tồn tại trong schema `users` nhưng chưa được project trong các query của `GET /me`, `GET /users/:id`, `GET /messages` (peer.avatar_url), `GET /messages/claims/:id` (peer.avatar_url). Ảnh đại diện luôn null với client. |
-| B5-12 | Fix `bio` không trả về trong `GET /me` | TrungVT | [~] | `PUT /me` nhận và lưu `bio` thành công nhưng `GET /me` response thiếu field này — Settings screen luôn hiển thị bio rỗng sau khi reload. Cần thêm `bio` vào SELECT + response struct. |
+| B5-11 | Fix `avatar_url` thiếu trong repository SELECT | TrungVT | [x] | Đã có sẵn — verify khi làm B6-8: `repository/users.go:35,192` SELECT `avatar_url`; `repository/messages.go:103,209` SELECT `peer.avatar_url`; models đã có field. Stale gap report — có thể fix sẵn trong [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) Phase 3. **No code change needed.** |
+| B5-12 | Fix `bio` không trả về trong `GET /me` | TrungVT | [x] | Đã có sẵn — verify khi làm B6-8: `repository/users.go:35` SELECT `bio`, `model/profile.go:42` `MeResponse.Bio` field. Stale gap report — fix sẵn trong [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3). **No code change needed.** |
 
 ### Flutter — Phase 3
 
@@ -152,8 +152,8 @@
 | B6-5 | `GET /me/organizations` | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705) |
 | B6-6 | `POST /organizations` — đăng ký org (status: pending) | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705) |
 | B6-7 | `PUT /organizations/:id` | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705); owner check 403 |
-| B6-8 | `GET /businesses/:id` — public business detail endpoint | TrungVT | [~] | Hiện tại F4-2 `GiverPublicBusinessScreen` chỉ dùng được khi caller đã có `BusinessModel` trong tay (từ Manage* flow). Cần public endpoint để standalone link (deeplink, public profile). Không cần auth. |
-| B6-9 | `GET /organizations/:id` — public organization detail endpoint | TrungVT | [~] | Tương tự B6-8 cho org. F4-7 `ReceiverPublicOrganizationScreen` cùng vấn đề. Cần thêm `address_detail` field vào `OrganizationModel` serialize (api_doc có nhưng backend chưa trả). |
+| B6-8 | `GET /businesses/:id` — public business detail endpoint | TrungVT | [x] | [790a602](https://github.com/thanks-org/thanks-backend/commit/790a602) — public route (no auth), 404 nếu not found. Mirror shape của items trong `GET /me/businesses`. |
+| B6-9 | `GET /organizations/:id` — public organization detail endpoint | TrungVT | [x] | [790a602](https://github.com/thanks-org/thanks-backend/commit/790a602) — public route (no auth), 404 nếu not found. **`address_detail` deferred**: cột không tồn tại trong `organizations` schema (chỉ có `address`); api_doc.html sai. Cần migration mới `ALTER TABLE organizations ADD COLUMN address_detail TEXT` + update api_doc nếu thực sự cần field — riêng task. |
 
 ### Flutter — Phase 4
 
