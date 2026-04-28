@@ -33,19 +33,26 @@ thanks-infra/                  ← Docker + PostgreSQL (clone riêng)
 
 ## Quy tắc làm việc
 
-### Trước khi bắt đầu task
-- Đọc WORKLOG.md
-- Claim task: điền tên + ngày vào cột "In Progress"
-- Commit WORKLOG.md lên repo `thanks` để người khác thấy
+### Git workflow — làm thẳng trên `main`
 
-### Khi làm xong task
-- Update WORKLOG.md: chuyển task sang Done, điền commit/PR link
-- Commit WORKLOG.md lên repo `thanks`
+Không cần tạo branch. Mọi Claude session đều commit thẳng lên `main`.
 
-### Git workflow
-- Branch từ `develop`: `git checkout -b feature/ten-feature`
-- Không push thẳng lên `main`
-- Tạo PR vào `develop`, cần 1 người review trước khi merge
+**Trước khi bắt đầu viết code:**
+1. `git pull` để lấy code mới nhất
+2. Đọc WORKLOG.md — kiểm tra xem có session nào đang làm task trùng không
+3. Claim task: điền tên + ngày vào cột "In Progress" trong WORKLOG.md
+4. `git add WORKLOG.md && git commit -m "chore: claim task [tên task]" && git push`
+
+**Khi làm xong task:**
+1. Update WORKLOG.md: chuyển task sang Done, điền commit hash
+2. `git add -A && git commit -m "..." && git push`
+
+**Nếu gặp conflict khi pull:**
+- Xem file nào conflict: `git status`
+- Nếu conflict ở WORKLOG.md: merge thủ công (giữ cả 2 phần In Progress), rồi tiếp tục
+- Nếu conflict ở code: đọc cả 2 version, chọn version đúng nhất, commit
+
+**Chỉ chạy git khi thực sự viết code.** Không cần git pull/push cho các câu trả lời giải thích hoặc đọc tài liệu.
 
 ### Tham chiếu
 - Mỗi API endpoint trong `api_and_doc/api_doc.html` ghi rõ xuất phát từ screen nào
