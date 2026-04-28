@@ -55,3 +55,5 @@
 | B2-2: `GET /api/v1/posts/:id` — post detail (description, address, giver profile card) | Luân | 2026-04-28 | [46578f4](https://github.com/thanks-org/thanks-backend/commit/46578f4) |
 | B1-1 — JWT bearer middleware (`auth.NewIssuer`, `middleware.RequireAuth`, 11 unit tests; blocker cho toàn bộ B-* / F-* Phase 1-3) | TrungVT | 2026-04-28 | [cf01e25](https://github.com/thanks-org/thanks-backend/commit/cf01e25) |
 | F1-1: API client (dio, interceptors, error types) + F1-5: Home Feed → real API | Luân | 2026-04-28 | [426fb6d](https://github.com/thanks-org/thanks-app/commit/426fb6d) |
+| B4-1 — `POST /uploads` (LocalStorage tạm; Storage interface để swap R2/S3 khi I1-1 xong; 10 MB cap, MIME whitelist, path-traversal hardened) | TrungVT | 2026-04-28 | [2a57a1c](https://github.com/thanks-org/thanks-backend/commit/2a57a1c) |
+| B4-2..B4-6 — Phase 2 backend writer endpoints: POST /posts, PUT /posts/:id, DELETE /posts/:id, GET /posts/:id/claimants, GET /me/posts (owner checks, sentinel→HTTP error mapping, atomic image replacement, status filter) | TrungVT | 2026-04-28 | [a73c055](https://github.com/thanks-org/thanks-backend/commit/a73c055) |

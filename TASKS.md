@@ -84,12 +84,12 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| B4-1 | `POST /uploads` — upload file lên S3/R2, trả CDN URL | TrungVT | [ ] | Phụ thuộc I1-1; multipart/form-data |
-| B4-2 | `POST /posts` — tạo post mới (cần image_urls từ B4-1) | Luân | [ ] | Phụ thuộc B1-1, B4-1 |
-| B4-3 | `PUT /posts/:id` — update post | TrungVT | [ ] | Phụ thuộc B1-1 |
-| B4-4 | `DELETE /posts/:id` — cancel post, notify claimants | TrungVT | [ ] | Phụ thuộc B1-1 |
-| B4-5 | `GET /posts/:id/claimants` — list tất cả người đã claim | Hiếu | [ ] | Phụ thuộc B1-1 |
-| B4-6 | `GET /me/posts` — my items với filter status | Quang | [ ] | Phụ thuộc B1-1 |
+| B4-1 | `POST /uploads` — upload file lên S3/R2, trả CDN URL | TrungVT | [x] | [2a57a1c](https://github.com/thanks-org/thanks-backend/commit/2a57a1c) — LocalStorage tạm; Storage interface trong `internal/storage` cho phép swap R2/S3 khi I1-1 xong mà không đổi handler. 10 MB cap, MIME whitelist (JPG/PNG/WebP/HEIC/PDF), path-traversal hardened |
+| B4-2 | `POST /posts` — tạo post mới (cần image_urls từ B4-1) | TrungVT (reassign từ Luân) | [x] | [a73c055](https://github.com/thanks-org/thanks-backend/commit/a73c055) — transaction insert + post_images, validate category vs DB CHECK |
+| B4-3 | `PUT /posts/:id` — update post | TrungVT | [x] | [a73c055](https://github.com/thanks-org/thanks-backend/commit/a73c055) — partial update với pointer fields, owner check, image set thay thế atomic; quantity KHÔNG updatable (cancel + tạo lại) |
+| B4-4 | `DELETE /posts/:id` — cancel post, notify claimants | TrungVT | [x] | [a73c055](https://github.com/thanks-org/thanks-backend/commit/a73c055) — set status='cancelled', idempotent, 409 nếu đã completed. Push notification cho claimants skip Phase 1 (chờ I4-1) |
+| B4-5 | `GET /posts/:id/claimants` — list tất cả người đã claim | TrungVT (reassign từ Hiếu) | [x] | [a73c055](https://github.com/thanks-org/thanks-backend/commit/a73c055) — owner-only, JOIN users, trả pickup_code |
+| B4-6 | `GET /me/posts` — my items với filter status | TrungVT (reassign từ Quang) | [x] | [a73c055](https://github.com/thanks-org/thanks-backend/commit/a73c055) — query param `status` validate vs `AllowedPostStatuses`, reuse PostSummary với optional `status` field |
 
 ### Flutter — Phase 2
 
