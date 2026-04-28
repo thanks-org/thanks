@@ -154,15 +154,15 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| F4-1 | Social login (Zalo SDK + Google Sign-In + FB + Apple) vào Auth screen | Luân | [ ] | Phụ thuộc B6-1 |
-| F4-2 | Screen 2.2.1 — Giver Public Profile (business) | Đức | [ ] | Phụ thuộc B5-5 |
-| F4-3 | Screen 2.2.2 — Giver Public Profile (personal) | Đức | [ ] | Phụ thuộc B5-5 |
-| F4-4 | Screen 2.2.5 — Manage Businesses | Đức | [ ] | Phụ thuộc B6-2 |
-| F4-5 | Screen 2.2.6 — Add Business | Đức | [ ] | Phụ thuộc B6-3, F2-1 |
-| F4-6 | Screen 2.3.1 — Receiver Public Profile (personal) | Đức | [ ] | Phụ thuộc B5-5 |
-| F4-7 | Screen 2.3.2 — Receiver Public Profile (organization) | Đức | [ ] | Phụ thuộc B5-5 |
-| F4-8 | Screen 2.3.3 — Manage Organizations | Đức | [ ] | Phụ thuộc B6-5 |
-| F4-9 | Screen 2.3.4 — Add Organization | Đức | [ ] | Phụ thuộc B6-6, F2-1 |
+| F4-1 | Social login (Zalo SDK + Google Sign-In + FB + Apple) vào Auth screen | ~~Luân~~ TrungVT | [~] | Polish-only [112ae3a](https://github.com/thanks-org/thanks-app/commit/112ae3a) — informative "Coming soon" SnackBars cho Zalo/FB/Apple, success toast trên kDebugMode Google login. **Còn lại:** swap fake id_token sang `google_sign_in` package + Zalo SDK + FB Login + Apple Sign-In khi provider keys/Client IDs có (Android/iOS Google Client ID, Zalo Open API App ID, FB App ID+Secret, Apple Services ID). |
+| F4-2 | Screen 2.2.1 — Giver Public Profile (business) | ~~Đức~~ TrungVT | [x] | [112ae3a](https://github.com/thanks-org/thanks-app/commit/112ae3a) — `GiverPublicBusinessScreen`. **Backend gap:** caller phải pass `BusinessModel` vì `GET /users/:id` không embed businesses[] và chưa có public `GET /businesses/:id`. |
+| F4-3 | Screen 2.2.2 — Giver Public Profile (personal) | ~~Đức~~ TrungVT | [x] | [112ae3a](https://github.com/thanks-org/thanks-app/commit/112ae3a) — reuse `PublicProfileScreen` (F3-3); layout prototype tương đương, không build duplicate. |
+| F4-4 | Screen 2.2.5 — Manage Businesses | ~~Đức~~ TrungVT | [x] | [112ae3a](https://github.com/thanks-org/thanks-app/commit/112ae3a) — `ManageBusinessesScreen` thay `MyBusinessesScreen` từ F2-5; verification status badges (approved/pending_review/rejected), edit → F4-5, "+ Thêm doanh nghiệp" CTA. |
+| F4-5 | Screen 2.2.6 — Add Business | ~~Đức~~ TrungVT | [x] | [112ae3a](https://github.com/thanks-org/thanks-app/commit/112ae3a) — `AddBusinessScreen` create/edit form (name, category chips, logo upload, address, phone, description, address_detail, city); `POST /businesses` on create, `PUT /businesses/:id` on edit. |
+| F4-6 | Screen 2.3.1 — Receiver Public Profile (personal) | ~~Đức~~ TrungVT | [x] | [112ae3a](https://github.com/thanks-org/thanks-app/commit/112ae3a) — reuse `PublicProfileScreen` (F3-3); layout prototype tương đương. |
+| F4-7 | Screen 2.3.2 — Receiver Public Profile (organization) | ~~Đức~~ TrungVT | [x] | [112ae3a](https://github.com/thanks-org/thanks-app/commit/112ae3a) — `ReceiverPublicOrganizationScreen`. **Backend gap:** caller phải pass `OrganizationModel` vì chưa có public `GET /organizations/:id`. |
+| F4-8 | Screen 2.3.3 — Manage Organizations | ~~Đức~~ TrungVT | [x] | [112ae3a](https://github.com/thanks-org/thanks-app/commit/112ae3a) — `ManageOrganizationsScreen` mirror F4-4. |
+| F4-9 | Screen 2.3.4 — Add Organization | ~~Đức~~ TrungVT | [x] | [112ae3a](https://github.com/thanks-org/thanks-app/commit/112ae3a) — `AddOrganizationScreen` mirror F4-5; `POST /organizations` / `PUT /organizations/:id`. |
 
 ### Infra — Phase 4
 
