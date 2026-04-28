@@ -125,14 +125,14 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| F3-1 | Screen 2.1.4a — Giver Profile (personal only) | Đức | [ ] | Phụ thuộc B5-1 |
-| F3-2 | Screen 2.1.4b — Giver Profile (with business) | Đức | [ ] | Phụ thuộc B5-1 |
-| F3-3 | Screen 2.1.4c — Receiver Profile | Đức | [ ] | Phụ thuộc B5-1 |
-| F3-4 | Screen 2.1.4d — Settings | Luân | [ ] | Phụ thuộc B5-2 |
-| F3-5 | Screen 2.2.9 — Thanks & Ratings (impact stats + notes) | Đức | [ ] | Phụ thuộc B5-4 |
-| F3-6 | Screen 2.1.2 — Givers Leaderboard | Đức | [ ] | Phụ thuộc B5-6 |
-| F3-7 | Screen 2.1.3a — Messages Receiver view | TrungVT | [ ] | Phụ thuộc B5-7, B5-8, B5-9 |
-| F3-8 | Screen 2.1.3b — Messages Giver view | TrungVT | [ ] | Phụ thuộc B5-7, B5-8, B5-9 |
+| F3-1 | Screen 2.1.4a — Giver Profile (personal only) | ~~Đức~~ TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — auto-switch personal↔business based on `listMyBusinesses()` result |
+| F3-2 | Screen 2.1.4b — Giver Profile (with business) | ~~Đức~~ TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — same screen, business section visible khi có businesses |
+| F3-3 | Screen 2.1.4c — Receiver Profile | ~~Đức~~ TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — `PublicProfileScreen` từ `/users/:id`; wired từ Who's Claimed claimant rows |
+| F3-4 | Screen 2.1.4d — Settings | ~~Luân~~ TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — avatar upload (image_picker→UploadService), `PUT /me`, sign-out, notif toggles local-state |
+| F3-5 | Screen 2.2.9 — Thanks & Ratings (impact stats + notes) | ~~Đức~~ TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — `GET /me/impact` + recent thanks list (always `[]` khi chưa có completed claims) |
+| F3-6 | Screen 2.1.2 — Givers Leaderboard | ~~Đức~~ TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — top 3 podium + list, period tabs (week/month/all-time), tap row → F3-3 |
+| F3-7 | Screen 2.1.3a — Messages Receiver view | TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — conversation list + thread (gộp với F3-8 vì share `GET /messages` endpoint) |
+| F3-8 | Screen 2.1.3b — Messages Giver view | TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — same screen với rating dialog khi `claim_status='completed'` (`POST /claims/:id/ratings`) |
 
 ---
 
