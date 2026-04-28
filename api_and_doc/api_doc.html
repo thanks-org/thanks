@@ -590,24 +590,27 @@
         <div class="screen-source">Screen 2.2.5 — Manage Businesses</div>
         <p class="endpoint-desc">Returns all business identities owned by the authenticated user, with verification status.</p>
         <div class="code-label">Example Response — 200 OK</div>
-        <div class="code-block">[
-  {
-    <span class="k">"id"</span>: <span class="s">"uuid-biz"</span>,
-    <span class="k">"owner_user_id"</span>: <span class="s">"uuid-user"</span>,
-    <span class="k">"name"</span>: <span class="s">"Bento Cooky"</span>,
-    <span class="k">"category"</span>: <span class="s">"restaurant"</span>,
-    <span class="k">"logo_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
-    <span class="k">"phone"</span>: <span class="s">"0901234567"</span>,
-    <span class="k">"description"</span>: <span class="s">"Cơm văn phòng ngon"</span>,
-    <span class="k">"address"</span>: <span class="s">"123 Lê Lợi"</span>,
-    <span class="k">"address_detail"</span>: <span class="s">"Tầng 2"</span>,
-    <span class="k">"city"</span>: <span class="s">"hcmc"</span>,
-    <span class="k">"verification_status"</span>: <span class="s">"approved"</span>,
-    <span class="k">"is_active"</span>: <span class="b">true</span>,
-    <span class="k">"created_at"</span>: <span class="s">"2026-04-01T00:00:00Z"</span>,
-    <span class="k">"updated_at"</span>: <span class="s">"2026-04-28T00:00:00Z"</span>
-  }
-]</div>
+        <div class="code-block">{
+  <span class="k">"total"</span>: <span class="n">1</span>,
+  <span class="k">"businesses"</span>: [
+    {
+      <span class="k">"id"</span>: <span class="s">"uuid-biz"</span>,
+      <span class="k">"owner_user_id"</span>: <span class="s">"uuid-user"</span>,
+      <span class="k">"name"</span>: <span class="s">"Bento Cooky"</span>,
+      <span class="k">"category"</span>: <span class="s">"restaurant"</span>,
+      <span class="k">"logo_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+      <span class="k">"phone"</span>: <span class="s">"0901234567"</span>,
+      <span class="k">"description"</span>: <span class="s">"Cơm văn phòng ngon"</span>,
+      <span class="k">"address"</span>: <span class="s">"123 Lê Lợi"</span>,
+      <span class="k">"address_detail"</span>: <span class="s">"Tầng 2"</span>,
+      <span class="k">"city"</span>: <span class="s">"hcmc"</span>,
+      <span class="k">"verification_status"</span>: <span class="s">"approved"</span>,
+      <span class="k">"is_active"</span>: <span class="b">true</span>,
+      <span class="k">"created_at"</span>: <span class="s">"2026-04-01T00:00:00Z"</span>,
+      <span class="k">"updated_at"</span>: <span class="s">"2026-04-28T00:00:00Z"</span>
+    }
+  ]
+}</div>
       </div>
     </div>
 
@@ -737,6 +740,16 @@
     <span class="k">"response_time_estimate"</span>: <span class="s">"Usually responds within 1 hour"</span>
   }
 }</div>
+        <div class="params-title">Error Responses</div>
+        <table class="param-table">
+          <tr><th>HTTP</th><th>Code</th><th>Description</th></tr>
+          <tr><td><span class="param-type">404</span></td><td class="param-name">post_not_found</td><td>Post does not exist</td></tr>
+          <tr><td><span class="param-type">422</span></td><td class="param-name">post_not_claimable</td><td>Post status is not <code>active</code> (e.g. closed, cancelled, expired)</td></tr>
+          <tr><td><span class="param-type">403</span></td><td class="param-name">self_claim</td><td>Cannot claim your own post</td></tr>
+          <tr><td><span class="param-type">422</span></td><td class="param-name">insufficient_quantity</td><td>Requested <code>quantity</code> exceeds <code>quantity_remaining</code></td></tr>
+          <tr><td><span class="param-type">409</span></td><td class="param-name">already_claimed</td><td>Caller already has a claim on this post (UNIQUE post_id+user_id)</td></tr>
+        </table>
+        <div class="info-box">Concurrency: server uses <code>SELECT … FOR UPDATE</code> on the post row inside a transaction, so simultaneous claims won't race past <code>quantity_remaining</code>. A <code>notification</code> row (type=<code>claim_created</code>) is written for the giver in the same TX — FCM (I4-1) consumes it.</div>
       </div>
     </div>
 
@@ -750,7 +763,16 @@
       </div>
       <div class="endpoint-body">
         <div class="screen-source">Screen 2.4.2 — Claim Confirmed (Cancel claim link)</div>
-        <p class="endpoint-desc">Cancels the authenticated receiver's claim. Restores <code>quantity_remaining</code> on the post. Only allowed while status is <code>pending</code> or <code>confirmed</code>.</p>
+        <p class="endpoint-desc">Cancels the authenticated receiver's claim. Restores <code>quantity_remaining</code> on the post atomically (TX with <code>FOR UPDATE</code> on the claim row). Only the receiver who created the claim may cancel.</p>
+        <div class="code-label">Response — 204 No Content</div>
+        <div class="code-block">(empty body)</div>
+        <div class="params-title">Error Responses</div>
+        <table class="param-table">
+          <tr><th>HTTP</th><th>Code</th><th>Description</th></tr>
+          <tr><td><span class="param-type">404</span></td><td class="param-name">claim_not_found</td><td>Claim ID does not exist</td></tr>
+          <tr><td><span class="param-type">403</span></td><td class="param-name">forbidden</td><td>Caller is not the receiver who created this claim</td></tr>
+          <tr><td><span class="param-type">409</span></td><td class="param-name">claim_not_cancellable</td><td>Claim status is not <code>pending</code> or <code>confirmed</code> (already cancelled / picked up / completed)</td></tr>
+        </table>
       </div>
     </div>
 

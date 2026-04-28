@@ -48,8 +48,8 @@
 #### [B3] Claims
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| B3-1 | `POST /posts/:id/claims` — tạo claim, sinh 4-digit pickup code, decrement quantity | Hiếu | [ ] | Phụ thuộc B1-1, B2-1; push notification cho giver (có thể skip push ở Phase 1) |
-| B3-2 | `DELETE /claims/:id` — cancel claim, restore quantity | Hiếu | [ ] | Phụ thuộc B3-1 |
+| B3-1 | `POST /posts/:id/claims` — tạo claim, sinh 4-digit pickup code, decrement quantity | TrungVT (reassigned từ Hiếu) | [x] | Done [9313e58](https://github.com/thanks-org/thanks-backend/commit/9313e58) — TX `FOR UPDATE` chống race, self-claim 403, duplicate 409, notification row written cho FCM I4-1 consume |
+| B3-2 | `DELETE /claims/:id` — cancel claim, restore quantity | TrungVT (reassigned từ Hiếu) | [x] | Done [9313e58](https://github.com/thanks-org/thanks-backend/commit/9313e58) — receiver-only, atomic restore quantity_remaining, double-cancel 409 |
 
 ---
 
@@ -58,12 +58,12 @@
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
 | F1-1 | API client setup (dio/http, base URL, token interceptor, error handling) | Luân | [x] | Làm trước tất cả F-tasks |
-| F1-2 | Auth service (lưu/đọc JWT từ secure storage) | Luân | [ ] | Phụ thuộc F1-1 |
-| F1-3 | Screen 2.1.5 — Profile Logged Out (entry point vào auth) | Luân | [ ] | |
-| F1-4 | Screen 2.1.6 — Sign Up / Auth Method (phone + OTP flow) | Luân | [ ] | Phụ thuộc F1-2, B1-2, B1-3 |
+| F1-2 | Auth service (lưu/đọc JWT từ secure storage) | TrungVT (reassigned từ Luân) | [x] | Done [4a326cb](https://github.com/thanks-org/thanks-app/commit/4a326cb) — `AuthService` singleton + `flutter_secure_storage` (key `auth_jwt`) + dio `QueuedInterceptor` auto-attach Bearer token |
+| F1-3 | Screen 2.1.5 — Profile Logged Out (entry point vào auth) | TrungVT (reassigned từ Luân) | [x] | Done [72ba948](https://github.com/thanks-org/thanks-app/commit/72ba948) — state-aware Profile branching theo `AuthService.isAuthenticated()`; logged-in stub có nút "Đăng xuất" để test flow |
+| F1-4 | Screen 2.1.6 — Sign Up / Auth Method (phone + OTP flow) | TrungVT (reassigned từ Luân) | [~] | Partial [2ef6901](https://github.com/thanks-org/thanks-app/commit/2ef6901) — static layout + Google button thật (kDebugMode = fake id_token POST, !kDebugMode = "Coming soon"); phone+OTP và Zalo/FB/Apple disabled với "Coming soon" SnackBar. **Còn lại:** Phone+OTP wire khi B1-2/B1-3 ship; Google switch sang `google_sign_in` package khi Android/iOS Client ID có. |
 | F1-5 | Home Feed → kết nối real API (thay mock data) | Luân | [x] | Phụ thuộc F1-1, B2-1 |
 | F1-6 | Screen 2.4.1 — Item Detail | Luân | [x] | Phụ thuộc B2-2 |
-| F1-7 | Screen 2.4.2 — Claim Confirmed (pickup code display) | Luân | [ ] | Phụ thuộc B3-1, F1-6 |
+| F1-7 | Screen 2.4.2 — Claim Confirmed (pickup code display) | TrungVT (reassigned từ Luân) | [x] | Done [6cfd266](https://github.com/thanks-org/thanks-app/commit/6cfd266) — `ClaimConfirmedScreen` match prototype, wired Item Detail claim button → `POST /posts/:id/claims` → push screen + Cancel claim với confirm dialog → `DELETE /claims/:id` |
 
 ---
 
@@ -95,12 +95,12 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| F2-1 | Upload service (chọn ảnh, upload lên R2/S3 qua POST /uploads) | Luân | [ ] | Phụ thuộc B4-1 |
-| F2-2 | Screen 2.2.7 — Submit Item Step 1 (ảnh, title, description) | Đức | [ ] | Phụ thuộc F2-1 |
-| F2-3 | Screen 2.2.8 — Submit Item Step 2 (category, quantity, pickup, location) | Đức | [ ] | Phụ thuộc F2-2, B4-2 |
-| F2-4 | Screen 2.2.3 — My Items Personal | Đức | [ ] | Phụ thuộc B4-6 |
-| F2-5 | Screen 2.2.4 — My Items Business | Đức | [ ] | Phụ thuộc B4-6 |
-| F2-6 | Screen 2.4.3 — Who's Claimed (claimants list) | Đức | [ ] | Phụ thuộc B4-5 |
+| F2-1 | Upload service (chọn ảnh, upload lên R2/S3 qua POST /uploads) | ~~Luân~~ TrungVT | [x] | [81ff436](https://github.com/thanks-org/thanks-app/commit/81ff436) — image_picker dep + UploadService (multipart via dio FormData) |
+| F2-2 | Screen 2.2.7 — Submit Item Step 1 (ảnh, title, description) | ~~Đức~~ TrungVT | [x] | [37d6331](https://github.com/thanks-org/thanks-app/commit/37d6331) — SubmitItemDraft model + Step 1 screen |
+| F2-3 | Screen 2.2.8 — Submit Item Step 2 (category, quantity, pickup, location) | ~~Đức~~ TrungVT | [x] | [d65ee26](https://github.com/thanks-org/thanks-app/commit/d65ee26) — Step 2 + createPost API + Home FAB + ticker; **drift fix** [b82877f](https://github.com/thanks-org/thanks-backend/commit/b82877f)/[154b378](https://github.com/thanks-org/thanks-app/commit/154b378) align lat/lng + clothes/tech |
+| F2-4 | Screen 2.2.3 — My Items Personal | ~~Đức~~ TrungVT | [x] | [841a70c](https://github.com/thanks-org/thanks-app/commit/841a70c) — status filter tabs, swipe-to-cancel, "Xem người claim" → F2-6 |
+| F2-5 | Screen 2.2.4 — My Items Business | ~~Đức~~ TrungVT | [x] | [841a70c](https://github.com/thanks-org/thanks-app/commit/841a70c) — MyBusinessesScreen entry + per-business header. **Backend gap:** `GET /me/posts?business_id=` chưa filter (sends param for forward-compat). |
+| F2-6 | Screen 2.4.3 — Who's Claimed (claimants list) | ~~Đức~~ TrungVT | [x] | [841a70c](https://github.com/thanks-org/thanks-app/commit/841a70c) — post header + claimants với pickup code + status chip |
 
 ---
 
@@ -125,14 +125,14 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| F3-1 | Screen 2.1.4a — Giver Profile (personal only) | Đức | [ ] | Phụ thuộc B5-1 |
-| F3-2 | Screen 2.1.4b — Giver Profile (with business) | Đức | [ ] | Phụ thuộc B5-1 |
-| F3-3 | Screen 2.1.4c — Receiver Profile | Đức | [ ] | Phụ thuộc B5-1 |
-| F3-4 | Screen 2.1.4d — Settings | Luân | [ ] | Phụ thuộc B5-2 |
-| F3-5 | Screen 2.2.9 — Thanks & Ratings (impact stats + notes) | Đức | [ ] | Phụ thuộc B5-4 |
-| F3-6 | Screen 2.1.2 — Givers Leaderboard | Đức | [ ] | Phụ thuộc B5-6 |
-| F3-7 | Screen 2.1.3a — Messages Receiver view | TrungVT | [ ] | Phụ thuộc B5-7, B5-8, B5-9 |
-| F3-8 | Screen 2.1.3b — Messages Giver view | TrungVT | [ ] | Phụ thuộc B5-7, B5-8, B5-9 |
+| F3-1 | Screen 2.1.4a — Giver Profile (personal only) | ~~Đức~~ TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — auto-switch personal↔business based on `listMyBusinesses()` result |
+| F3-2 | Screen 2.1.4b — Giver Profile (with business) | ~~Đức~~ TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — same screen, business section visible khi có businesses |
+| F3-3 | Screen 2.1.4c — Receiver Profile | ~~Đức~~ TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — `PublicProfileScreen` từ `/users/:id`; wired từ Who's Claimed claimant rows |
+| F3-4 | Screen 2.1.4d — Settings | ~~Luân~~ TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — avatar upload (image_picker→UploadService), `PUT /me`, sign-out, notif toggles local-state |
+| F3-5 | Screen 2.2.9 — Thanks & Ratings (impact stats + notes) | ~~Đức~~ TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — `GET /me/impact` + recent thanks list (always `[]` khi chưa có completed claims) |
+| F3-6 | Screen 2.1.2 — Givers Leaderboard | ~~Đức~~ TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — top 3 podium + list, period tabs (week/month/all-time), tap row → F3-3 |
+| F3-7 | Screen 2.1.3a — Messages Receiver view | TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — conversation list + thread (gộp với F3-8 vì share `GET /messages` endpoint) |
+| F3-8 | Screen 2.1.3b — Messages Giver view | TrungVT | [x] | [42af304](https://github.com/thanks-org/thanks-app/commit/42af304) — same screen với rating dialog khi `claim_status='completed'` (`POST /claims/:id/ratings`) |
 
 ---
 
