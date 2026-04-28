@@ -32,7 +32,7 @@
 ### Backend (`thanks-backend`)
 | Task | Priority | Ghi chú |
 |------|----------|---------|
-| Auth API — POST /auth/otp/send | 🔴 high | Xem api_doc.html |
+| Auth API — POST /auth/otp/send | 🔴 high | Xem api_and_doc/api_doc.html |
 | Auth API — POST /auth/otp/verify | 🔴 high | |
 | Auth API — POST /auth/social (Zalo/GG/FB/Apple) | 🔴 high | |
 | Posts API — GET /posts (browse feed) | 🔴 high | Có filter category, lat/lng |
@@ -78,4 +78,11 @@
 | Docker Compose + PostgreSQL setup | Claude Code | 2026-04-27 | [b8d1a8d](https://github.com/thanks-org/thanks-infra/commit/b8d1a8d) |
 | Flutter app skeleton + Home Feed screen (mock data) | Claude Code | 2026-04-27 | [865bba2](https://github.com/thanks-org/thanks-app/commit/865bba2) |
 | Prototype → Screen descriptions (thanks_screens.md) | Claude Code | 2026-04-27 | trong repo `thanks` |
-| Screen descriptions → API doc HTML (api_doc.html) | Claude Code | 2026-04-27 | trong repo `thanks` |
+| Screen descriptions → API doc HTML (api_doc.html) | Claude Code | 2026-04-27 | [ad17d6c](https://github.com/thanks-org/thanks/commit/ad17d6c) |
+| Tách 26 prototype screens → static HTML (idea_to_static_html/) | Claude Code | 2026-04-27 | [7d81d2e](https://github.com/thanks-org/thanks/commit/7d81d2e) |
+| App icon — thanks! branding (cream, terracotta, Plus Jakarta Sans 800) | Claude Code | 2026-04-28 | [0f8fbf8](https://github.com/thanks-org/thanks-app/commit/0f8fbf8) |
+| Dockerize backend — Dockerfile.dev + air hot-reload, migrate tự chạy khi `make up` | Claude Code | 2026-04-28 | [831b6a1](https://github.com/thanks-org/thanks-infra/commit/831b6a1) |
+| Update README (thanks, thanks-infra, thanks-backend) phản ánh setup mới | Claude Code | 2026-04-28 | [3c3c006](https://github.com/thanks-org/thanks-infra/commit/3c3c006) |
+| Tái cấu trúc docs → api_and_doc/ (API doc + DB schema diagram) | Claude Code | 2026-04-28 | [ad17d6c](https://github.com/thanks-org/thanks/commit/ad17d6c) |
+| Home Feed rebuild — match prototype (màu sắc, layout, item cards, top givers, sort bar) | Claude Code | 2026-04-28 | [6893534](https://github.com/thanks-org/thanks-app/commit/6893534) |
+| Fix item card overflow + đổi tên app thành "Thanks" | Claude Code | 2026-04-28 | [41503ce](https://github.com/thanks-org/thanks-app/commit/41503ce) |
