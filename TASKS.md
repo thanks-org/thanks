@@ -90,7 +90,7 @@
 | B4-4 | `DELETE /posts/:id` — cancel post, notify claimants | TrungVT | [x] | [a73c055](https://github.com/thanks-org/thanks-backend/commit/a73c055) — set status='cancelled', idempotent, 409 nếu đã completed. Push notification cho claimants skip Phase 1 (chờ I4-1) |
 | B4-5 | `GET /posts/:id/claimants` — list tất cả người đã claim | TrungVT (reassign từ Hiếu) | [x] | [a73c055](https://github.com/thanks-org/thanks-backend/commit/a73c055) — owner-only, JOIN users, trả pickup_code |
 | B4-6 | `GET /me/posts` — my items với filter status | TrungVT (reassign từ Quang) | [x] | [a73c055](https://github.com/thanks-org/thanks-backend/commit/a73c055) — query param `status` validate vs `AllowedPostStatuses`, reuse PostSummary với optional `status` field |
-| B4-7 | `GET /me/posts?business_id=` — filter posts theo business | TrungVT | [ ] | Handler hiện bỏ qua param `business_id`; cần thêm WHERE clause + verify caller owns business (403 nếu không). Phụ thuộc: không. Unblocks: F2-5 My Items Business screen. |
+| B4-7 | `GET /me/posts?business_id=` — filter posts theo business | TrungVT | [~] | Handler hiện bỏ qua param `business_id`; cần thêm WHERE clause + verify caller owns business (403 nếu không). Phụ thuộc: không. Unblocks: F2-5 My Items Business screen. |
 
 ### Flutter — Phase 2
 
@@ -121,8 +121,8 @@
 | B5-8 | `GET /messages/claims/:claim_id` — message thread | TrungVT | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
 | B5-9 | `POST /messages/claims/:claim_id` — send message | TrungVT | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3); notification row đã ghi, FCM push chờ I4-1 |
 | B5-10 | `POST /claims/:id/ratings` — rate sau khi pickup | TrungVT (reassign từ Hiếu) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3); in-TX rating_avg recompute, UNIQUE(claim_id, rater_id)→409 |
-| B5-11 | Fix `avatar_url` thiếu trong repository SELECT | TrungVT | [ ] | Cột `avatar_url` tồn tại trong schema `users` nhưng chưa được project trong các query của `GET /me`, `GET /users/:id`, `GET /messages` (peer.avatar_url), `GET /messages/claims/:id` (peer.avatar_url). Ảnh đại diện luôn null với client. |
-| B5-12 | Fix `bio` không trả về trong `GET /me` | TrungVT | [ ] | `PUT /me` nhận và lưu `bio` thành công nhưng `GET /me` response thiếu field này — Settings screen luôn hiển thị bio rỗng sau khi reload. Cần thêm `bio` vào SELECT + response struct. |
+| B5-11 | Fix `avatar_url` thiếu trong repository SELECT | TrungVT | [~] | Cột `avatar_url` tồn tại trong schema `users` nhưng chưa được project trong các query của `GET /me`, `GET /users/:id`, `GET /messages` (peer.avatar_url), `GET /messages/claims/:id` (peer.avatar_url). Ảnh đại diện luôn null với client. |
+| B5-12 | Fix `bio` không trả về trong `GET /me` | TrungVT | [~] | `PUT /me` nhận và lưu `bio` thành công nhưng `GET /me` response thiếu field này — Settings screen luôn hiển thị bio rỗng sau khi reload. Cần thêm `bio` vào SELECT + response struct. |
 
 ### Flutter — Phase 3
 
@@ -152,8 +152,8 @@
 | B6-5 | `GET /me/organizations` | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705) |
 | B6-6 | `POST /organizations` — đăng ký org (status: pending) | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705) |
 | B6-7 | `PUT /organizations/:id` | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705); owner check 403 |
-| B6-8 | `GET /businesses/:id` — public business detail endpoint | TrungVT | [ ] | Hiện tại F4-2 `GiverPublicBusinessScreen` chỉ dùng được khi caller đã có `BusinessModel` trong tay (từ Manage* flow). Cần public endpoint để standalone link (deeplink, public profile). Không cần auth. |
-| B6-9 | `GET /organizations/:id` — public organization detail endpoint | TrungVT | [ ] | Tương tự B6-8 cho org. F4-7 `ReceiverPublicOrganizationScreen` cùng vấn đề. Cần thêm `address_detail` field vào `OrganizationModel` serialize (api_doc có nhưng backend chưa trả). |
+| B6-8 | `GET /businesses/:id` — public business detail endpoint | TrungVT | [~] | Hiện tại F4-2 `GiverPublicBusinessScreen` chỉ dùng được khi caller đã có `BusinessModel` trong tay (từ Manage* flow). Cần public endpoint để standalone link (deeplink, public profile). Không cần auth. |
+| B6-9 | `GET /organizations/:id` — public organization detail endpoint | TrungVT | [~] | Tương tự B6-8 cho org. F4-7 `ReceiverPublicOrganizationScreen` cùng vấn đề. Cần thêm `address_detail` field vào `OrganizationModel` serialize (api_doc có nhưng backend chưa trả). |
 
 ### Flutter — Phase 4
 

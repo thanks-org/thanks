@@ -23,7 +23,7 @@
 
 | Task | Ai làm | Bắt đầu | Ghi chú |
 |------|--------|---------|---------|
-| _(trống)_ | | | |
+| B4-7 + B5-11 + B5-12 + B6-8 + B6-9 — 5 backend gap fixes (filter `?business_id=`, `avatar_url` SELECT, `bio` SELECT, public `GET /businesses/:id`, public `GET /organizations/:id` + `address_detail`) | TrungVT | 2026-04-28 | Delegated to sonnet executor; 1 commit batched |
 
 ---
 
