@@ -43,7 +43,7 @@
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
 | B2-1 | `GET /posts` — feed có filter category, lat/lng proximity, pagination | Luân | [x] | Public endpoint, không cần auth |
-| B2-2 | `GET /posts/:id` — post detail đầy đủ | Luân | [ ] | Public endpoint |
+| B2-2 | `GET /posts/:id` — post detail đầy đủ | Luân | [x] | Public endpoint |
 
 #### [B3] Claims
 | # | Task | Assignee | Status | Ghi chú |

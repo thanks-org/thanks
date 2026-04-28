@@ -52,3 +52,4 @@
 | Fix item card overflow + đổi tên app thành "Thanks" | Claude Code | 2026-04-28 | [41503ce](https://github.com/thanks-org/thanks-app/commit/41503ce) |
 | Schema extension v2 — bổ sung businesses, organizations, auth_providers, sessions, device_tokens, notifications, thanks, post_schedules + extend users/posts/claims/ratings/messages cho khớp 26 prototype screens | Claude Code (vanlang) | 2026-04-28 | [PR #3](https://github.com/thanks-org/thanks-backend/pull/3) |
 | B2-1: `GET /api/v1/posts` — feed API (category filter, Haversine proximity, pagination) | Luân | 2026-04-28 | [d39d561](https://github.com/thanks-org/thanks-backend/commit/d39d561) |
+| B2-2: `GET /api/v1/posts/:id` — post detail (description, address, giver profile card) | Luân | 2026-04-28 | [46578f4](https://github.com/thanks-org/thanks-backend/commit/46578f4) |
