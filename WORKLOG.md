@@ -54,3 +54,4 @@
 | B2-1: `GET /api/v1/posts` — feed API (category filter, Haversine proximity, pagination) | Luân | 2026-04-28 | [d39d561](https://github.com/thanks-org/thanks-backend/commit/d39d561) |
 | B2-2: `GET /api/v1/posts/:id` — post detail (description, address, giver profile card) | Luân | 2026-04-28 | [46578f4](https://github.com/thanks-org/thanks-backend/commit/46578f4) |
 | B1-1 — JWT bearer middleware (`auth.NewIssuer`, `middleware.RequireAuth`, 11 unit tests; blocker cho toàn bộ B-* / F-* Phase 1-3) | TrungVT | 2026-04-28 | [cf01e25](https://github.com/thanks-org/thanks-backend/commit/cf01e25) |
+| F1-1: API client (dio, interceptors, error types) + F1-5: Home Feed → real API | Luân | 2026-04-28 | [426fb6d](https://github.com/thanks-org/thanks-app/commit/426fb6d) |
