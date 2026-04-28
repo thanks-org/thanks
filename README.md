@@ -34,7 +34,8 @@ Kiểm tra backend: mở http://localhost:8080/health — nếu thấy `{"status
 ## Tài liệu
 
 - **Prototype**: https://minhidea.com/#thanks
-- **API documentation**: [word_idea_to_api_doc/api_doc.html](word_idea_to_api_doc/api_doc.html)
+- **API documentation**: [api_and_doc/api_doc.html](api_and_doc/api_doc.html)
+- **DB Schema diagram**: [api_and_doc/schema.html](api_and_doc/schema.html)
 - **Công việc hiện tại**: [WORKLOG.md](WORKLOG.md)
 
 ## Tham gia phát triển

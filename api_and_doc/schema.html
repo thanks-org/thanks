@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thanks — Database Schema</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #F0EBE3;
+  color: #1F1B16;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 32px;
+  background: #fff;
+  border-bottom: 1px solid #e2d9ce;
+  flex-shrink: 0;
+}
+.page-header h1 { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
+.page-header h1 .dot { color: #D65A3A; }
+.page-header .subtitle { color: #9ca3af; font-size: 12px; margin-left: 4px; }
+.page-header .nav-link {
+  margin-left: auto;
+  color: #2F5D3A;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  background: #e8f5ee;
+  border-radius: 6px;
+}
+.page-header .nav-link:hover { background: #d1ecdb; }
+
+/* ── Diagram wrapper ── */
+.diagram-wrapper {
+  flex: 1;
+  position: relative;
+  overflow: auto;
+}
+
+#svg-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+}
+
+/* ── Grid ── */
+.diagram-grid {
+  display: grid;
+  grid-template-columns: 220px 220px 220px;
+  grid-template-rows: auto auto;
+  column-gap: 90px;
+  row-gap: 64px;
+  padding: 52px 52px 60px;
+  width: fit-content;
+}
+
+/* ── Table cards ── */
+.table-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.table-header {
+  background: #2F5D3A;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 14px 9px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.table-header .tbl-icon { opacity: 0.55; font-size: 11px; }
+
+.col-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  font-size: 11.5px;
+  border-bottom: 1px solid #f5efe6;
+}
+.col-row:last-child { border-bottom: none; }
+
+.col-row.pk   { background: #fff9f6; }
+.col-row.fk   { background: #f0f5ff; }
+.col-row.dim  { opacity: 0.38; }
+
+.col-icon { font-size: 9px; width: 12px; flex-shrink: 0; text-align: center; }
+.col-name { flex: 1; font-weight: 500; }
+.col-type { color: #a0a0a0; font-size: 10px; font-family: 'SF Mono', 'Fira Code', monospace; white-space: nowrap; }
+
+.col-row.pk .col-name  { color: #C04E2A; font-weight: 700; }
+.col-row.fk .col-name  { color: #2563eb; }
+.col-row.fk .col-icon  { color: #2563eb; }
+
+/* ── Legend ── */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 32px;
+  background: #fff;
+  border-top: 1px solid #e2d9ce;
+  font-size: 11px;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+.leg { display: flex; align-items: center; gap: 5px; }
+.leg-key  { width: 12px; height: 12px; border-radius: 3px; background: #fff9f6; border: 1.5px solid #C04E2A; }
+.leg-fk   { width: 12px; height: 12px; border-radius: 3px; background: #f0f5ff; border: 1.5px solid #2563eb; }
+.leg-dim  { width: 12px; height: 12px; border-radius: 3px; background: #f5f5f5; border: 1.5px solid #ccc; }
+.leg-sep  { width: 1px; height: 16px; background: #e2d9ce; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>thanks<span class="dot">!</span> <span class="subtitle">— Database Schema</span></h1>
+  <a class="nav-link" href="api_doc.html">API Docs →</a>
+</div>
+
+<div class="diagram-wrapper" id="wrapper">
+  <svg id="svg-canvas"></svg>
+
+  <div class="diagram-grid" id="grid">
+
+    <!-- ── users ── -->
+    <div class="table-card" id="tbl-users" style="grid-column:1;grid-row:1">
+      <div class="table-header"><span class="tbl-icon">▣</span>users</div>
+      <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">phone</span><span class="col-type">VARCHAR(15) UNIQUE</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">name</span><span class="col-type">VARCHAR(100)</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">avatar_url</span><span class="col-type">TEXT</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">bio</span><span class="col-type">TEXT</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">is_business</span><span class="col-type">BOOLEAN</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">is_verified</span><span class="col-type">BOOLEAN</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">rating_avg</span><span class="col-type">DECIMAL(3,2)</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">rating_count</span><span class="col-type">INT</span></div>
+      <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+      <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">updated_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+    </div>
+
+    <!-- ── posts ── -->
+    <div class="table-card" id="tbl-posts" style="grid-column:2;grid-row:1">
+      <div class="table-header"><span class="tbl-icon">▣</span>posts</div>
+      <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
+      <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">user_id</span><span class="col-type">→ users</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">title</span><span class="col-type">VARCHAR(200)</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">description</span><span class="col-type">TEXT</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">quantity</span><span class="col-type">INT</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">quantity_remaining</span><span class="col-type">INT</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">pickup_start</span><span class="col-type">TIMESTAMPTZ</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">pickup_end</span><span class="col-type">TIMESTAMPTZ</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">latitude / longitude</span><span class="col-type">DECIMAL(10,7)</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">address</span><span class="col-type">TEXT</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">status</span><span class="col-type">active|completed|cancelled</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">is_recurring</span><span class="col-type">BOOLEAN</span></div>
+      <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+      <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">updated_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+    </div>
+
+    <!-- ── post_images ── -->
+    <div class="table-card" id="tbl-post-images" style="grid-column:3;grid-row:1">
+      <div class="table-header"><span class="tbl-icon">▣</span>post_images</div>
+      <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
+      <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">post_id</span><span class="col-type">→ posts</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">url</span><span class="col-type">TEXT</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">position</span><span class="col-type">INT</span></div>
+    </div>
+
+    <!-- ── ratings ── -->
+    <div class="table-card" id="tbl-ratings" style="grid-column:1;grid-row:2">
+      <div class="table-header"><span class="tbl-icon">▣</span>ratings</div>
+      <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
+      <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">claim_id</span><span class="col-type">→ claims</span></div>
+      <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">rater_id</span><span class="col-type">→ users</span></div>
+      <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">rated_id</span><span class="col-type">→ users</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">score</span><span class="col-type">INT (1–5)</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">comment</span><span class="col-type">TEXT</span></div>
+      <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+    </div>
+
+    <!-- ── claims ── -->
+    <div class="table-card" id="tbl-claims" style="grid-column:2;grid-row:2">
+      <div class="table-header"><span class="tbl-icon">▣</span>claims</div>
+      <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
+      <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">post_id</span><span class="col-type">→ posts</span></div>
+      <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">user_id</span><span class="col-type">→ users</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">quantity</span><span class="col-type">INT</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">pickup_code</span><span class="col-type">VARCHAR(6)</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">status</span><span class="col-type">pending|confirmed|completed|cancelled</span></div>
+      <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+      <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">updated_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+    </div>
+
+    <!-- ── messages ── -->
+    <div class="table-card" id="tbl-messages" style="grid-column:3;grid-row:2">
+      <div class="table-header"><span class="tbl-icon">▣</span>messages</div>
+      <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
+      <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">claim_id</span><span class="col-type">→ claims</span></div>
+      <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">sender_id</span><span class="col-type">→ users</span></div>
+      <div class="col-row"><span class="col-icon">·</span><span class="col-name">content</span><span class="col-type">TEXT</span></div>
+      <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+    </div>
+
+  </div><!-- /diagram-grid -->
+</div><!-- /diagram-wrapper -->
+
+<div class="legend">
+  <div class="leg"><div class="leg-key"></div> Primary Key</div>
+  <div class="leg"><div class="leg-fk"></div> Foreign Key</div>
+  <div class="leg"><div class="leg-dim"></div> Timestamps (dimmed)</div>
+  <div class="leg-sep"></div>
+  <div class="leg" style="margin-left:4px">
+    <svg width="28" height="10"><line x1="0" y1="5" x2="20" y2="5" stroke="#555" stroke-width="1.5"/><polygon points="20,2 28,5 20,8" fill="#555"/></svg>
+    1 → N relationship
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const svg    = document.getElementById('svg-canvas');
+  const wrapper = document.getElementById('wrapper');
+
+  /* ── Colour palette per relationship ── */
+  const C = {
+    users_posts:    '#3b82f6',  // blue
+    posts_images:   '#8b5cf6',  // purple
+    posts_claims:   '#f59e0b',  // amber
+    users_claims:   '#06b6d4',  // cyan
+    claims_msgs:    '#10b981',  // emerald
+    claims_ratings: '#f97316',  // orange
+    users_ratings:  '#ef4444',  // red
+    users_msgs:     '#6366f1',  // indigo
+  };
+
+  /* ── SVG helpers ── */
+  function ns(tag) { return document.createElementNS('http://www.w3.org/2000/svg', tag); }
+
+  function addMarker(id, color) {
+    const m = ns('marker');
+    m.setAttribute('id', `arr-${id}`);
+    m.setAttribute('markerWidth', '9');
+    m.setAttribute('markerHeight', '9');
+    m.setAttribute('refX', '8');
+    m.setAttribute('refY', '3');
+    m.setAttribute('orient', 'auto');
+    const p = ns('path');
+    p.setAttribute('d', 'M0,0 L0,6 L9,3 z');
+    p.setAttribute('fill', color);
+    m.appendChild(p);
+    return m;
+  }
+
+  const defs = ns('defs');
+  Object.entries(C).forEach(([k, v]) => defs.appendChild(addMarker(k, v)));
+  svg.appendChild(defs);
+
+  /* ── Compute anchor point on a table card ── */
+  function pt(id, side, frac = 0.5) {
+    const el = document.getElementById(id);
+    const er = el.getBoundingClientRect();
+    const wr = wrapper.getBoundingClientRect();
+    const l = er.left - wr.left + wrapper.scrollLeft;
+    const t = er.top  - wr.top  + wrapper.scrollTop;
+    const w = er.width, h = er.height;
+    switch (side) {
+      case 'L': return { x: l,     y: t + h * frac };
+      case 'R': return { x: l + w, y: t + h * frac };
+      case 'T': return { x: l + w * frac, y: t };
+      case 'B': return { x: l + w * frac, y: t + h };
+    }
+  }
+
+  /* ── Draw one bezier FK line ── */
+  function line(fromId, fSide, fFrac, toId, tSide, tFrac, colorKey, label, oneIsFrom = true) {
+    const f = pt(fromId, fSide, fFrac);
+    const t = pt(toId,   tSide, tFrac);
+    const c = C[colorKey];
+
+    /* Build bezier path depending on sides */
+    let d;
+    if (fSide === 'R' && tSide === 'L') {
+      const mx = f.x + (t.x - f.x) * 0.5;
+      d = `M${f.x},${f.y} C${mx},${f.y} ${mx},${t.y} ${t.x},${t.y}`;
+    } else if (fSide === 'L' && tSide === 'R') {
+      const mx = f.x - (f.x - t.x) * 0.5;
+      d = `M${f.x},${f.y} C${mx},${f.y} ${mx},${t.y} ${t.x},${t.y}`;
+    } else if (fSide === 'B' && tSide === 'T') {
+      const my = f.y + (t.y - f.y) * 0.5;
+      d = `M${f.x},${f.y} C${f.x},${my} ${t.x},${my} ${t.x},${t.y}`;
+    } else if (fSide === 'B' && tSide === 'L') {
+      d = `M${f.x},${f.y} C${f.x},${f.y+55} ${t.x-55},${t.y} ${t.x},${t.y}`;
+    } else if (fSide === 'R' && tSide === 'T') {
+      d = `M${f.x},${f.y} C${f.x+55},${f.y} ${t.x},${t.y-55} ${t.x},${t.y}`;
+    } else {
+      d = `M${f.x},${f.y} L${t.x},${t.y}`;
+    }
+
+    const path = ns('path');
+    path.setAttribute('d', d);
+    path.setAttribute('stroke', c);
+    path.setAttribute('stroke-width', '1.8');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('opacity', '0.72');
+    path.setAttribute('marker-end', `url(#arr-${colorKey})`);
+    svg.appendChild(path);
+
+    /* Cardinality dots: small circle = "1" side, double bar = "N" side */
+    [{ pt: f, isOne: oneIsFrom }, { pt: t, isOne: !oneIsFrom }].forEach(({ pt: p, isOne }) => {
+      const g = ns('g');
+      if (isOne) {
+        const c1 = ns('circle');
+        c1.setAttribute('cx', p.x); c1.setAttribute('cy', p.y);
+        c1.setAttribute('r', '3'); c1.setAttribute('fill', c); c1.setAttribute('opacity', '0.7');
+        g.appendChild(c1);
+      } else {
+        // N side — fork lines
+        const fork = ns('path');
+        const dx = p.x === f.x ? 0 : (p.x > f.x ? -1 : 1);
+        const dy = p.y === f.y ? 0 : (p.y > f.y ? -1 : 1);
+        const ox = dx !== 0 ? dx * 6 : 0;
+        const oy = dy !== 0 ? dy * 6 : 0;
+        fork.setAttribute('d', `M${p.x + oy*0.7},${p.y + ox*0.7} L${p.x + ox},${p.y + oy} M${p.x - oy*0.7},${p.y - ox*0.7} L${p.x + ox},${p.y + oy}`);
+        fork.setAttribute('stroke', c); fork.setAttribute('stroke-width', '1.5');
+        fork.setAttribute('fill', 'none'); fork.setAttribute('opacity', '0.7');
+        g.appendChild(fork);
+      }
+      svg.appendChild(g);
+    });
+
+    /* Label */
+    if (label) {
+      const lx = (f.x + t.x) / 2;
+      const ly = (f.y + t.y) / 2;
+      const bg = ns('rect');
+      const tw = label.length * 6.2 + 10;
+      bg.setAttribute('x', lx - tw / 2); bg.setAttribute('y', ly - 9);
+      bg.setAttribute('width', tw); bg.setAttribute('height', 14);
+      bg.setAttribute('rx', '4'); bg.setAttribute('fill', '#FAF6EF');
+      bg.setAttribute('opacity', '0.92');
+      svg.appendChild(bg);
+      const tx = ns('text');
+      tx.setAttribute('x', lx); tx.setAttribute('y', ly + 1);
+      tx.setAttribute('text-anchor', 'middle');
+      tx.setAttribute('font-size', '10');
+      tx.setAttribute('font-family', 'SF Mono, Fira Code, monospace');
+      tx.setAttribute('fill', c);
+      tx.setAttribute('font-weight', '600');
+      tx.textContent = label;
+      svg.appendChild(tx);
+    }
+  }
+
+  /* ── Size SVG ── */
+  function draw() {
+    svg.querySelectorAll(':not(defs)').forEach(el => el.remove());
+    svg.setAttribute('width',  wrapper.scrollWidth);
+    svg.setAttribute('height', wrapper.scrollHeight);
+
+    // Re-add defs children (markers got cleared)
+    const newDefs = ns('defs');
+    Object.entries(C).forEach(([k, v]) => newDefs.appendChild(addMarker(k, v)));
+    svg.insertBefore(newDefs, svg.firstChild);
+
+    /* ── FK relationships ─────────────────────────────────────
+       format: from, side, frac,  to,   side, frac,  key,           label
+    ── */
+    line('tbl-users',       'R', 0.20, 'tbl-posts',        'L', 0.20, 'users_posts',    'user_id');
+    line('tbl-posts',       'R', 0.20, 'tbl-post-images',  'L', 0.20, 'posts_images',   'post_id');
+    line('tbl-posts',       'B', 0.42, 'tbl-claims',       'T', 0.42, 'posts_claims',   'post_id');
+    line('tbl-users',       'B', 0.62, 'tbl-claims',       'L', 0.30, 'users_claims',   'user_id');
+    line('tbl-claims',      'R', 0.32, 'tbl-messages',     'L', 0.32, 'claims_msgs',    'claim_id');
+    line('tbl-claims',      'L', 0.55, 'tbl-ratings',      'R', 0.32, 'claims_ratings', 'claim_id');
+    line('tbl-users',       'B', 0.35, 'tbl-ratings',      'T', 0.35, 'users_ratings',  'rater/rated_id');
+    line('tbl-users',       'R', 0.80, 'tbl-messages',     'T', 0.32, 'users_msgs',     'sender_id');
+  }
+
+  draw();
+  window.addEventListener('resize', draw);
+});
+</script>
+</body>
+</html>

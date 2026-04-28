@@ -6,7 +6,8 @@
 
 1. Đọc `WORKLOG.md` — xem ai đang làm gì, task nào còn trong backlog
 2. Đọc `idea_img_to_word/thanks_screens.md` — mô tả chi tiết toàn bộ screens của app
-3. Đọc `word_idea_to_api_doc/api_doc.html` — toàn bộ API endpoints và schema
+3. Đọc `api_and_doc/api_doc.html` — toàn bộ API endpoints và schema
+4. Xem `api_and_doc/schema.html` — database schema diagram (table relationships)
 
 ## Cấu trúc project
 
@@ -15,7 +16,8 @@ thanks/                        ← repo này (coordination hub)
 ├── WORKLOG.md                 ← log công việc — ĐỌC TRƯỚC, UPDATE SAU
 ├── CLAUDE.md                  ← file này
 ├── idea_img_to_word/          ← mô tả prototype bằng text
-└── word_idea_to_api_doc/      ← API documentation HTML
+├── idea_to_static_html/       ← prototype screens dạng static HTML
+└── api_and_doc/               ← tài liệu API + DB schema diagram
 
 thanks-backend/                ← Go API server (clone riêng)
 thanks-app/                    ← Flutter mobile app (clone riêng)
@@ -46,6 +48,7 @@ thanks-infra/                  ← Docker + PostgreSQL (clone riêng)
 - Tạo PR vào `develop`, cần 1 người review trước khi merge
 
 ### Tham chiếu
-- Mỗi API endpoint trong `api_doc.html` ghi rõ xuất phát từ screen nào
-- Mỗi screen trong `thanks_screens.md` ghi rõ từng element, từng field
-- Database schema: `thanks-backend/migrations/000001_init.up.sql`
+- Mỗi API endpoint trong `api_and_doc/api_doc.html` ghi rõ xuất phát từ screen nào
+- Mỗi screen trong `idea_img_to_word/thanks_screens.md` ghi rõ từng element, từng field
+- Database schema diagram: `api_and_doc/schema.html`
+- Database schema SQL: `thanks-backend/migrations/000001_init.up.sql`
