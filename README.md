@@ -12,41 +12,34 @@ Community item-sharing app cho Việt Nam — người có đồ thừa tặng m
 
 ## Setup lần đầu
 
-**Yêu cầu:** Git, Docker Desktop, Go 1.22+, Flutter 3.19+
+**Yêu cầu:** Git, [Docker Desktop](https://www.docker.com/products/docker-desktop/), [Flutter 3.19+](https://flutter.dev/docs/get-started/install)
 
 ```bash
-# 1. Clone repo này
+# 1. Clone repo này và tất cả sub-repos
 git clone https://github.com/thanks-org/thanks.git
 cd thanks
+chmod +x setup.sh && ./setup.sh
 
-# 2. Chạy setup — tự clone hết các repo còn lại
-chmod +x setup.sh
-./setup.sh
+# 2. Khởi động backend (PostgreSQL + migrations + API server)
+cd thanks-infra && cp .env.example .env && make up
 
-# 3. Khởi động database
-cd thanks-infra && cp .env.example .env && make up && cd ..
-
-# 4. Chạy migrations
-cd thanks-backend && cp .env.example .env && make migrate-up && cd ..
-
-# 5. Chạy backend (terminal 1)
-cd thanks-backend && make run
-
-# 6. Chạy app (terminal 2)
+# 3. Chạy app (terminal mới)
 cd thanks-app && flutter run
 ```
 
-Mở http://localhost:8080/health — nếu thấy `{"status":"ok"}` là backend đang chạy.
+Kiểm tra backend: mở http://localhost:8080/health — nếu thấy `{"status":"ok"}` là thành công.
+
+> **Không cần cài Go.** Backend chạy hoàn toàn trong Docker với hot-reload.
 
 ## Tài liệu
 
 - **Prototype**: https://minhidea.com/#thanks
-- **Screen descriptions**: [idea_img_to_word/thanks_screens.md](idea_img_to_word/thanks_screens.md)
 - **API documentation**: [word_idea_to_api_doc/api_doc.html](word_idea_to_api_doc/api_doc.html)
 - **Công việc hiện tại**: [WORKLOG.md](WORKLOG.md)
 
 ## Tham gia phát triển
 
 1. Đọc [WORKLOG.md](WORKLOG.md) xem task nào đang available
-2. Claim task, bắt đầu làm, update WORKLOG khi xong
-3. Branch từ `develop`, tạo PR, chờ review rồi merge
+2. Claim task: điền tên + ngày vào cột "In Progress", commit WORKLOG.md
+3. Branch từ `develop`, code, tạo PR, chờ review rồi merge
+4. Khi xong: chuyển task sang Done, điền commit/PR link, commit WORKLOG.md
