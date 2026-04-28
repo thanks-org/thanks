@@ -110,16 +110,16 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| B5-1 | `GET /me` — full profile (stats, rating, identity list) | Quang | [ ] | Phụ thuộc B1-1 |
-| B5-2 | `PUT /me` — update profile (name, avatar, bio) | Quang | [ ] | Phụ thuộc B1-1, B4-1 |
-| B5-3 | `GET /me/claims` — claim history | Quang | [ ] | Phụ thuộc B1-1 |
-| B5-4 | `GET /me/impact` — stats + thank-you notes | Quang | [ ] | Phụ thuộc B1-1 |
-| B5-5 | `GET /users/:id` — public profile (user/business/org) | Quang | [ ] | Public endpoint |
-| B5-6 | `GET /leaderboard` — top givers by city | Quang | [ ] | Public endpoint |
-| B5-7 | `GET /messages` — list conversations | TrungVT | [ ] | Phụ thuộc B1-1 |
-| B5-8 | `GET /messages/claims/:claim_id` — message thread | TrungVT | [ ] | Phụ thuộc B1-1 |
-| B5-9 | `POST /messages/claims/:claim_id` — send message | TrungVT | [ ] | Phụ thuộc B1-1; push notification cho recipient |
-| B5-10 | `POST /claims/:id/ratings` — rate sau khi pickup | Hiếu | [ ] | Phụ thuộc B3-1 |
+| B5-1 | `GET /me` — full profile (stats, rating, identity list) | TrungVT (reassign từ Quang) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-2 | `PUT /me` — update profile (name, avatar, bio) | TrungVT (reassign từ Quang) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-3 | `GET /me/claims` — claim history | TrungVT (reassign từ Quang) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-4 | `GET /me/impact` — stats + thank-you notes | TrungVT (reassign từ Quang) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-5 | `GET /users/:id` — public profile (user/business/org) | TrungVT (reassign từ Quang) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-6 | `GET /leaderboard` — top givers by city | TrungVT (reassign từ Quang) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-7 | `GET /messages` — list conversations | TrungVT | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-8 | `GET /messages/claims/:claim_id` — message thread | TrungVT | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-9 | `POST /messages/claims/:claim_id` — send message | TrungVT | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3); notification row đã ghi, FCM push chờ I4-1 |
+| B5-10 | `POST /claims/:id/ratings` — rate sau khi pickup | TrungVT (reassign từ Hiếu) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3); in-TX rating_avg recompute, UNIQUE(claim_id, rater_id)→409 |
 
 ### Flutter — Phase 3
 
