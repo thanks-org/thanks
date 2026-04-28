@@ -142,13 +142,13 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| B6-1 | `POST /auth/social` — OAuth với Zalo/Google/Facebook/Apple | Hiếu | [ ] | Verify token với từng provider |
-| B6-2 | `GET /me/businesses` | Quang | [ ] | Phụ thuộc B1-1 |
-| B6-3 | `POST /businesses` — đăng ký business (status: pending) | Quang | [ ] | Phụ thuộc B1-1, B4-1 |
-| B6-4 | `PUT /businesses/:id` | Quang | [ ] | Phụ thuộc B1-1 |
-| B6-5 | `GET /me/organizations` | Quang | [ ] | Phụ thuộc B1-1 |
-| B6-6 | `POST /organizations` — đăng ký org (status: pending) | Quang | [ ] | Phụ thuộc B1-1, B4-1 |
-| B6-7 | `PUT /organizations/:id` | Quang | [ ] | Phụ thuộc B1-1 |
+| B6-1 | `POST /auth/social` — OAuth với Zalo/Google/Facebook/Apple | TrungVT (reassign từ Hiếu) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705); pluggable SocialVerifier, dev mode accept base64-JSON id_token, production verifier TODO chờ provider keys |
+| B6-2 | `GET /me/businesses` | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705) |
+| B6-3 | `POST /businesses` — đăng ký business (status: pending) | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705) |
+| B6-4 | `PUT /businesses/:id` | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705); owner check 403 |
+| B6-5 | `GET /me/organizations` | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705) |
+| B6-6 | `POST /organizations` — đăng ký org (status: pending) | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705) |
+| B6-7 | `PUT /organizations/:id` | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705); owner check 403 |
 
 ### Flutter — Phase 4
 
