@@ -23,7 +23,7 @@
 
 | Task | Ai làm | Bắt đầu | Ghi chú |
 |------|--------|---------|---------|
-| _(trống)_ | | | |
+| B1-1 — JWT bearer middleware (auth, blocker cho Phase 1-3) | TrungVT | 2026-04-28 | [thanks-backend PR #5](https://github.com/thanks-org/thanks-backend/pull/5) — chờ review/merge |
 
 ---
 
