@@ -48,8 +48,8 @@
 #### [B3] Claims
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| B3-1 | `POST /posts/:id/claims` — tạo claim, sinh 4-digit pickup code, decrement quantity | Hiếu | [ ] | Phụ thuộc B1-1, B2-1; push notification cho giver (có thể skip push ở Phase 1) |
-| B3-2 | `DELETE /claims/:id` — cancel claim, restore quantity | Hiếu | [ ] | Phụ thuộc B3-1 |
+| B3-1 | `POST /posts/:id/claims` — tạo claim, sinh 4-digit pickup code, decrement quantity | TrungVT (reassigned từ Hiếu) | [x] | Done [9313e58](https://github.com/thanks-org/thanks-backend/commit/9313e58) — TX `FOR UPDATE` chống race, self-claim 403, duplicate 409, notification row written cho FCM I4-1 consume |
+| B3-2 | `DELETE /claims/:id` — cancel claim, restore quantity | TrungVT (reassigned từ Hiếu) | [x] | Done [9313e58](https://github.com/thanks-org/thanks-backend/commit/9313e58) — receiver-only, atomic restore quantity_remaining, double-cancel 409 |
 
 ---
 
