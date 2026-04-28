@@ -58,12 +58,12 @@
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
 | F1-1 | API client setup (dio/http, base URL, token interceptor, error handling) | Luân | [x] | Làm trước tất cả F-tasks |
-| F1-2 | Auth service (lưu/đọc JWT từ secure storage) | Luân | [ ] | Phụ thuộc F1-1 |
+| F1-2 | Auth service (lưu/đọc JWT từ secure storage) | TrungVT (reassigned từ Luân) | [x] | Done [4a326cb](https://github.com/thanks-org/thanks-app/commit/4a326cb) — `AuthService` singleton + `flutter_secure_storage` (key `auth_jwt`) + dio `QueuedInterceptor` auto-attach Bearer token |
 | F1-3 | Screen 2.1.5 — Profile Logged Out (entry point vào auth) | Luân | [ ] | |
 | F1-4 | Screen 2.1.6 — Sign Up / Auth Method (phone + OTP flow) | Luân | [ ] | Phụ thuộc F1-2, B1-2, B1-3 |
 | F1-5 | Home Feed → kết nối real API (thay mock data) | Luân | [x] | Phụ thuộc F1-1, B2-1 |
 | F1-6 | Screen 2.4.1 — Item Detail | Luân | [x] | Phụ thuộc B2-2 |
-| F1-7 | Screen 2.4.2 — Claim Confirmed (pickup code display) | Luân | [ ] | Phụ thuộc B3-1, F1-6 |
+| F1-7 | Screen 2.4.2 — Claim Confirmed (pickup code display) | TrungVT (reassigned từ Luân) | [x] | Done [6cfd266](https://github.com/thanks-org/thanks-app/commit/6cfd266) — `ClaimConfirmedScreen` match prototype, wired Item Detail claim button → `POST /posts/:id/claims` → push screen + Cancel claim với confirm dialog → `DELETE /claims/:id` |
 
 ---
 
