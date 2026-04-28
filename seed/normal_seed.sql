@@ -1,0 +1,24 @@
+-- =============================================================
+-- seed/normal_seed.sql — Baseline reference data
+-- =============================================================
+-- Safe to run on any environment (staging, production).
+-- Does NOT truncate user data. Only inserts reference/config rows
+-- that must exist for the app to function correctly.
+--
+-- Currently empty: post categories, business categories, and org
+-- categories are all stored as inline CHECK constraints on their
+-- tables — no separate lookup tables exist yet.
+--
+-- Run:
+--   make seed-normal          (from thanks-backend/)
+--   # or directly:
+--   psql $DATABASE_URL -f seed/normal_seed.sql
+--
+-- Future entries for this file:
+--   - System/admin users
+--   - Default notification templates
+--   - Lookup tables if categories are ever extracted to their own tables
+-- =============================================================
+
+-- (no rows to insert yet)
+SELECT 'normal_seed: nothing to seed at this time' AS note;

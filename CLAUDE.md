@@ -45,10 +45,20 @@ Xem `WORKLOG.md` → bảng **In Progress** (file ngắn, đọc < 5s).
 
 ## Cấu trúc repo
 
+> **QUAN TRỌNG:** `thanks-app`, `thanks-backend`, `thanks-infra` là **subfolders nằm BÊN TRONG working directory này**. Khi tìm file, dùng relative path từ đây:
+> - Flutter app: `thanks-app/`
+> - Go backend: `thanks-backend/`
+> - Infra: `thanks-infra/`
+>
+> **KHÔNG** tìm các folder này ở ngoài working directory hiện tại.
+
 ```
-thanks/                        ← repo này (coordination hub)
+thanks/                        ← working directory (repo coordination hub)
 ├── CLAUDE.md                  ← file này — đọc đầu tiên
 ├── WORKLOG.md                 ← task tracker — claim trước khi code
+├── thanks-app/                ← Flutter app (iOS + Android)
+├── thanks-backend/            ← Go + Gin backend
+├── thanks-infra/              ← Docker Compose + Railway config
 ├── idea_img_to_word/
 │   └── thanks_screens.md      ← mô tả 26 screens (đọc khi làm Flutter)
 ├── idea_to_static_html/       ← prototype screens dạng static HTML
@@ -94,3 +104,33 @@ thanks/                        ← repo này (coordination hub)
 - Mỗi API endpoint trong `api_doc.html` ghi rõ xuất phát từ screen nào
 - Mỗi screen trong `thanks_screens.md` ghi rõ từng element, từng field
 - DB schema SQL đầy đủ: `thanks-backend/migrations/000001_init.up.sql`
+
+---
+
+## Seed data
+
+Khi người dùng nói "start DB", "seed data", hoặc "chạy app", **hỏi trước**:
+
+> "Dùng **fake seed** (data prototype cho tất cả screens) hay **normal seed** (chỉ reference data)?"
+
+| | Fake seed | Normal seed |
+|--|--|--|
+| Dùng khi | Dev / test / UI smoke | Staging / production baseline |
+| Dữ liệu | Prototype-quality, tất cả FKs connect | Chỉ reference (hiện chưa có gì) |
+| ⚠️ Destructive | Wipe toàn bộ app data trước | Không xóa gì |
+| Lệnh (từ `thanks-backend/`) | `make seed-fake` | `make seed-normal` |
+| Xóa không re-seed | `make seed-clear` | — |
+
+**Fake seed bao gồm:**
+- 6 users: Dev User (test account), Nguyễn Văn Phượng (business giver), Trần Thị Mai (personal giver #1), Lê Minh Đức (org admin), Phạm Thị Hoa (personal receiver), Hoàng Minh Tuấn (personal giver #2)
+- 2 businesses: Bánh Mì Phượng (verified), Cà Phê Nhớ (pending — dev user's)
+- 1 organization: Mái Ấm Thiên Tâm (verified)
+- 7 posts: 5 active (food/clothes/books/furniture/tech) + 2 completed (for leaderboard history)
+- 10 claims: status đa dạng (pending / confirmed / completed / picked_up)
+- Messages, ratings, thanks, notifications cho Dev User
+
+**Dev User** (UUID `00000000-0000-0000-0000-000000000001`):
+- `auth_providers`: provider=`google`, provider_user_id=`dev-user-001`
+- Claim đang confirmed: bánh mì, pickup_code=`A4B7C2`
+- Business đang pending: Cà Phê Nhớ
+- Leaderboard rank #3 (3 items tặng qua sách)
