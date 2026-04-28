@@ -110,16 +110,16 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| B5-1 | `GET /me` — full profile (stats, rating, identity list) | Quang | [ ] | Phụ thuộc B1-1 |
-| B5-2 | `PUT /me` — update profile (name, avatar, bio) | Quang | [ ] | Phụ thuộc B1-1, B4-1 |
-| B5-3 | `GET /me/claims` — claim history | Quang | [ ] | Phụ thuộc B1-1 |
-| B5-4 | `GET /me/impact` — stats + thank-you notes | Quang | [ ] | Phụ thuộc B1-1 |
-| B5-5 | `GET /users/:id` — public profile (user/business/org) | Quang | [ ] | Public endpoint |
-| B5-6 | `GET /leaderboard` — top givers by city | Quang | [ ] | Public endpoint |
-| B5-7 | `GET /messages` — list conversations | TrungVT | [ ] | Phụ thuộc B1-1 |
-| B5-8 | `GET /messages/claims/:claim_id` — message thread | TrungVT | [ ] | Phụ thuộc B1-1 |
-| B5-9 | `POST /messages/claims/:claim_id` — send message | TrungVT | [ ] | Phụ thuộc B1-1; push notification cho recipient |
-| B5-10 | `POST /claims/:id/ratings` — rate sau khi pickup | Hiếu | [ ] | Phụ thuộc B3-1 |
+| B5-1 | `GET /me` — full profile (stats, rating, identity list) | TrungVT (reassign từ Quang) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-2 | `PUT /me` — update profile (name, avatar, bio) | TrungVT (reassign từ Quang) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-3 | `GET /me/claims` — claim history | TrungVT (reassign từ Quang) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-4 | `GET /me/impact` — stats + thank-you notes | TrungVT (reassign từ Quang) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-5 | `GET /users/:id` — public profile (user/business/org) | TrungVT (reassign từ Quang) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-6 | `GET /leaderboard` — top givers by city | TrungVT (reassign từ Quang) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-7 | `GET /messages` — list conversations | TrungVT | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-8 | `GET /messages/claims/:claim_id` — message thread | TrungVT | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3) |
+| B5-9 | `POST /messages/claims/:claim_id` — send message | TrungVT | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3); notification row đã ghi, FCM push chờ I4-1 |
+| B5-10 | `POST /claims/:id/ratings` — rate sau khi pickup | TrungVT (reassign từ Hiếu) | [x] | [ed382c3](https://github.com/thanks-org/thanks-backend/commit/ed382c3); in-TX rating_avg recompute, UNIQUE(claim_id, rater_id)→409 |
 
 ### Flutter — Phase 3
 
@@ -142,13 +142,13 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| B6-1 | `POST /auth/social` — OAuth với Google/Apple (Zalo/Facebook sau) | Luân (reassign từ Hiếu) | [x] | Kéo lên Phase 1 — Google tokeninfo + Apple JWKS; migration phone nullable |
-| B6-2 | `GET /me/businesses` | Quang | [ ] | Phụ thuộc B1-1 |
-| B6-3 | `POST /businesses` — đăng ký business (status: pending) | Quang | [ ] | Phụ thuộc B1-1, B4-1 |
-| B6-4 | `PUT /businesses/:id` | Quang | [ ] | Phụ thuộc B1-1 |
-| B6-5 | `GET /me/organizations` | Quang | [ ] | Phụ thuộc B1-1 |
-| B6-6 | `POST /organizations` — đăng ký org (status: pending) | Quang | [ ] | Phụ thuộc B1-1, B4-1 |
-| B6-7 | `PUT /organizations/:id` | Quang | [ ] | Phụ thuộc B1-1 |
+| B6-1 | `POST /auth/social` — OAuth với Zalo/Google/Facebook/Apple | TrungVT (reassign từ Hiếu) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705); pluggable SocialVerifier, dev mode accept base64-JSON id_token, production verifier TODO chờ provider keys |
+| B6-2 | `GET /me/businesses` | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705) |
+| B6-3 | `POST /businesses` — đăng ký business (status: pending) | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705) |
+| B6-4 | `PUT /businesses/:id` | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705); owner check 403 |
+| B6-5 | `GET /me/organizations` | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705) |
+| B6-6 | `POST /organizations` — đăng ký org (status: pending) | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705) |
+| B6-7 | `PUT /organizations/:id` | TrungVT (reassign từ Quang) | [x] | [413d705](https://github.com/thanks-org/thanks-backend/commit/413d705); owner check 403 |
 
 ### Flutter — Phase 4
 

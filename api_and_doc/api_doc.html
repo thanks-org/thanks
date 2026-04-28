@@ -275,18 +275,36 @@
       </div>
       <div class="endpoint-body">
         <div class="screen-source">Screen 2.1.6 — Sign Up</div>
-        <p class="endpoint-desc">Authenticates the user using an OAuth access token from a social provider. Returns a JWT on success.</p>
+        <p class="endpoint-desc">Authenticates the user using an ID token from a social provider. Returns a JWT on success. Creates a new account if the provider identity is new.</p>
         <div class="params-title">Request Body</div>
         <table class="param-table">
           <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
           <tr><td class="param-name">provider</td><td class="param-type">string</td><td><span class="required">required</span></td><td><div class="enum-list"><span class="enum-val">zalo</span><span class="enum-val">google</span><span class="enum-val">facebook</span><span class="enum-val">apple</span></div></td></tr>
-          <tr><td class="param-name">access_token</td><td class="param-type">string</td><td><span class="required">required</span></td><td>OAuth token from the provider's SDK</td></tr>
-          <tr><td class="param-name">role</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td><code>giver</code> or <code>receiver</code> — only for first sign-up</td></tr>
+          <tr><td class="param-name">id_token</td><td class="param-type">string</td><td><span class="required">required</span></td><td>ID token from the provider's SDK (not <code>access_token</code>)</td></tr>
+          <tr><td class="param-name">name</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Display name hint from provider profile</td></tr>
+          <tr><td class="param-name">avatar_url</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Avatar URL hint from provider profile</td></tr>
+          <tr><td class="param-name">email</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Email hint from provider profile</td></tr>
         </table>
+        <div class="info-box">
+          <strong>Dev mode:</strong> When the backend runs with <code>JWT_SECRET=dev-only-secret-change-me</code>, the <code>id_token</code> is decoded as a base64-encoded JSON object <code>{"sub": "...", "email": "...", "name": "...", "picture": "..."}</code> — no real provider SDK keys needed. Production provider verification is TODO per-provider.
+        </div>
         <div class="code-label">Example Response — 200 OK</div>
         <div class="code-block">{
-  <span class="k">"token"</span>: <span class="s">"eyJhbGci..."</span>,
-  <span class="k">"user"</span>: { <span class="k">"id"</span>: <span class="s">"uuid-456"</span>, <span class="k">"name"</span>: <span class="s">"Nguyễn Văn A"</span>, <span class="k">"is_new_user"</span>: <span class="b">false</span> }
+  <span class="k">"access_token"</span>: <span class="s">"eyJhbGci..."</span>,
+  <span class="k">"token_type"</span>: <span class="s">"Bearer"</span>,
+  <span class="k">"expires_in"</span>: <span class="n">2592000</span>,
+  <span class="k">"user"</span>: {
+    <span class="k">"id"</span>: <span class="s">"uuid-456"</span>,
+    <span class="k">"name"</span>: <span class="s">"Nguyễn Văn A"</span>,
+    <span class="k">"email"</span>: <span class="s">"a@example.com"</span>,
+    <span class="k">"avatar_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+    <span class="k">"role_type"</span>: <span class="s">"giver"</span>,
+    <span class="k">"is_verified"</span>: <span class="b">false</span>,
+    <span class="k">"rating_avg"</span>: <span class="n">0</span>,
+    <span class="k">"rating_count"</span>: <span class="n">0</span>,
+    <span class="k">"city"</span>: <span class="s">"hcmc"</span>,
+    <span class="k">"created_at"</span>: <span class="s">"2026-04-28T10:00:00Z"</span>
+  }
 }</div>
       </div>
     </div>
@@ -364,14 +382,30 @@
       </div>
       <div class="endpoint-body">
         <div class="screen-source">Screen 2.1.2 — Givers Leaderboard</div>
-        <p class="endpoint-desc">Returns a ranked list of the top givers for a given city. Supports filtering by account type.</p>
+        <p class="endpoint-desc">Returns a ranked list of the top givers. Supports filtering by city. Default limit 50, max 200.</p>
         <div class="params-title">Query Parameters</div>
         <table class="param-table">
           <tr><th>Param</th><th>Type</th><th>Required</th><th>Description</th></tr>
-          <tr><td class="param-name">city</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>City slug (default: <code>hcmc</code>)</td></tr>
-          <tr><td class="param-name">type</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td><div class="enum-list"><span class="enum-val">all</span><span class="enum-val">business</span><span class="enum-val">personal</span></div></td></tr>
-          <tr><td class="param-name">limit</td><td class="param-type">int</td><td><span class="optional">optional</span></td><td>Number of results (default: 10, max: 50)</td></tr>
+          <tr><td class="param-name">limit</td><td class="param-type">int</td><td><span class="optional">optional</span></td><td>Number of results (default: 50, max: 200)</td></tr>
+          <tr><td class="param-name">city</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>City slug filter, e.g. <code>hcmc</code>, <code>hanoi</code></td></tr>
         </table>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"total"</span>: <span class="n">50</span>,
+  <span class="k">"entries"</span>: [
+    {
+      <span class="k">"rank"</span>: <span class="n">1</span>,
+      <span class="k">"user_id"</span>: <span class="s">"uuid-giver"</span>,
+      <span class="k">"user_name"</span>: <span class="s">"Bento Cooky"</span>,
+      <span class="k">"avatar_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+      <span class="k">"is_verified"</span>: <span class="b">true</span>,
+      <span class="k">"giver_type"</span>: <span class="s">"business"</span>,
+      <span class="k">"city"</span>: <span class="s">"hcmc"</span>,
+      <span class="k">"total_items_given"</span>: <span class="n">480</span>,
+      <span class="k">"rating_avg"</span>: <span class="n">4.9</span>
+    }
+  ]
+}</div>
       </div>
     </div>
 
@@ -384,7 +418,26 @@
       </div>
       <div class="endpoint-body">
         <div class="screen-source">Screens 2.2.1, 2.2.2, 2.3.1, 2.3.2 — Public Profiles</div>
-        <p class="endpoint-desc">Returns the public profile of any user. Includes their recent/available/completed posts and stats. Private data (exact address) is hidden unless the viewer has an active claim from this user.</p>
+        <p class="endpoint-desc">Returns the public profile of any user. Private data (phone, email, exact coordinates) is never exposed. If <code>giver_type=business</code>, includes a <code>businesses</code> array. If <code>receiver_type=organization</code>, includes an <code>organizations</code> array.</p>
+        <div class="params-title">Response Fields</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td class="param-name">id</td><td class="param-type">uuid</td><td>User ID</td></tr>
+          <tr><td class="param-name">name</td><td class="param-type">string</td><td>Display name</td></tr>
+          <tr><td class="param-name">avatar_url</td><td class="param-type">string</td><td>Avatar URL</td></tr>
+          <tr><td class="param-name">bio</td><td class="param-type">string</td><td>Short bio</td></tr>
+          <tr><td class="param-name">role_type</td><td class="param-type">string</td><td><div class="enum-list"><span class="enum-val">giver</span><span class="enum-val">receiver</span><span class="enum-val">both</span></div></td></tr>
+          <tr><td class="param-name">giver_type</td><td class="param-type">string</td><td><div class="enum-list"><span class="enum-val">personal</span><span class="enum-val">business</span></div></td></tr>
+          <tr><td class="param-name">receiver_type</td><td class="param-type">string</td><td><div class="enum-list"><span class="enum-val">personal</span><span class="enum-val">organization</span></div></td></tr>
+          <tr><td class="param-name">is_verified</td><td class="param-type">bool</td><td>Verified status</td></tr>
+          <tr><td class="param-name">rating_avg</td><td class="param-type">float</td><td>Average star rating</td></tr>
+          <tr><td class="param-name">rating_count</td><td class="param-type">int</td><td>Number of ratings received</td></tr>
+          <tr><td class="param-name">city</td><td class="param-type">string</td><td>City slug</td></tr>
+          <tr><td class="param-name">total_posts</td><td class="param-type">int</td><td>Total posts ever created</td></tr>
+          <tr><td class="param-name">businesses</td><td class="param-type">object[]</td><td>Only present when <code>giver_type=business</code>. Fields: id, name, category, logo_url, description, address, city, is_verified</td></tr>
+          <tr><td class="param-name">organizations</td><td class="param-type">object[]</td><td>Only present when <code>receiver_type=organization</code>. Fields: id, name, category, logo_url, description, address, city, is_verified</td></tr>
+          <tr><td class="param-name">created_at</td><td class="param-type">datetime</td><td>Account creation timestamp</td></tr>
+        </table>
       </div>
     </div>
   </div>
@@ -536,6 +589,25 @@
       <div class="endpoint-body">
         <div class="screen-source">Screen 2.2.5 — Manage Businesses</div>
         <p class="endpoint-desc">Returns all business identities owned by the authenticated user, with verification status.</p>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">[
+  {
+    <span class="k">"id"</span>: <span class="s">"uuid-biz"</span>,
+    <span class="k">"owner_user_id"</span>: <span class="s">"uuid-user"</span>,
+    <span class="k">"name"</span>: <span class="s">"Bento Cooky"</span>,
+    <span class="k">"category"</span>: <span class="s">"restaurant"</span>,
+    <span class="k">"logo_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+    <span class="k">"phone"</span>: <span class="s">"0901234567"</span>,
+    <span class="k">"description"</span>: <span class="s">"Cơm văn phòng ngon"</span>,
+    <span class="k">"address"</span>: <span class="s">"123 Lê Lợi"</span>,
+    <span class="k">"address_detail"</span>: <span class="s">"Tầng 2"</span>,
+    <span class="k">"city"</span>: <span class="s">"hcmc"</span>,
+    <span class="k">"verification_status"</span>: <span class="s">"approved"</span>,
+    <span class="k">"is_active"</span>: <span class="b">true</span>,
+    <span class="k">"created_at"</span>: <span class="s">"2026-04-01T00:00:00Z"</span>,
+    <span class="k">"updated_at"</span>: <span class="s">"2026-04-28T00:00:00Z"</span>
+  }
+]</div>
       </div>
     </div>
 
@@ -548,16 +620,20 @@
       </div>
       <div class="endpoint-body">
         <div class="screen-source">Screen 2.2.6 — Add Business</div>
-        <p class="endpoint-desc">Submits a new business identity for admin review. Status starts as <code>pending</code>. Review takes 1–3 business days.</p>
+        <p class="endpoint-desc">Submits a new business identity for admin review. <code>verification_status</code> defaults to <code>pending_review</code>, <code>is_active</code> defaults to <code>true</code>, <code>owner_user_id</code> is set to the caller. Review takes 1–3 business days.</p>
         <div class="params-title">Request Body</div>
         <table class="param-table">
           <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
-          <tr><td class="param-name">name</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Business name</td></tr>
-          <tr><td class="param-name">category</td><td class="param-type">string</td><td><span class="required">required</span></td><td>e.g. <code>food_beverage</code>, <code>retail</code>, <code>services</code></td></tr>
-          <tr><td class="param-name">address</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Business address</td></tr>
-          <tr><td class="param-name">phone</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Business phone number</td></tr>
+          <tr><td class="param-name">name</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Business name, max 200 chars</td></tr>
+          <tr><td class="param-name">category</td><td class="param-type">string</td><td><span class="required">required</span></td><td><div class="enum-list"><span class="enum-val">restaurant</span><span class="enum-val">bakery</span><span class="enum-val">grocery</span><span class="enum-val">convenience_store</span><span class="enum-val">cafe</span><span class="enum-val">other</span></div></td></tr>
           <tr><td class="param-name">logo_url</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>URL from <code>POST /uploads</code></td></tr>
+          <tr><td class="param-name">phone</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Business phone, max 15 chars</td></tr>
           <tr><td class="param-name">description</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>About the business</td></tr>
+          <tr><td class="param-name">address</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Street address</td></tr>
+          <tr><td class="param-name">address_detail</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Floor, unit, extra details</td></tr>
+          <tr><td class="param-name">latitude</td><td class="param-type">float</td><td><span class="optional">optional</span></td><td>Location latitude</td></tr>
+          <tr><td class="param-name">longitude</td><td class="param-type">float</td><td><span class="optional">optional</span></td><td>Location longitude</td></tr>
+          <tr><td class="param-name">city</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>City slug</td></tr>
         </table>
       </div>
     </div>
@@ -570,7 +646,21 @@
         <span class="auth-badge">AUTH</span>
       </div>
       <div class="endpoint-body">
-        <p class="endpoint-desc">Updates an owned business. Note: changes to <code>name</code> or <code>address</code> will reset verification status to <code>pending</code>.</p>
+        <p class="endpoint-desc">Partial update of an owned business — all fields are optional. Returns <strong>403 forbidden</strong> if the caller is not <code>owner_user_id</code>. <code>verification_status</code> is admin-only and cannot be changed via this endpoint.</p>
+        <div class="params-title">Request Body (all optional)</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td class="param-name">name</td><td class="param-type">string</td><td>Business name, max 200 chars</td></tr>
+          <tr><td class="param-name">category</td><td class="param-type">string</td><td><div class="enum-list"><span class="enum-val">restaurant</span><span class="enum-val">bakery</span><span class="enum-val">grocery</span><span class="enum-val">convenience_store</span><span class="enum-val">cafe</span><span class="enum-val">other</span></div></td></tr>
+          <tr><td class="param-name">logo_url</td><td class="param-type">string</td><td>URL from <code>POST /uploads</code></td></tr>
+          <tr><td class="param-name">phone</td><td class="param-type">string</td><td>Business phone, max 15 chars</td></tr>
+          <tr><td class="param-name">description</td><td class="param-type">string</td><td>About the business</td></tr>
+          <tr><td class="param-name">address</td><td class="param-type">string</td><td>Street address</td></tr>
+          <tr><td class="param-name">address_detail</td><td class="param-type">string</td><td>Floor, unit, extra details</td></tr>
+          <tr><td class="param-name">latitude</td><td class="param-type">float</td><td>Location latitude</td></tr>
+          <tr><td class="param-name">longitude</td><td class="param-type">float</td><td>Location longitude</td></tr>
+          <tr><td class="param-name">city</td><td class="param-type">string</td><td>City slug</td></tr>
+        </table>
       </div>
     </div>
 
@@ -584,22 +674,23 @@
       </div>
       <div class="endpoint-body">
         <div class="screen-source">Screen 2.2.9 — Thanks &amp; Ratings</div>
-        <p class="endpoint-desc">Returns aggregate impact metrics and recent thank-you notes received by the authenticated giver.</p>
+        <p class="endpoint-desc">Returns aggregate impact metrics and recent thank-you notes received by the authenticated user.</p>
         <div class="code-label">Example Response — 200 OK</div>
         <div class="code-block">{
-  <span class="k">"stats"</span>: {
-    <span class="k">"items_given"</span>: <span class="n">45</span>,
-    <span class="k">"people_helped"</span>: <span class="n">120</span>,
-    <span class="k">"weight_saved_kg"</span>: <span class="n">18.4</span>,
-    <span class="k">"rating_avg"</span>: <span class="n">4.7</span>,
-    <span class="k">"rating_count"</span>: <span class="n">23</span>,
-    <span class="k">"percentile_rank"</span>: <span class="n">90</span>
-  },
-  <span class="k">"thanks_notes"</span>: [
+  <span class="k">"total_posts_completed"</span>: <span class="n">12</span>,
+  <span class="k">"total_items_given"</span>: <span class="n">45</span>,
+  <span class="k">"total_items_received"</span>: <span class="n">3</span>,
+  <span class="k">"total_thanks_received"</span>: <span class="n">23</span>,
+  <span class="k">"rating_avg"</span>: <span class="n">4.7</span>,
+  <span class="k">"rating_count"</span>: <span class="n">23</span>,
+  <span class="k">"recent_thanks"</span>: [
     {
-      <span class="k">"from_user"</span>: { <span class="k">"name"</span>: <span class="s">"Minh Tuấn"</span>, <span class="k">"avatar_url"</span>: <span class="s">"..."</span> },
+      <span class="k">"id"</span>: <span class="s">"uuid-thanks"</span>,
+      <span class="k">"from_user_id"</span>: <span class="s">"uuid-receiver"</span>,
+      <span class="k">"from_user_name"</span>: <span class="s">"Minh Tuấn"</span>,
+      <span class="k">"avatar_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
       <span class="k">"message"</span>: <span class="s">"Cảm ơn bạn rất nhiều..."</span>,
-      <span class="k">"item_title"</span>: <span class="s">"Bánh mì thịt"</span>,
+      <span class="k">"reaction_emoji"</span>: <span class="s">"❤️"</span>,
       <span class="k">"created_at"</span>: <span class="s">"2026-04-20T08:00:00Z"</span>
     }
   ]
@@ -673,12 +764,41 @@
       </div>
       <div class="endpoint-body">
         <div class="screen-source">Screen 2.1.3a — Messages (Receiver View)</div>
-        <p class="endpoint-desc">Returns the authenticated user's claim history, filterable by status.</p>
+        <p class="endpoint-desc">Returns the authenticated user's claim history, filterable by status. Supports pagination via <code>limit</code> and <code>offset</code>.</p>
         <div class="params-title">Query Parameters</div>
         <table class="param-table">
           <tr><th>Param</th><th>Type</th><th>Required</th><th>Description</th></tr>
-          <tr><td class="param-name">status</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td><div class="enum-list"><span class="enum-val">active</span><span class="enum-val">completed</span><span class="enum-val">cancelled</span></div></td></tr>
+          <tr><td class="param-name">limit</td><td class="param-type">int</td><td><span class="optional">optional</span></td><td>Results per page (default: 20, max: 100)</td></tr>
+          <tr><td class="param-name">offset</td><td class="param-type">int</td><td><span class="optional">optional</span></td><td>Pagination offset (default: 0)</td></tr>
+          <tr><td class="param-name">status</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td><div class="enum-list"><span class="enum-val">pending</span><span class="enum-val">confirmed</span><span class="enum-val">picked_up</span><span class="enum-val">no_show</span><span class="enum-val">cancelled</span><span class="enum-val">completed</span></div></td></tr>
         </table>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"total"</span>: <span class="n">8</span>,
+  <span class="k">"claims"</span>: [
+    {
+      <span class="k">"claim_id"</span>: <span class="s">"uuid-claim"</span>,
+      <span class="k">"status"</span>: <span class="s">"confirmed"</span>,
+      <span class="k">"quantity"</span>: <span class="n">1</span>,
+      <span class="k">"pickup_code"</span>: <span class="s">"4286"</span>,
+      <span class="k">"created_at"</span>: <span class="s">"2026-04-28T08:00:00Z"</span>,
+      <span class="k">"confirmed_at"</span>: <span class="s">"2026-04-28T08:01:00Z"</span>,
+      <span class="k">"post"</span>: {
+        <span class="k">"id"</span>: <span class="s">"uuid-post"</span>,
+        <span class="k">"title"</span>: <span class="s">"Bánh mì thịt"</span>,
+        <span class="k">"category"</span>: <span class="s">"food"</span>,
+        <span class="k">"image"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+        <span class="k">"status"</span>: <span class="s">"active"</span>
+      },
+      <span class="k">"giver"</span>: {
+        <span class="k">"id"</span>: <span class="s">"uuid-giver"</span>,
+        <span class="k">"name"</span>: <span class="s">"Bento Cooky"</span>,
+        <span class="k">"avatar_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+        <span class="k">"is_verified"</span>: <span class="b">true</span>
+      }
+    }
+  ]
+}</div>
       </div>
     </div>
 
@@ -693,6 +813,25 @@
       <div class="endpoint-body">
         <div class="screen-source">Screen 2.3.3 — Manage Organizations</div>
         <p class="endpoint-desc">Returns all non-profit/mutual-aid organisations managed by the authenticated user.</p>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">[
+  {
+    <span class="k">"id"</span>: <span class="s">"uuid-org"</span>,
+    <span class="k">"owner_user_id"</span>: <span class="s">"uuid-user"</span>,
+    <span class="k">"name"</span>: <span class="s">"Hội từ thiện Quận 1"</span>,
+    <span class="k">"category"</span>: <span class="s">"social"</span>,
+    <span class="k">"logo_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+    <span class="k">"phone"</span>: <span class="s">"0901111222"</span>,
+    <span class="k">"description"</span>: <span class="s">"Hỗ trợ người có hoàn cảnh khó khăn"</span>,
+    <span class="k">"address"</span>: <span class="s">"45 Nguyễn Trãi"</span>,
+    <span class="k">"contact_person_name"</span>: <span class="s">"Trần Thị B"</span>,
+    <span class="k">"city"</span>: <span class="s">"hcmc"</span>,
+    <span class="k">"verification_status"</span>: <span class="s">"pending_review"</span>,
+    <span class="k">"is_active"</span>: <span class="b">true</span>,
+    <span class="k">"created_at"</span>: <span class="s">"2026-04-01T00:00:00Z"</span>,
+    <span class="k">"updated_at"</span>: <span class="s">"2026-04-28T00:00:00Z"</span>
+  }
+]</div>
       </div>
     </div>
 
@@ -705,18 +844,20 @@
       </div>
       <div class="endpoint-body">
         <div class="screen-source">Screen 2.3.4 — Add Organization</div>
-        <p class="endpoint-desc">Submits a new organisation for admin review. Status starts as <code>pending</code>. Review takes 1–3 business days.</p>
+        <p class="endpoint-desc">Submits a new organisation for admin review. <code>verification_status</code> defaults to <code>pending_review</code>, <code>is_active</code> defaults to <code>true</code>, <code>owner_user_id</code> is set to the caller. Review takes 1–3 business days.</p>
         <div class="params-title">Request Body</div>
         <table class="param-table">
           <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
-          <tr><td class="param-name">name</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Organisation name</td></tr>
-          <tr><td class="param-name">type</td><td class="param-type">string</td><td><span class="required">required</span></td><td><div class="enum-list"><span class="enum-val">food_bank</span><span class="enum-val">mutual_aid</span><span class="enum-val">shelter</span><span class="enum-val">other</span></div></td></tr>
-          <tr><td class="param-name">mission</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Mission statement / description</td></tr>
-          <tr><td class="param-name">address</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Operating address</td></tr>
-          <tr><td class="param-name">phone</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Contact phone</td></tr>
+          <tr><td class="param-name">name</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Organisation name, max 200 chars</td></tr>
+          <tr><td class="param-name">category</td><td class="param-type">string</td><td><span class="required">required</span></td><td><div class="enum-list"><span class="enum-val">social</span><span class="enum-val">educational</span><span class="enum-val">healthcare</span><span class="enum-val">environmental</span><span class="enum-val">other</span></div></td></tr>
           <tr><td class="param-name">logo_url</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>URL from <code>POST /uploads</code></td></tr>
-          <tr><td class="param-name">photo_urls</td><td class="param-type">string[]</td><td><span class="optional">optional</span></td><td>Operational photos (proof of legitimacy)</td></tr>
-          <tr><td class="param-name">registration_doc_url</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>PDF registration document</td></tr>
+          <tr><td class="param-name">phone</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Contact phone, max 15 chars</td></tr>
+          <tr><td class="param-name">description</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Mission statement / about</td></tr>
+          <tr><td class="param-name">address</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Operating address</td></tr>
+          <tr><td class="param-name">contact_person_name</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Name of primary contact person</td></tr>
+          <tr><td class="param-name">latitude</td><td class="param-type">float</td><td><span class="optional">optional</span></td><td>Location latitude</td></tr>
+          <tr><td class="param-name">longitude</td><td class="param-type">float</td><td><span class="optional">optional</span></td><td>Location longitude</td></tr>
+          <tr><td class="param-name">city</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>City slug</td></tr>
         </table>
       </div>
     </div>
@@ -729,7 +870,21 @@
         <span class="auth-badge">AUTH</span>
       </div>
       <div class="endpoint-body">
-        <p class="endpoint-desc">Updates an owned organisation. Changes to <code>name</code> or <code>address</code> reset verification status to <code>pending</code>.</p>
+        <p class="endpoint-desc">Partial update of an owned organisation — all fields are optional. Returns <strong>403 forbidden</strong> if the caller is not <code>owner_user_id</code>. <code>verification_status</code> is admin-only and cannot be changed via this endpoint.</p>
+        <div class="params-title">Request Body (all optional)</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td class="param-name">name</td><td class="param-type">string</td><td>Organisation name, max 200 chars</td></tr>
+          <tr><td class="param-name">category</td><td class="param-type">string</td><td><div class="enum-list"><span class="enum-val">social</span><span class="enum-val">educational</span><span class="enum-val">healthcare</span><span class="enum-val">environmental</span><span class="enum-val">other</span></div></td></tr>
+          <tr><td class="param-name">logo_url</td><td class="param-type">string</td><td>URL from <code>POST /uploads</code></td></tr>
+          <tr><td class="param-name">phone</td><td class="param-type">string</td><td>Contact phone, max 15 chars</td></tr>
+          <tr><td class="param-name">description</td><td class="param-type">string</td><td>Mission statement / about</td></tr>
+          <tr><td class="param-name">address</td><td class="param-type">string</td><td>Operating address</td></tr>
+          <tr><td class="param-name">contact_person_name</td><td class="param-type">string</td><td>Name of primary contact person</td></tr>
+          <tr><td class="param-name">latitude</td><td class="param-type">float</td><td>Location latitude</td></tr>
+          <tr><td class="param-name">longitude</td><td class="param-type">float</td><td>Location longitude</td></tr>
+          <tr><td class="param-name">city</td><td class="param-type">string</td><td>City slug</td></tr>
+        </table>
       </div>
     </div>
   </div>
@@ -752,6 +907,32 @@
       <div class="endpoint-body">
         <div class="screen-source">Screens 2.1.4a, 2.1.4c — Profile</div>
         <p class="endpoint-desc">Returns the authenticated user's full profile including stats, rating, and identity list (personal + businesses + organisations).</p>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"id"</span>: <span class="s">"uuid-user"</span>,
+  <span class="k">"phone"</span>: <span class="s">"0901234567"</span>,
+  <span class="k">"email"</span>: <span class="s">"user@example.com"</span>,
+  <span class="k">"name"</span>: <span class="s">"Nguyễn Văn A"</span>,
+  <span class="k">"avatar_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+  <span class="k">"bio"</span>: <span class="s">"Yêu thích chia sẻ"</span>,
+  <span class="k">"role_type"</span>: <span class="s">"giver"</span>,
+  <span class="k">"giver_type"</span>: <span class="s">"business"</span>,
+  <span class="k">"receiver_type"</span>: <span class="s">"personal"</span>,
+  <span class="k">"is_verified"</span>: <span class="b">true</span>,
+  <span class="k">"rating_avg"</span>: <span class="n">4.7</span>,
+  <span class="k">"rating_count"</span>: <span class="n">23</span>,
+  <span class="k">"city"</span>: <span class="s">"hcmc"</span>,
+  <span class="k">"address"</span>: <span class="s">"Quận 1"</span>,
+  <span class="k">"created_at"</span>: <span class="s">"2026-01-01T00:00:00Z"</span>,
+  <span class="k">"stats"</span>: {
+    <span class="k">"total_posts"</span>: <span class="n">12</span>,
+    <span class="k">"total_claims"</span>: <span class="n">3</span>,
+    <span class="k">"total_thanks_received"</span>: <span class="n">23</span>
+  },
+  <span class="k">"identity_list"</span>: [
+    { <span class="k">"provider"</span>: <span class="s">"google"</span>, <span class="k">"email"</span>: <span class="s">"user@gmail.com"</span>, <span class="k">"created_at"</span>: <span class="s">"2026-01-01T00:00:00Z"</span> }
+  ]
+}</div>
       </div>
     </div>
 
@@ -764,16 +945,21 @@
       </div>
       <div class="endpoint-body">
         <div class="screen-source">Screen 2.1.4d — Settings</div>
-        <p class="endpoint-desc">Updates the authenticated user's profile fields.</p>
+        <p class="endpoint-desc">Updates the authenticated user's profile fields. Phone is not updatable here — phone changes go through the auth flow. Response is the same shape as <code>GET /me</code>.</p>
         <div class="params-title">Request Body (all optional)</div>
         <table class="param-table">
           <tr><th>Field</th><th>Type</th><th>Description</th></tr>
           <tr><td class="param-name">name</td><td class="param-type">string</td><td>Display name</td></tr>
           <tr><td class="param-name">avatar_url</td><td class="param-type">string</td><td>URL from <code>POST /uploads</code></td></tr>
           <tr><td class="param-name">bio</td><td class="param-type">string</td><td>Short bio</td></tr>
-          <tr><td class="param-name">address</td><td class="param-type">string</td><td>Home area (not exact, used for proximity)</td></tr>
           <tr><td class="param-name">email</td><td class="param-type">string</td><td>Email address</td></tr>
-          <tr><td class="param-name">language</td><td class="param-type">string</td><td><div class="enum-list"><span class="enum-val">vi</span><span class="enum-val">en</span></div></td></tr>
+          <tr><td class="param-name">role_type</td><td class="param-type">string</td><td><div class="enum-list"><span class="enum-val">giver</span><span class="enum-val">receiver</span><span class="enum-val">both</span></div></td></tr>
+          <tr><td class="param-name">giver_type</td><td class="param-type">string</td><td><div class="enum-list"><span class="enum-val">personal</span><span class="enum-val">business</span></div></td></tr>
+          <tr><td class="param-name">receiver_type</td><td class="param-type">string</td><td><div class="enum-list"><span class="enum-val">personal</span><span class="enum-val">organization</span></div></td></tr>
+          <tr><td class="param-name">address</td><td class="param-type">string</td><td>Home area (used for proximity)</td></tr>
+          <tr><td class="param-name">latitude</td><td class="param-type">float</td><td>Location latitude</td></tr>
+          <tr><td class="param-name">longitude</td><td class="param-type">float</td><td>Location longitude</td></tr>
+          <tr><td class="param-name">city</td><td class="param-type">string</td><td>City slug</td></tr>
         </table>
       </div>
     </div>
@@ -788,7 +974,35 @@
       </div>
       <div class="endpoint-body">
         <div class="screen-source">Screens 2.1.3a, 2.1.3b — Messages (Receiver + Giver Views)</div>
-        <p class="endpoint-desc">Returns a list of all message threads for the current user, grouped by claim. Each thread shows the last message preview and unread count. Response adapts based on whether the user is the giver or receiver in each claim.</p>
+        <p class="endpoint-desc">Returns a list of all message threads for the current user, grouped by claim. Each thread shows the last message preview and unread count. Threads with no messages return <code>last_message: null</code> and sort last.</p>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"total"</span>: <span class="n">3</span>,
+  <span class="k">"conversations"</span>: [
+    {
+      <span class="k">"claim_id"</span>: <span class="s">"uuid-claim"</span>,
+      <span class="k">"claim_status"</span>: <span class="s">"confirmed"</span>,
+      <span class="k">"post"</span>: {
+        <span class="k">"id"</span>: <span class="s">"uuid-post"</span>,
+        <span class="k">"title"</span>: <span class="s">"Bánh mì thịt"</span>,
+        <span class="k">"image"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>
+      },
+      <span class="k">"peer"</span>: {
+        <span class="k">"id"</span>: <span class="s">"uuid-giver"</span>,
+        <span class="k">"name"</span>: <span class="s">"Bento Cooky"</span>,
+        <span class="k">"avatar_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+        <span class="k">"is_verified"</span>: <span class="b">true</span>
+      },
+      <span class="k">"last_message"</span>: {
+        <span class="k">"content"</span>: <span class="s">"Bạn đến lúc 8h nhé"</span>,
+        <span class="k">"sender_id"</span>: <span class="s">"uuid-giver"</span>,
+        <span class="k">"is_read"</span>: <span class="b">false</span>,
+        <span class="k">"created_at"</span>: <span class="s">"2026-04-28T07:45:00Z"</span>
+      },
+      <span class="k">"unread_count"</span>: <span class="n">1</span>
+    }
+  ]
+}</div>
       </div>
     </div>
 
@@ -800,8 +1014,27 @@
         <span class="auth-badge">AUTH</span>
       </div>
       <div class="endpoint-body">
-        <p class="endpoint-desc">Returns all messages in a claim's chat thread, ordered by <code>created_at</code> ascending. User must be either the giver or the receiver of the claim.</p>
+        <p class="endpoint-desc">Returns all messages in a claim's chat thread, ordered by <code>created_at</code> ascending. User must be either the giver or the receiver of the claim. Side effect: marks the peer's unread messages as read on each fetch.</p>
         <div class="info-box">For real-time messaging, connect to the WebSocket endpoint: <code>wss://api.thanks.vn/ws/claims/:claim_id?token=&lt;jwt&gt;</code></div>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"claim_id"</span>: <span class="s">"uuid-claim"</span>,
+  <span class="k">"peer"</span>: {
+    <span class="k">"id"</span>: <span class="s">"uuid-giver"</span>,
+    <span class="k">"name"</span>: <span class="s">"Bento Cooky"</span>,
+    <span class="k">"avatar_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+    <span class="k">"is_verified"</span>: <span class="b">true</span>
+  },
+  <span class="k">"messages"</span>: [
+    {
+      <span class="k">"id"</span>: <span class="s">"uuid-msg"</span>,
+      <span class="k">"sender_id"</span>: <span class="s">"uuid-receiver"</span>,
+      <span class="k">"content"</span>: <span class="s">"Chào bạn, mình đến lúc 8h30 nhé"</span>,
+      <span class="k">"is_read"</span>: <span class="b">true</span>,
+      <span class="k">"created_at"</span>: <span class="s">"2026-04-28T07:30:00Z"</span>
+    }
+  ]
+}</div>
       </div>
     </div>
 
@@ -818,8 +1051,16 @@
         <div class="params-title">Request Body</div>
         <table class="param-table">
           <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
-          <tr><td class="param-name">content</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Message text, max 1000 chars</td></tr>
+          <tr><td class="param-name">content</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Message text, min 1 char, max 2000 chars</td></tr>
         </table>
+        <div class="code-label">Example Response — 201 Created</div>
+        <div class="code-block">{
+  <span class="k">"id"</span>: <span class="s">"uuid-msg-new"</span>,
+  <span class="k">"sender_id"</span>: <span class="s">"uuid-user"</span>,
+  <span class="k">"content"</span>: <span class="s">"Mình đến lúc 8h30 nhé"</span>,
+  <span class="k">"is_read"</span>: <span class="b">false</span>,
+  <span class="k">"created_at"</span>: <span class="s">"2026-04-28T08:00:00Z"</span>
+}</div>
       </div>
     </div>
 
@@ -833,12 +1074,20 @@
       </div>
       <div class="endpoint-body">
         <div class="screen-source">Post-pickup flow</div>
-        <p class="endpoint-desc">Submits a star rating and optional comment for the other party in a completed claim. Givers rate receivers; receivers rate givers. Only allowed once per claim per user. Updates the rated user's <code>rating_avg</code>.</p>
+        <p class="endpoint-desc">Submits a star rating and optional comment for the other party in a completed claim. Givers rate receivers; receivers rate givers. Only allowed once per claim per user (UNIQUE constraint). Updates the rated user's <code>rating_avg</code>.</p>
         <div class="params-title">Request Body</div>
         <table class="param-table">
           <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
           <tr><td class="param-name">score</td><td class="param-type">int</td><td><span class="required">required</span></td><td>1–5 star rating</td></tr>
-          <tr><td class="param-name">comment</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Optional written note, max 500 chars</td></tr>
+          <tr><td class="param-name">comment</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Optional written note (no max length currently enforced)</td></tr>
+        </table>
+        <div class="params-title">Errors</div>
+        <table class="param-table">
+          <tr><th>Status</th><th>Error Code</th><th>When</th></tr>
+          <tr><td><span class="param-type">409</span></td><td class="param-name">already_rated</td><td>Caller has already rated this claim (UNIQUE per claim + rater)</td></tr>
+          <tr><td><span class="param-type">409</span></td><td class="param-name">claim_not_ratable</td><td>Claim status is not <code>picked_up</code> or <code>completed</code></td></tr>
+          <tr><td><span class="param-type">403</span></td><td class="param-name">forbidden</td><td>Caller is not the giver or receiver of this claim</td></tr>
+          <tr><td><span class="param-type">404</span></td><td class="param-name">claim_not_found</td><td>Claim ID does not exist</td></tr>
         </table>
       </div>
     </div>
