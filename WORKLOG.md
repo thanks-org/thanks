@@ -29,44 +29,8 @@
 
 ## 📋 Backlog
 
-### Backend (`thanks-backend`)
-| Task | Priority | Ghi chú |
-|------|----------|---------|
-| Auth API — POST /auth/otp/send | 🔴 high | Xem api_and_doc/api_doc.html |
-| Auth API — POST /auth/otp/verify | 🔴 high | |
-| Auth API — POST /auth/social (Zalo/GG/FB/Apple) | 🔴 high | |
-| Posts API — GET /posts (browse feed) | 🔴 high | Có filter category, lat/lng |
-| Posts API — POST /posts (create) | 🔴 high | |
-| Posts API — GET /posts/:id | 🟡 medium | |
-| Claims API — POST /posts/:id/claims | 🔴 high | Tạo pickup code 4 số |
-| Claims API — DELETE /claims/:id | 🟡 medium | |
-| Messages API — GET + POST /messages | 🟡 medium | |
-| File Upload API — POST /uploads | 🟡 medium | |
-| Ratings API — POST /claims/:id/ratings | 🟡 medium | |
-| Leaderboard API — GET /leaderboard | 🟢 low | |
-| Businesses API — CRUD | 🟡 medium | |
-| Organizations API — CRUD | 🟢 low | |
-
-### App (`thanks-app`)
-| Task | Priority | Ghi chú |
-|------|----------|---------|
-| Auth screens — phone + OTP | 🔴 high | Screen 2.1.5, 2.1.6 |
-| Item Detail screen | 🔴 high | Screen 2.4.1 |
-| Claim Confirmed screen | 🔴 high | Screen 2.4.2 — pickup code |
-| Submit Item screen — Step 1 | 🔴 high | Screen 2.2.7 |
-| Submit Item screen — Step 2 | 🔴 high | Screen 2.2.8 |
-| Givers Leaderboard screen | 🟡 medium | Screen 2.1.2 |
-| Messages screen (Receiver view) | 🟡 medium | Screen 2.1.3a |
-| Messages screen (Giver view) | 🟡 medium | Screen 2.1.3b |
-| Profile screen | 🟡 medium | Screen 2.1.4a/c |
-| Connect Home Feed to real API | 🟡 medium | Thay mock data bằng API call |
-
-### Infra (`thanks-infra`)
-| Task | Priority | Ghi chú |
-|------|----------|---------|
-| Setup staging server (Railway/Fly.io) | 🟡 medium | Auto-deploy từ develop branch |
-| CI/CD pipeline (GitHub Actions) | 🟡 medium | Build + test khi push |
-| Push notification setup (FCM) | 🟢 low | |
+> **Backlog đầy đủ đã chuyển sang [`TASKS.md`](TASKS.md)** — chia theo phase, người phụ trách, và dependencies.
+> File này chỉ track **In Progress** và **Done**.
 
 ---
 
