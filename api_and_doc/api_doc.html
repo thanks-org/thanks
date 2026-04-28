@@ -737,6 +737,16 @@
     <span class="k">"response_time_estimate"</span>: <span class="s">"Usually responds within 1 hour"</span>
   }
 }</div>
+        <div class="params-title">Error Responses</div>
+        <table class="param-table">
+          <tr><th>HTTP</th><th>Code</th><th>Description</th></tr>
+          <tr><td><span class="param-type">404</span></td><td class="param-name">post_not_found</td><td>Post does not exist</td></tr>
+          <tr><td><span class="param-type">422</span></td><td class="param-name">post_not_claimable</td><td>Post status is not <code>active</code> (e.g. closed, cancelled, expired)</td></tr>
+          <tr><td><span class="param-type">403</span></td><td class="param-name">self_claim</td><td>Cannot claim your own post</td></tr>
+          <tr><td><span class="param-type">422</span></td><td class="param-name">insufficient_quantity</td><td>Requested <code>quantity</code> exceeds <code>quantity_remaining</code></td></tr>
+          <tr><td><span class="param-type">409</span></td><td class="param-name">already_claimed</td><td>Caller already has a claim on this post (UNIQUE post_id+user_id)</td></tr>
+        </table>
+        <div class="info-box">Concurrency: server uses <code>SELECT … FOR UPDATE</code> on the post row inside a transaction, so simultaneous claims won't race past <code>quantity_remaining</code>. A <code>notification</code> row (type=<code>claim_created</code>) is written for the giver in the same TX — FCM (I4-1) consumes it.</div>
       </div>
     </div>
 
@@ -750,7 +760,16 @@
       </div>
       <div class="endpoint-body">
         <div class="screen-source">Screen 2.4.2 — Claim Confirmed (Cancel claim link)</div>
-        <p class="endpoint-desc">Cancels the authenticated receiver's claim. Restores <code>quantity_remaining</code> on the post. Only allowed while status is <code>pending</code> or <code>confirmed</code>.</p>
+        <p class="endpoint-desc">Cancels the authenticated receiver's claim. Restores <code>quantity_remaining</code> on the post atomically (TX with <code>FOR UPDATE</code> on the claim row). Only the receiver who created the claim may cancel.</p>
+        <div class="code-label">Response — 204 No Content</div>
+        <div class="code-block">(empty body)</div>
+        <div class="params-title">Error Responses</div>
+        <table class="param-table">
+          <tr><th>HTTP</th><th>Code</th><th>Description</th></tr>
+          <tr><td><span class="param-type">404</span></td><td class="param-name">claim_not_found</td><td>Claim ID does not exist</td></tr>
+          <tr><td><span class="param-type">403</span></td><td class="param-name">forbidden</td><td>Caller is not the receiver who created this claim</td></tr>
+          <tr><td><span class="param-type">409</span></td><td class="param-name">claim_not_cancellable</td><td>Claim status is not <code>pending</code> or <code>confirmed</code> (already cancelled / picked up / completed)</td></tr>
+        </table>
       </div>
     </div>
 
