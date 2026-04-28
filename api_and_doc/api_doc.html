@@ -590,24 +590,27 @@
         <div class="screen-source">Screen 2.2.5 — Manage Businesses</div>
         <p class="endpoint-desc">Returns all business identities owned by the authenticated user, with verification status.</p>
         <div class="code-label">Example Response — 200 OK</div>
-        <div class="code-block">[
-  {
-    <span class="k">"id"</span>: <span class="s">"uuid-biz"</span>,
-    <span class="k">"owner_user_id"</span>: <span class="s">"uuid-user"</span>,
-    <span class="k">"name"</span>: <span class="s">"Bento Cooky"</span>,
-    <span class="k">"category"</span>: <span class="s">"restaurant"</span>,
-    <span class="k">"logo_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
-    <span class="k">"phone"</span>: <span class="s">"0901234567"</span>,
-    <span class="k">"description"</span>: <span class="s">"Cơm văn phòng ngon"</span>,
-    <span class="k">"address"</span>: <span class="s">"123 Lê Lợi"</span>,
-    <span class="k">"address_detail"</span>: <span class="s">"Tầng 2"</span>,
-    <span class="k">"city"</span>: <span class="s">"hcmc"</span>,
-    <span class="k">"verification_status"</span>: <span class="s">"approved"</span>,
-    <span class="k">"is_active"</span>: <span class="b">true</span>,
-    <span class="k">"created_at"</span>: <span class="s">"2026-04-01T00:00:00Z"</span>,
-    <span class="k">"updated_at"</span>: <span class="s">"2026-04-28T00:00:00Z"</span>
-  }
-]</div>
+        <div class="code-block">{
+  <span class="k">"total"</span>: <span class="n">1</span>,
+  <span class="k">"businesses"</span>: [
+    {
+      <span class="k">"id"</span>: <span class="s">"uuid-biz"</span>,
+      <span class="k">"owner_user_id"</span>: <span class="s">"uuid-user"</span>,
+      <span class="k">"name"</span>: <span class="s">"Bento Cooky"</span>,
+      <span class="k">"category"</span>: <span class="s">"restaurant"</span>,
+      <span class="k">"logo_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+      <span class="k">"phone"</span>: <span class="s">"0901234567"</span>,
+      <span class="k">"description"</span>: <span class="s">"Cơm văn phòng ngon"</span>,
+      <span class="k">"address"</span>: <span class="s">"123 Lê Lợi"</span>,
+      <span class="k">"address_detail"</span>: <span class="s">"Tầng 2"</span>,
+      <span class="k">"city"</span>: <span class="s">"hcmc"</span>,
+      <span class="k">"verification_status"</span>: <span class="s">"approved"</span>,
+      <span class="k">"is_active"</span>: <span class="b">true</span>,
+      <span class="k">"created_at"</span>: <span class="s">"2026-04-01T00:00:00Z"</span>,
+      <span class="k">"updated_at"</span>: <span class="s">"2026-04-28T00:00:00Z"</span>
+    }
+  ]
+}</div>
       </div>
     </div>
 
