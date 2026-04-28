@@ -95,9 +95,9 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| F2-1 | Upload service (chọn ảnh, upload lên R2/S3 qua POST /uploads) | Luân | [ ] | Phụ thuộc B4-1 |
-| F2-2 | Screen 2.2.7 — Submit Item Step 1 (ảnh, title, description) | Đức | [ ] | Phụ thuộc F2-1 |
-| F2-3 | Screen 2.2.8 — Submit Item Step 2 (category, quantity, pickup, location) | Đức | [ ] | Phụ thuộc F2-2, B4-2 |
+| F2-1 | Upload service (chọn ảnh, upload lên R2/S3 qua POST /uploads) | ~~Luân~~ TrungVT | [x] | [81ff436](https://github.com/thanks-org/thanks-app/commit/81ff436) — image_picker dep + UploadService (multipart via dio FormData) |
+| F2-2 | Screen 2.2.7 — Submit Item Step 1 (ảnh, title, description) | ~~Đức~~ TrungVT | [x] | [37d6331](https://github.com/thanks-org/thanks-app/commit/37d6331) — SubmitItemDraft model + Step 1 screen |
+| F2-3 | Screen 2.2.8 — Submit Item Step 2 (category, quantity, pickup, location) | ~~Đức~~ TrungVT | [x] | [d65ee26](https://github.com/thanks-org/thanks-app/commit/d65ee26) — Step 2 + createPost API + Home FAB + ticker; **drift fix** [b82877f](https://github.com/thanks-org/thanks-backend/commit/b82877f)/[154b378](https://github.com/thanks-org/thanks-app/commit/154b378) align lat/lng + clothes/tech |
 | F2-4 | Screen 2.2.3 — My Items Personal | Đức | [ ] | Phụ thuộc B4-6 |
 | F2-5 | Screen 2.2.4 — My Items Business | Đức | [ ] | Phụ thuộc B4-6 |
 | F2-6 | Screen 2.4.3 — Who's Claimed (claimants list) | Đức | [ ] | Phụ thuộc B4-5 |
