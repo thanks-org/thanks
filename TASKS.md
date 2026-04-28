@@ -34,7 +34,7 @@
 #### [B1] Auth module
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| B1-1 | JWT middleware (Bearer token guard cho protected routes) | TrungVT | [~] | Làm trước — các task khác phụ thuộc; [thanks-backend PR #5](https://github.com/thanks-org/thanks-backend/pull/5) — chờ review/merge |
+| B1-1 | JWT middleware (Bearer token guard cho protected routes) | TrungVT | [x] | [cf01e25](https://github.com/thanks-org/thanks-backend/commit/cf01e25) — `auth.NewIssuer`, `middleware.RequireAuth`, 11 unit tests |
 | B1-2 | `POST /auth/otp/send` — gửi OTP qua SMS | Luân | [ ] | Dùng ESMS hoặc Twilio; lưu OTP vào Redis/DB có TTL 5 phút |
 | B1-3 | `POST /auth/otp/verify` — verify OTP, trả JWT, tạo user mới nếu chưa có | Luân | [ ] | Phụ thuộc B1-1 |
 | B1-4 | `POST /auth/logout` — invalidate token (denylist) | TrungVT | [ ] | Phụ thuộc B1-1 |

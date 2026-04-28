@@ -23,7 +23,7 @@
 
 | Task | Ai làm | Bắt đầu | Ghi chú |
 |------|--------|---------|---------|
-| B1-1 — JWT bearer middleware (auth, blocker cho Phase 1-3) | TrungVT | 2026-04-28 | [thanks-backend PR #5](https://github.com/thanks-org/thanks-backend/pull/5) — chờ review/merge |
+| _(trống)_ | | | |
 
 ---
 
@@ -53,3 +53,4 @@
 | Schema extension v2 — bổ sung businesses, organizations, auth_providers, sessions, device_tokens, notifications, thanks, post_schedules + extend users/posts/claims/ratings/messages cho khớp 26 prototype screens | Claude Code (vanlang) | 2026-04-28 | [PR #3](https://github.com/thanks-org/thanks-backend/pull/3) |
 | B2-1: `GET /api/v1/posts` — feed API (category filter, Haversine proximity, pagination) | Luân | 2026-04-28 | [d39d561](https://github.com/thanks-org/thanks-backend/commit/d39d561) |
 | B2-2: `GET /api/v1/posts/:id` — post detail (description, address, giver profile card) | Luân | 2026-04-28 | [46578f4](https://github.com/thanks-org/thanks-backend/commit/46578f4) |
+| B1-1 — JWT bearer middleware (`auth.NewIssuer`, `middleware.RequireAuth`, 11 unit tests; blocker cho toàn bộ B-* / F-* Phase 1-3) | TrungVT | 2026-04-28 | [cf01e25](https://github.com/thanks-org/thanks-backend/commit/cf01e25) |
