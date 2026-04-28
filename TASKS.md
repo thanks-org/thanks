@@ -35,8 +35,8 @@
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
 | B1-1 | JWT middleware (Bearer token guard cho protected routes) | TrungVT | [x] | [cf01e25](https://github.com/thanks-org/thanks-backend/commit/cf01e25) — `auth.NewIssuer`, `middleware.RequireAuth`, 11 unit tests |
-| B1-2 | `POST /auth/otp/send` — gửi OTP qua SMS | Luân | [ ] | Dùng ESMS hoặc Twilio; lưu OTP vào Redis/DB có TTL 5 phút |
-| B1-3 | `POST /auth/otp/verify` — verify OTP, trả JWT, tạo user mới nếu chưa có | Luân | [ ] | Phụ thuộc B1-1 |
+| B1-2 | `POST /auth/otp/send` — gửi OTP qua SMS | Luân | [-] | ⏸ Deferred — làm social auth (B6-1) trước; cần ESMS/Twilio account |
+| B1-3 | `POST /auth/otp/verify` — verify OTP, trả JWT, tạo user mới nếu chưa có | Luân | [-] | ⏸ Deferred — phụ thuộc B1-2 |
 | B1-4 | `POST /auth/logout` — invalidate token (denylist) | TrungVT | [x] | [20c376d](https://github.com/thanks-org/thanks-backend/commit/20c376d) — migration `revoked_tokens` + middleware check + 204 logout |
 
 #### [B2] Posts — browse & detail
@@ -142,7 +142,7 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| B6-1 | `POST /auth/social` — OAuth với Zalo/Google/Facebook/Apple | Hiếu | [ ] | Verify token với từng provider |
+| B6-1 | `POST /auth/social` — OAuth với Google/Apple (Zalo/Facebook sau) | Luân (reassign từ Hiếu) | [x] | Kéo lên Phase 1 — Google tokeninfo + Apple JWKS; migration phone nullable |
 | B6-2 | `GET /me/businesses` | Quang | [ ] | Phụ thuộc B1-1 |
 | B6-3 | `POST /businesses` — đăng ký business (status: pending) | Quang | [ ] | Phụ thuộc B1-1, B4-1 |
 | B6-4 | `PUT /businesses/:id` | Quang | [ ] | Phụ thuộc B1-1 |
