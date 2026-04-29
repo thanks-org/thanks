@@ -186,6 +186,47 @@
 
 ---
 
+## Phase 5 — Frontend Polish & Real Integration
+> Mục tiêu: 26 screens đã có nhưng nhiều flow vẫn là `SnackBar("Coming soon")`. Phase này wire các stub vào API/SDK đã sẵn để app dùng được end-to-end.
+> Audit gap: thực hiện 2026-04-29 sau khi dò 26 prototype HTML × Flutter screens — `WORKLOG.md` § 2026-04-29.
+
+### Backend — Phase 5
+
+| # | Task | Assignee | Status | Ghi chú |
+|---|------|----------|--------|---------|
+| B7-1 | `GET /me/notifications` — list notifications cho user (paginated, filter unread) | _unassigned_ | [ ] | Bảng `notifications` đã có (B3-1, B5-9 ghi); cần handler+repo. Block F5-5, F5-11 |
+| B7-2 | `GET /posts?q=...&sort=...` — search title/description + sort (distance/recent/expiring) | _unassigned_ | [ ] | Mở rộng B2-1 hiện có. Block F5-6, F5-9 |
+| B7-3 | `POST /me/notifications/:id/read` (hoặc bulk `POST /me/notifications/read`) — mark notification đã đọc | _unassigned_ | [ ] | Cho F5-5 unread badge clear |
+
+### Flutter — Phase 5
+
+| # | Task | Assignee | Status | Ghi chú |
+|---|------|----------|--------|---------|
+| F5-1 | Wire **"Nhắn tin"** trong Claim Confirmed → `MessageThreadScreen` | TrungVT | [~] | Hiện stub `SnackBar("Tính năng nhắn tin sẽ ra mắt sớm")`; `claim_confirmed_screen.dart:436-441`. Endpoint `POST /messages/claims/:id` đã sẵn (B5-9). |
+| F5-2 | **"Chỉ đường"** Claim Confirmed → mở Maps qua `url_launcher` | TrungVT | [~] | Hiện SnackBar stub `claim_confirmed_screen.dart:633-636`. iOS dùng `maps://?q=lat,lng`, Android `geo:lat,lng?q=...`. Cần thêm `url_launcher` dep. |
+| F5-3 | Item Detail **image carousel** (PageView + dot indicator) | TrungVT | [~] | Hiện chỉ `images.first` ở `item_detail_screen.dart:196-204`. API trả `images[]` đầy đủ. Prototype có "1/3" pager. |
+| F5-4 | Pickup code **copy-to-clipboard** (long-press 4-digit code block) | TrungVT | [~] | `claim_confirmed_screen.dart:_PickupCodeBlock`. UX critical, `Clipboard.setData(ClipboardData(text: code))` + SnackBar "Đã sao chép". |
+| F5-5 | **Notifications inbox** screen + bottom-nav badge thật | _unassigned_ | [ ] | Block B7-1, B7-3. Hiện badge "3" hardcode `main_scaffold.dart:43-50`. |
+| F5-6 | Search bar Home Feed wire vào API (`q` param) | _unassigned_ | [ ] | Block B7-2. Hiện `home_screen.dart:172` `onTap: () {}` rỗng. |
+| F5-7 | **Pull-to-refresh + pagination** Home Feed | _unassigned_ | [ ] | `RefreshIndicator` wrap CustomScrollView; cursor pagination dựa trên `offset`/`limit` của B2-1. |
+| F5-8 | Empty / error / loading skeleton states chuẩn hóa toàn app | _unassigned_ | [ ] | Phối hợp với D3 (Vũ). Hiện đa phần là `CircularProgressIndicator` đơn giản. |
+| F5-9 | Sort tabs Home Feed (Gần / Mới / Sắp hết / Đã đóng) wire backend | _unassigned_ | [ ] | Block B7-2. Hiện `home_screen.dart:267-291` chỉ đổi `_selectedSort`, không gọi API. |
+| F5-10 | Onboarding **role picker** (Receiver/Giver) ở Profile Logged Out (2.1.5) | _unassigned_ | [ ] | Hiện `sign_up_auth_method_screen.dart:128-168` hard-code "Người nhận"; cần chọn từ logged-out screen + pass intent vào sign-up. |
+| F5-11 | Bottom-nav messages **badge thật** từ unread_count API | _unassigned_ | [ ] | Block B7-1 (hoặc dùng count từ `GET /messages` summary). |
+| F5-12 | Pickup code **share** Claim Confirmed → `share_plus` dialog | _unassigned_ | [ ] | Hiện SnackBar stub `claim_confirmed_screen.dart:610-612`. |
+
+### Deferred — Phase 5
+> Block trên external dependencies, không vào sprint này.
+
+| # | Task | Block bởi | Ghi chú |
+|---|------|-----------|---------|
+| D5-A | AI suggest description / category trong Submit Item | AI service / endpoint chưa có | Prototype có "Regenerate" button; có thể bỏ khỏi MVP |
+| D5-B | Phone + OTP login wire | B1-2, B1-3 (Twilio/ESMS account) | F1-4 partial; phone button SnackBar "Coming soon" |
+| D5-C | Zalo / Facebook / Apple Sign-in native SDK | Provider keys chưa có | Google đã chạy thật; 3 còn lại SnackBar |
+| D5-D | Map widget thật trong Claim Confirmed (`google_maps_flutter`) | Maps API key + billing | Hiện gradient placeholder; F5-2 unblock "Chỉ đường" trước |
+
+---
+
 ## Dependency map (tóm tắt)
 
 ```
@@ -206,6 +247,12 @@ B1-2 + B1-3 (OTP)
 B4-1 (uploads)
   └── F2-1 (upload service)
         └── F2-2, F2-3 (submit item screens)
+
+B7-1 (GET /me/notifications)
+  └── F5-5 (notifications inbox), F5-11 (badge thật)
+
+B7-2 (search + sort params)
+  └── F5-6 (search bar), F5-9 (sort tabs)
 ```
 
 ---

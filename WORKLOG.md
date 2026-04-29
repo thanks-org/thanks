@@ -23,7 +23,7 @@
 
 | Task | Ai làm | Bắt đầu | Ghi chú |
 |------|--------|---------|---------|
-| _(trống)_ | | | |
+| F5-1..F5-4 — Phase 5 P0 frontend wiring (Claim Confirmed nhắn tin nav, "Chỉ đường" url_launcher, Item Detail image carousel, pickup code copy-to-clipboard) | TrungVT | 2026-04-29 | Audit gap 26 prototype × Flutter screens hôm nay; tất cả backend endpoints đã có sẵn (B5-9 messages, claim images[], etc.), chỉ là wire UI. Phase 5 bổ sung TASKS.md cùng commit này. |
 
 ---
 
