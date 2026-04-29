@@ -215,6 +215,13 @@
 | F5-11 | Bottom-nav messages **badge thật** từ unread_count API | TrungVT | [x] | Done [c1873da](https://github.com/thanks-org/thanks-app/commit/c1873da): `MainScaffold` polls every 30s, sums `unread_count` across conversations (no total_unread field), badge 1-99 or "99+", no badge when 0, silent auth-failure fallback. |
 | F5-12 | Pickup code **share** Claim Confirmed → `share_plus` dialog | TrungVT | [x] | Done [4b1ebdb](https://github.com/thanks-org/thanks-app/commit/4b1ebdb): `share_plus ^10.1.0` (resolved 10.1.4); `Share.share` với text VN gồm title + pickup code + (optional) pickup window/address; iPad fallback `sharePositionOrigin = screen center`. |
 
+### Backend — Extra (Public Profile endpoints)
+
+| # | Task | Assignee | Status | Ghi chú |
+|---|------|----------|--------|---------|
+| B-extra-1 | `GET /users/:id/posts` — list posts by a user (public profile page, no auth) | TrungVT (sonnet exec) | [x] | Done [5a22e03](https://github.com/thanks-org/thanks-backend/commit/5a22e03) — keyset cursor pagination, status filter (default active+completed), `{items, next_cursor, total}` shape. |
+| B-extra-2 | `GET /users/:id/ratings` — list ratings received by a user (public, no auth) | TrungVT (sonnet exec) | [x] | Done [5a22e03](https://github.com/thanks-org/thanks-backend/commit/5a22e03) — keyset cursor pagination, rater+post context joined, aggregate `summary {average, total}`. |
+
 ### Deferred — Phase 5
 > Block trên external dependencies, không vào sprint này.
 

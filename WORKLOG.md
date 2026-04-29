@@ -37,6 +37,7 @@
 
 | Task | Ai làm | Ngày xong | Commit / PR |
 |------|--------|-----------|-------------|
+| B-extra-1 + B-extra-2 — `GET /users/:id/posts` + `GET /users/:id/ratings` cho Giver Public Profile screen. Keyset cursor pagination (base64 created_at), status filter, rater+post join, aggregate summary. Docs updated in api_doc.html. | TrungVT (sonnet exec) | 2026-04-29 | [5a22e03](https://github.com/thanks-org/thanks-backend/commit/5a22e03) |
 | Hotfix F-bugfix-3 — "Xem tất cả →" Givers screen mất bottom nav (Navigator.push thay vì switch tab) | TrungVT (sonnet exec) | 2026-04-29 | [0589d76](https://github.com/thanks-org/thanks-app/commit/0589d76) |
 | Hotfix F-bugfix-2 — Top Givers section: card onTap + "Xem tất cả →" + real leaderboard API (was using mockTopGivers) | TrungVT (sonnet exec) | 2026-04-29 | [ad8f416](https://github.com/thanks-org/thanks-app/commit/ad8f416) |
 | Hotfix F-bugfix-1 — Claim Confirmed Container negative-margin assertion crash (header rendered green, body all red ErrorWidget on iOS device) — root cause: `_PickupCodeBlock` Container had literal `margin: EdgeInsets.fromLTRB(18, -18, 18, 0)` triggering Flutter's `margin.isNonNegative` assertion; fix: replaced negative top margin with `Transform.translate(offset: Offset(0, -18))` wrapping the Container | TrungVT (sonnet exec) | 2026-04-29 | [5bed0b0](https://github.com/thanks-org/thanks-app/commit/5bed0b0) |

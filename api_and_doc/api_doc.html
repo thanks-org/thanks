@@ -143,6 +143,8 @@
     <a href="#posts-get"><span class="method-badge m-GET">GET</span>Post Detail</a>
     <a href="#leaderboard"><span class="method-badge m-GET">GET</span>Leaderboard</a>
     <a href="#users-public"><span class="method-badge m-GET">GET</span>Public Profile</a>
+    <a href="#users-posts"><span class="method-badge m-GET">GET</span>User Posts</a>
+    <a href="#users-ratings"><span class="method-badge m-GET">GET</span>User Ratings</a>
   </div>
 
   <div class="sidebar-section">
@@ -438,6 +440,78 @@
           <tr><td class="param-name">organizations</td><td class="param-type">object[]</td><td>Only present when <code>receiver_type=organization</code>. Fields: id, name, category, logo_url, description, address, city, is_verified</td></tr>
           <tr><td class="param-name">created_at</td><td class="param-type">datetime</td><td>Account creation timestamp</td></tr>
         </table>
+      </div>
+    </div>
+
+    <!-- User Posts (public) -->
+    <div class="endpoint" id="users-posts">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/users/:id/posts</span>
+        <span class="endpoint-summary">List posts by a user (public profile page)</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">B-extra-1 — Giver Public Profile screen</div>
+        <p class="endpoint-desc">Returns publicly-visible posts created by the given user. Only <code>active</code> and <code>completed</code> statuses are exposed (no drafts or archived). No auth required.</p>
+        <div class="params-title">Query Parameters</div>
+        <table class="param-table">
+          <tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr>
+          <tr><td class="param-name">status</td><td class="param-type">string</td><td>active,completed</td><td>Comma-separated status filter. Allowed values: <div class="enum-list"><span class="enum-val">active</span><span class="enum-val">completed</span></div></td></tr>
+          <tr><td class="param-name">limit</td><td class="param-type">int</td><td>20</td><td>Max items per page (max 50)</td></tr>
+          <tr><td class="param-name">cursor</td><td class="param-type">string</td><td>—</td><td>Opaque pagination cursor (base64 of <code>created_at</code>) from previous response's <code>next_cursor</code></td></tr>
+        </table>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"items"</span>: [
+    {
+      <span class="k">"id"</span>: <span class="s">"uuid-post"</span>,
+      <span class="k">"title"</span>: <span class="s">"Sách giáo khoa lớp 12"</span>,
+      <span class="k">"category"</span>: <span class="s">"books"</span>,
+      <span class="k">"quantity_total"</span>: <span class="n">10</span>,
+      <span class="k">"quantity_remaining"</span>: <span class="n">7</span>,
+      <span class="k">"status"</span>: <span class="s">"active"</span>,
+      <span class="k">"images"</span>: [<span class="s">"https://..."</span>],
+      <span class="k">"giver"</span>: { <span class="k">"id"</span>: <span class="s">"uuid-user"</span>, <span class="k">"name"</span>: <span class="s">"Dev User"</span>, <span class="k">"is_verified"</span>: <span class="b">false</span> }
+    }
+  ],
+  <span class="k">"next_cursor"</span>: <span class="b">null</span>,
+  <span class="k">"total"</span>: <span class="n">1</span>
+}</div>
+      </div>
+    </div>
+
+    <!-- User Ratings (public) -->
+    <div class="endpoint" id="users-ratings">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/users/:id/ratings</span>
+        <span class="endpoint-summary">List ratings/reviews received by a user</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">B-extra-2 — Giver Public Profile screen</div>
+        <p class="endpoint-desc">Returns ratings received by the given user, newest first, with rater info and the post context. Also returns an aggregate <code>summary</code> over all ratings (not just the current page). No auth required.</p>
+        <div class="params-title">Query Parameters</div>
+        <table class="param-table">
+          <tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr>
+          <tr><td class="param-name">limit</td><td class="param-type">int</td><td>20</td><td>Max items per page (max 50)</td></tr>
+          <tr><td class="param-name">cursor</td><td class="param-type">string</td><td>—</td><td>Opaque pagination cursor from previous response's <code>next_cursor</code></td></tr>
+        </table>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"items"</span>: [
+    {
+      <span class="k">"id"</span>: <span class="s">"uuid-rating"</span>,
+      <span class="k">"rater"</span>: { <span class="k">"id"</span>: <span class="s">"uuid-user"</span>, <span class="k">"name"</span>: <span class="s">"Trần Thị Mai"</span>, <span class="k">"avatar_url"</span>: <span class="s">"https://..."</span> },
+      <span class="k">"stars"</span>: <span class="n">5</span>,
+      <span class="k">"comment"</span>: <span class="s">"Rất nhiệt tình!"</span>,
+      <span class="k">"post_id"</span>: <span class="s">"uuid-post"</span>,
+      <span class="k">"post_title"</span>: <span class="s">"Áo khoác mùa đông"</span>,
+      <span class="k">"created_at"</span>: <span class="s">"2026-04-07T02:45:07Z"</span>
+    }
+  ],
+  <span class="k">"next_cursor"</span>: <span class="b">null</span>,
+  <span class="k">"summary"</span>: { <span class="k">"average"</span>: <span class="n">5.0</span>, <span class="k">"total"</span>: <span class="n">1</span> }
+}</div>
       </div>
     </div>
   </div>
