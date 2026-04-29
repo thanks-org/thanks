@@ -37,6 +37,7 @@
 
 | Task | Ai làm | Ngày xong | Commit / PR |
 |------|--------|-----------|-------------|
+| Hotfix F-bugfix-2 — Top Givers section: card onTap + "Xem tất cả →" + real leaderboard API (was using mockTopGivers) | TrungVT (sonnet exec) | 2026-04-29 | [ad8f416](https://github.com/thanks-org/thanks-app/commit/ad8f416) |
 | Hotfix F-bugfix-1 — Claim Confirmed Container negative-margin assertion crash (header rendered green, body all red ErrorWidget on iOS device) — root cause: `_PickupCodeBlock` Container had literal `margin: EdgeInsets.fromLTRB(18, -18, 18, 0)` triggering Flutter's `margin.isNonNegative` assertion; fix: replaced negative top margin with `Transform.translate(offset: Offset(0, -18))` wrapping the Container | TrungVT (sonnet exec) | 2026-04-29 | [5bed0b0](https://github.com/thanks-org/thanks-app/commit/5bed0b0) |
 | Hotfix B-bugfix-1 — `GET /me` crash NULL phone scan (`repository/users.go` GetMe) — discovered during wave 2 QA via dev user; fix `*string` + `derefString` pattern (audit nearby scans too) | TrungVT (sonnet exec) | 2026-04-29 | [24f9ac8](https://github.com/thanks-org/thanks-backend/commit/24f9ac8) |
 | F5-5 + F5-11 — Notifications inbox screen + bottom-nav badges (notifications + messages) thật | TrungVT (sonnet exec) | 2026-04-29 | [c1873da](https://github.com/thanks-org/thanks-app/commit/c1873da) |
