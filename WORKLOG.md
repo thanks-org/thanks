@@ -24,7 +24,6 @@
 | Task | Ai làm | Bắt đầu | Ghi chú |
 |------|--------|---------|---------|
 | F5-5 + F5-11 — Notifications inbox screen + bottom-nav badges (notifications + messages) thật | TrungVT (sonnet exec) | 2026-04-29 | Block B7-1, B7-3 ready. Replace hardcoded badge "3" `main_scaffold.dart:43-50`. |
-| F5-6 + F5-9 — Home Feed search bar (`q` debounce) + sort tabs wire vào B7-2 | TrungVT (sonnet exec) | 2026-04-29 | Block B7-2 ready. `home_screen.dart:172` (search) + `home_screen.dart:267-291` (sort). |
 
 ---
 
@@ -39,6 +38,7 @@
 
 | Task | Ai làm | Ngày xong | Commit / PR |
 |------|--------|-----------|-------------|
+| F5-6 + F5-9 — Home Feed search bar (`q` debounce) + sort tabs wire vào B7-2 | TrungVT (sonnet exec) | 2026-04-29 | [441678d](https://github.com/thanks-org/thanks-app/commit/441678d) |
 | Go backend skeleton + DB migrations (users, posts, claims, messages, ratings) | Claude Code | 2026-04-27 | [c84fcab](https://github.com/thanks-org/thanks-backend/commit/c84fcab) |
 | Docker Compose + PostgreSQL setup | Claude Code | 2026-04-27 | [b8d1a8d](https://github.com/thanks-org/thanks-infra/commit/b8d1a8d) |
 | Flutter app skeleton + Home Feed screen (mock data) | Claude Code | 2026-04-27 | [865bba2](https://github.com/thanks-org/thanks-app/commit/865bba2) |
