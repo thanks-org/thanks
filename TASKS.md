@@ -202,10 +202,10 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| F5-1 | Wire **"Nhắn tin"** trong Claim Confirmed → `MessageThreadScreen` | TrungVT | [~] | Hiện stub `SnackBar("Tính năng nhắn tin sẽ ra mắt sớm")`; `claim_confirmed_screen.dart:436-441`. Endpoint `POST /messages/claims/:id` đã sẵn (B5-9). |
-| F5-2 | **"Chỉ đường"** Claim Confirmed → mở Maps qua `url_launcher` | TrungVT | [~] | Hiện SnackBar stub `claim_confirmed_screen.dart:633-636`. iOS dùng `maps://?q=lat,lng`, Android `geo:lat,lng?q=...`. Cần thêm `url_launcher` dep. |
-| F5-3 | Item Detail **image carousel** (PageView + dot indicator) | TrungVT | [~] | Hiện chỉ `images.first` ở `item_detail_screen.dart:196-204`. API trả `images[]` đầy đủ. Prototype có "1/3" pager. |
-| F5-4 | Pickup code **copy-to-clipboard** (long-press 4-digit code block) | TrungVT | [~] | `claim_confirmed_screen.dart:_PickupCodeBlock`. UX critical, `Clipboard.setData(ClipboardData(text: code))` + SnackBar "Đã sao chép". |
+| F5-1 | Wire **"Nhắn tin"** trong Claim Confirmed → `MessageThreadScreen` | TrungVT | [x] | Done [925cca4](https://github.com/thanks-org/thanks-app/commit/925cca4): `_GiverCard` build `Conversation` từ `ClaimResponse`+postId, push `MessageThreadScreen`. Peer.id để rỗng — JWT `sub` là source of truth cho bubble direction nên fallback ổn. |
+| F5-2 | **"Chỉ đường"** Claim Confirmed → mở Maps qua `url_launcher` | TrungVT | [x] | Done [925cca4](https://github.com/thanks-org/thanks-app/commit/925cca4): try `geo:0,0?q=<encoded address>` → fallback `https://www.google.com/maps/search/?api=1&query=<encoded>`. ClaimResponse không có lat/lng nên dùng address string. |
+| F5-3 | Item Detail **image carousel** (PageView + dot indicator) | TrungVT | [x] | Done [925cca4](https://github.com/thanks-org/thanks-app/commit/925cca4): `_HeroImage` Stateless→Stateful, `PageView.builder` qua `post.images[]`, dot indicator + counter pill `1/N`. |
+| F5-4 | Pickup code **copy-to-clipboard** (long-press 4-digit code block) | TrungVT | [x] | Done [925cca4](https://github.com/thanks-org/thanks-app/commit/925cca4): `GestureDetector` onTap+onLongPress → `Clipboard.setData` + SnackBar "Đã sao chép mã". |
 | F5-5 | **Notifications inbox** screen + bottom-nav badge thật | _unassigned_ | [ ] | Block B7-1, B7-3. Hiện badge "3" hardcode `main_scaffold.dart:43-50`. |
 | F5-6 | Search bar Home Feed wire vào API (`q` param) | _unassigned_ | [ ] | Block B7-2. Hiện `home_screen.dart:172` `onTap: () {}` rỗng. |
 | F5-7 | **Pull-to-refresh + pagination** Home Feed | _unassigned_ | [ ] | `RefreshIndicator` wrap CustomScrollView; cursor pagination dựa trên `offset`/`limit` của B2-1. |
