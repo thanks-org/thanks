@@ -194,9 +194,9 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| B7-1 | `GET /me/notifications` — list notifications cho user (paginated, filter unread) | TrungVT | [~] | Bảng `notifications` đã có (B3-1, B5-9 ghi); cần handler+repo. Block F5-5, F5-11 |
-| B7-2 | `GET /posts?q=...&sort=...` — search title/description + sort (distance/recent/expiring) | TrungVT | [~] | Mở rộng B2-1 hiện có. Block F5-6, F5-9 |
-| B7-3 | `POST /me/notifications/:id/read` (hoặc bulk `POST /me/notifications/read`) — mark notification đã đọc | TrungVT | [~] | Cho F5-5 unread badge clear |
+| B7-1 | `GET /me/notifications` — list notifications cho user (paginated, filter unread) | TrungVT | [x] | Done [0615c43](https://github.com/thanks-org/thanks-backend/commit/0615c43): `model/notification.go` + `repository/notifications.go` + `handler/notifications.go`. Params `limit` (def 20, cap 50), `offset`, `unread_only`. Response: `{total, unread_count, notifications[]}`. **Schema note**: `notifications` table có `id, user_id, type, related_entity_id, title, body, is_read, created_at` — **KHÔNG có** `data` JSONB như api_doc giả định; api_doc cần update. |
+| B7-2 | `GET /posts?q=...&sort=...` — search title/description + sort (distance/recent/expiring) | TrungVT | [x] | Done [0615c43](https://github.com/thanks-org/thanks-backend/commit/0615c43): `repository/posts.go` thêm `Q` + `Sort` vào `ListPostsParams`, ILIKE qua `(title \|\| ' ' \|\| COALESCE(description,''))` với `escapeLike` (escape `% _ \`). Sort values: `recent` / `expiring` / `distance`. Default: distance khi có lat/lng, else recent. `sort=distance` không lat/lng silent fallback `recent`. |
+| B7-3 | `POST /me/notifications/:id/read` (hoặc bulk `POST /me/notifications/read`) — mark notification đã đọc | TrungVT | [x] | Done [0615c43](https://github.com/thanks-org/thanks-backend/commit/0615c43): bulk endpoint `POST /me/notifications/read` body `{"ids":[...]}` hoặc `{"all": true}`. Response `{updated:count}`. UPDATE filter `WHERE user_id=$1 AND id = ANY($2)` nên không cần auth-z thêm. |
 
 ### Flutter — Phase 5
 
@@ -208,12 +208,12 @@
 | F5-4 | Pickup code **copy-to-clipboard** (long-press 4-digit code block) | TrungVT | [x] | Done [925cca4](https://github.com/thanks-org/thanks-app/commit/925cca4): `GestureDetector` onTap+onLongPress → `Clipboard.setData` + SnackBar "Đã sao chép mã". |
 | F5-5 | **Notifications inbox** screen + bottom-nav badge thật | _unassigned_ | [ ] | Block B7-1, B7-3. Hiện badge "3" hardcode `main_scaffold.dart:43-50`. |
 | F5-6 | Search bar Home Feed wire vào API (`q` param) | _unassigned_ | [ ] | Block B7-2. Hiện `home_screen.dart:172` `onTap: () {}` rỗng. |
-| F5-7 | **Pull-to-refresh + pagination** Home Feed | TrungVT | [~] | `RefreshIndicator` wrap CustomScrollView; cursor pagination dựa trên `offset`/`limit` của B2-1. |
+| F5-7 | **Pull-to-refresh + pagination** Home Feed | TrungVT | [x] | Done [4b1ebdb](https://github.com/thanks-org/thanks-app/commit/4b1ebdb): `RefreshIndicator` (terracotta) + `ScrollController` infinite scroll trigger 300px-from-bottom, append page-N (limit=20), stop khi API trả < limit, error row "Tải thêm thất bại — chạm để thử lại". |
 | F5-8 | Empty / error / loading skeleton states chuẩn hóa toàn app | _unassigned_ | [ ] | Phối hợp với D3 (Vũ). Hiện đa phần là `CircularProgressIndicator` đơn giản. |
 | F5-9 | Sort tabs Home Feed (Gần / Mới / Sắp hết / Đã đóng) wire backend | _unassigned_ | [ ] | Block B7-2. Hiện `home_screen.dart:267-291` chỉ đổi `_selectedSort`, không gọi API. |
 | F5-10 | Onboarding **role picker** (Receiver/Giver) ở Profile Logged Out (2.1.5) | _unassigned_ | [ ] | Hiện `sign_up_auth_method_screen.dart:128-168` hard-code "Người nhận"; cần chọn từ logged-out screen + pass intent vào sign-up. |
 | F5-11 | Bottom-nav messages **badge thật** từ unread_count API | _unassigned_ | [ ] | Block B7-1 (hoặc dùng count từ `GET /messages` summary). |
-| F5-12 | Pickup code **share** Claim Confirmed → `share_plus` dialog | TrungVT | [~] | Hiện SnackBar stub `claim_confirmed_screen.dart:610-612`. |
+| F5-12 | Pickup code **share** Claim Confirmed → `share_plus` dialog | TrungVT | [x] | Done [4b1ebdb](https://github.com/thanks-org/thanks-app/commit/4b1ebdb): `share_plus ^10.1.0` (resolved 10.1.4); `Share.share` với text VN gồm title + pickup code + (optional) pickup window/address; iPad fallback `sharePositionOrigin = screen center`. |
 
 ### Deferred — Phase 5
 > Block trên external dependencies, không vào sprint này.
