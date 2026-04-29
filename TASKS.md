@@ -222,6 +222,13 @@
 | B-extra-1 | `GET /users/:id/posts` — list posts by a user (public profile page, no auth) | TrungVT (sonnet exec) | [x] | Done [5a22e03](https://github.com/thanks-org/thanks-backend/commit/5a22e03) — keyset cursor pagination, status filter (default active+completed), `{items, next_cursor, total}` shape. |
 | B-extra-2 | `GET /users/:id/ratings` — list ratings received by a user (public, no auth) | TrungVT (sonnet exec) | [x] | Done [5a22e03](https://github.com/thanks-org/thanks-backend/commit/5a22e03) — keyset cursor pagination, rater+post context joined, aggregate `summary {average, total}`. |
 
+### Flutter — Extra (UX improvements)
+
+| # | Task | Assignee | Status | Ghi chú |
+|---|------|----------|--------|---------|
+| F-extra-1 | **Giver profile sections** — "Bài đăng đang tặng" + "Đánh giá gần đây" in `GiverPublicBusinessScreen` | TrungVT (sonnet exec) | [x] | Done [44ae6a4](https://github.com/thanks-org/thanks-app/commit/44ae6a4) — `UsersService` (`getUserPosts`/`getUserRatings`), `UserRating` model, parallel fetch in `initState`, skeleton/empty/error states per section, top-5 post rows + rating rows with star row + relative date. |
+| F-extra-2 | **Bottom nav bar on all sub-screens** — `AppBottomNavBar` widget reused across all pushed screens (except auth + screens with existing bottom CTA bars) | TrungVT (sonnet exec) | [x] | Done [44ae6a4](https://github.com/thanks-org/thanks-app/commit/44ae6a4) — `lib/shared/app_bottom_nav_bar.dart`; added to: `GiverPublicBusinessScreen`, `ReceiverPublicOrganizationScreen`, `NotificationsInboxScreen`, `ClaimConfirmedScreen`, `WhoClaimedScreen`, `MyItemsPersonalScreen`, `MyBusinessesScreen`, `ManageOrganizationsScreen`, `SettingsScreen`, `PublicProfileScreen`, `ThanksRatingsScreen`. Skipped: screens with existing bottom CTA bars (`ItemDetailScreen` _ClaimBar, `SubmitItemStep1/2`, `MessageThreadScreen`, `ManageBusinessesScreen`, `MyItemsBusinessScreen`, `AddBusinessScreen`, `AddOrganizationScreen`). |
+
 ### Deferred — Phase 5
 > Block trên external dependencies, không vào sprint này.
 
