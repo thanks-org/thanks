@@ -206,13 +206,13 @@
 | F5-2 | **"Chỉ đường"** Claim Confirmed → mở Maps qua `url_launcher` | TrungVT | [x] | Done [925cca4](https://github.com/thanks-org/thanks-app/commit/925cca4): try `geo:0,0?q=<encoded address>` → fallback `https://www.google.com/maps/search/?api=1&query=<encoded>`. ClaimResponse không có lat/lng nên dùng address string. |
 | F5-3 | Item Detail **image carousel** (PageView + dot indicator) | TrungVT | [x] | Done [925cca4](https://github.com/thanks-org/thanks-app/commit/925cca4): `_HeroImage` Stateless→Stateful, `PageView.builder` qua `post.images[]`, dot indicator + counter pill `1/N`. |
 | F5-4 | Pickup code **copy-to-clipboard** (long-press 4-digit code block) | TrungVT | [x] | Done [925cca4](https://github.com/thanks-org/thanks-app/commit/925cca4): `GestureDetector` onTap+onLongPress → `Clipboard.setData` + SnackBar "Đã sao chép mã". |
-| F5-5 | **Notifications inbox** screen + bottom-nav badge thật | _unassigned_ | [ ] | Block B7-1, B7-3. Hiện badge "3" hardcode `main_scaffold.dart:43-50`. |
-| F5-6 | Search bar Home Feed wire vào API (`q` param) | _unassigned_ | [ ] | Block B7-2. Hiện `home_screen.dart:172` `onTap: () {}` rỗng. |
+| F5-5 | **Notifications inbox** screen + bottom-nav badge thật | TrungVT | [~] | Block B7-1, B7-3. Hiện badge "3" hardcode `main_scaffold.dart:43-50`. |
+| F5-6 | Search bar Home Feed wire vào API (`q` param) | TrungVT | [~] | Block B7-2. Hiện `home_screen.dart:172` `onTap: () {}` rỗng. |
 | F5-7 | **Pull-to-refresh + pagination** Home Feed | TrungVT | [x] | Done [4b1ebdb](https://github.com/thanks-org/thanks-app/commit/4b1ebdb): `RefreshIndicator` (terracotta) + `ScrollController` infinite scroll trigger 300px-from-bottom, append page-N (limit=20), stop khi API trả < limit, error row "Tải thêm thất bại — chạm để thử lại". |
 | F5-8 | Empty / error / loading skeleton states chuẩn hóa toàn app | _unassigned_ | [ ] | Phối hợp với D3 (Vũ). Hiện đa phần là `CircularProgressIndicator` đơn giản. |
-| F5-9 | Sort tabs Home Feed (Gần / Mới / Sắp hết / Đã đóng) wire backend | _unassigned_ | [ ] | Block B7-2. Hiện `home_screen.dart:267-291` chỉ đổi `_selectedSort`, không gọi API. |
+| F5-9 | Sort tabs Home Feed (Gần / Mới / Sắp hết / Đã đóng) wire backend | TrungVT | [~] | Block B7-2. Hiện `home_screen.dart:267-291` chỉ đổi `_selectedSort`, không gọi API. |
 | F5-10 | Onboarding **role picker** (Receiver/Giver) ở Profile Logged Out (2.1.5) | _unassigned_ | [ ] | Hiện `sign_up_auth_method_screen.dart:128-168` hard-code "Người nhận"; cần chọn từ logged-out screen + pass intent vào sign-up. |
-| F5-11 | Bottom-nav messages **badge thật** từ unread_count API | _unassigned_ | [ ] | Block B7-1 (hoặc dùng count từ `GET /messages` summary). |
+| F5-11 | Bottom-nav messages **badge thật** từ unread_count API | TrungVT | [~] | Block B7-1 (hoặc dùng count từ `GET /messages` summary). |
 | F5-12 | Pickup code **share** Claim Confirmed → `share_plus` dialog | TrungVT | [x] | Done [4b1ebdb](https://github.com/thanks-org/thanks-app/commit/4b1ebdb): `share_plus ^10.1.0` (resolved 10.1.4); `Share.share` với text VN gồm title + pickup code + (optional) pickup window/address; iPad fallback `sharePositionOrigin = screen center`. |
 
 ### Deferred — Phase 5

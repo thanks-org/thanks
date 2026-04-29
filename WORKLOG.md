@@ -23,7 +23,8 @@
 
 | Task | Ai làm | Bắt đầu | Ghi chú |
 |------|--------|---------|---------|
-| _(empty)_ | | | |
+| F5-5 + F5-11 — Notifications inbox screen + bottom-nav badges (notifications + messages) thật | TrungVT (sonnet exec) | 2026-04-29 | Block B7-1, B7-3 ready. Replace hardcoded badge "3" `main_scaffold.dart:43-50`. |
+| F5-6 + F5-9 — Home Feed search bar (`q` debounce) + sort tabs wire vào B7-2 | TrungVT (sonnet exec) | 2026-04-29 | Block B7-2 ready. `home_screen.dart:172` (search) + `home_screen.dart:267-291` (sort). |
 
 ---
 
