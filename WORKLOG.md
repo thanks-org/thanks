@@ -23,7 +23,8 @@
 
 | Task | Ai làm | Bắt đầu | Ghi chú |
 |------|--------|---------|---------|
-| _(empty)_ | | | |
+| B7-1 + B7-2 + B7-3 — Phase 5 backend (notifications GET/mark-read + posts q+sort) | TrungVT (sonnet exec) | 2026-04-29 | Mở rộng router/handler/repo trong thanks-backend. Block F5-5, F5-6, F5-9, F5-11. |
+| F5-7 + F5-12 — Phase 5 frontend P1 độc lập (pull-to-refresh + pagination Home, share pickup code) | TrungVT (sonnet exec) | 2026-04-29 | F5-7 RefreshIndicator + offset/limit cho `home_screen.dart`. F5-12 thêm `share_plus` dep, replace SnackBar stub bằng `Share.share`. Không phụ thuộc B7. |
 
 ---
 

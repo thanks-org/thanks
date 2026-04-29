@@ -194,9 +194,9 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| B7-1 | `GET /me/notifications` — list notifications cho user (paginated, filter unread) | _unassigned_ | [ ] | Bảng `notifications` đã có (B3-1, B5-9 ghi); cần handler+repo. Block F5-5, F5-11 |
-| B7-2 | `GET /posts?q=...&sort=...` — search title/description + sort (distance/recent/expiring) | _unassigned_ | [ ] | Mở rộng B2-1 hiện có. Block F5-6, F5-9 |
-| B7-3 | `POST /me/notifications/:id/read` (hoặc bulk `POST /me/notifications/read`) — mark notification đã đọc | _unassigned_ | [ ] | Cho F5-5 unread badge clear |
+| B7-1 | `GET /me/notifications` — list notifications cho user (paginated, filter unread) | TrungVT | [~] | Bảng `notifications` đã có (B3-1, B5-9 ghi); cần handler+repo. Block F5-5, F5-11 |
+| B7-2 | `GET /posts?q=...&sort=...` — search title/description + sort (distance/recent/expiring) | TrungVT | [~] | Mở rộng B2-1 hiện có. Block F5-6, F5-9 |
+| B7-3 | `POST /me/notifications/:id/read` (hoặc bulk `POST /me/notifications/read`) — mark notification đã đọc | TrungVT | [~] | Cho F5-5 unread badge clear |
 
 ### Flutter — Phase 5
 
@@ -208,12 +208,12 @@
 | F5-4 | Pickup code **copy-to-clipboard** (long-press 4-digit code block) | TrungVT | [x] | Done [925cca4](https://github.com/thanks-org/thanks-app/commit/925cca4): `GestureDetector` onTap+onLongPress → `Clipboard.setData` + SnackBar "Đã sao chép mã". |
 | F5-5 | **Notifications inbox** screen + bottom-nav badge thật | _unassigned_ | [ ] | Block B7-1, B7-3. Hiện badge "3" hardcode `main_scaffold.dart:43-50`. |
 | F5-6 | Search bar Home Feed wire vào API (`q` param) | _unassigned_ | [ ] | Block B7-2. Hiện `home_screen.dart:172` `onTap: () {}` rỗng. |
-| F5-7 | **Pull-to-refresh + pagination** Home Feed | _unassigned_ | [ ] | `RefreshIndicator` wrap CustomScrollView; cursor pagination dựa trên `offset`/`limit` của B2-1. |
+| F5-7 | **Pull-to-refresh + pagination** Home Feed | TrungVT | [~] | `RefreshIndicator` wrap CustomScrollView; cursor pagination dựa trên `offset`/`limit` của B2-1. |
 | F5-8 | Empty / error / loading skeleton states chuẩn hóa toàn app | _unassigned_ | [ ] | Phối hợp với D3 (Vũ). Hiện đa phần là `CircularProgressIndicator` đơn giản. |
 | F5-9 | Sort tabs Home Feed (Gần / Mới / Sắp hết / Đã đóng) wire backend | _unassigned_ | [ ] | Block B7-2. Hiện `home_screen.dart:267-291` chỉ đổi `_selectedSort`, không gọi API. |
 | F5-10 | Onboarding **role picker** (Receiver/Giver) ở Profile Logged Out (2.1.5) | _unassigned_ | [ ] | Hiện `sign_up_auth_method_screen.dart:128-168` hard-code "Người nhận"; cần chọn từ logged-out screen + pass intent vào sign-up. |
 | F5-11 | Bottom-nav messages **badge thật** từ unread_count API | _unassigned_ | [ ] | Block B7-1 (hoặc dùng count từ `GET /messages` summary). |
-| F5-12 | Pickup code **share** Claim Confirmed → `share_plus` dialog | _unassigned_ | [ ] | Hiện SnackBar stub `claim_confirmed_screen.dart:610-612`. |
+| F5-12 | Pickup code **share** Claim Confirmed → `share_plus` dialog | TrungVT | [~] | Hiện SnackBar stub `claim_confirmed_screen.dart:610-612`. |
 
 ### Deferred — Phase 5
 > Block trên external dependencies, không vào sprint này.
