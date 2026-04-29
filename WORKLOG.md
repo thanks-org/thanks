@@ -37,6 +37,7 @@
 
 | Task | Ai làm | Ngày xong | Commit / PR |
 |------|--------|-----------|-------------|
+| Hotfix B-bugfix-1 — `GET /me` crash NULL phone scan (`repository/users.go` GetMe) — discovered during wave 2 QA via dev user; fix `*string` + `derefString` pattern (audit nearby scans too) | TrungVT (sonnet exec) | 2026-04-29 | [24f9ac8](https://github.com/thanks-org/thanks-backend/commit/24f9ac8) |
 | F5-5 + F5-11 — Notifications inbox screen + bottom-nav badges (notifications + messages) thật | TrungVT (sonnet exec) | 2026-04-29 | [c1873da](https://github.com/thanks-org/thanks-app/commit/c1873da) |
 | F5-6 + F5-9 — Home Feed search bar (`q` debounce) + sort tabs wire vào B7-2 | TrungVT (sonnet exec) | 2026-04-29 | [441678d](https://github.com/thanks-org/thanks-app/commit/441678d) |
 | Go backend skeleton + DB migrations (users, posts, claims, messages, ratings) | Claude Code | 2026-04-27 | [c84fcab](https://github.com/thanks-org/thanks-backend/commit/c84fcab) |
