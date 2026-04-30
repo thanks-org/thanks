@@ -22,6 +22,7 @@ BEGIN;
 
 -- ── 0. Wipe all application data ─────────────────────────────────────────
 TRUNCATE TABLE
+    invites, org_members, business_members,
     notifications, thanks, ratings, messages,
     claims, post_images, post_schedules, posts,
     organizations, businesses,
@@ -144,13 +145,45 @@ VALUES
 
 -- ── 4. AUTH PROVIDERS ────────────────────────────────────────────────────
 -- UUID scheme: 00000000-0000-0000-0010-00000000000X
--- provider_user_id matches _maybeDevAutoLogin() sub field in main.dart
+-- Dev login: backend accepts base64({"sub":"<provider_user_id>","email":"..."})
+-- as id_token when JWT_SECRET == dev-only-secret-change-me (default dev mode)
 INSERT INTO auth_providers (id, user_id, provider, provider_user_id, email, created_at)
 VALUES
+  -- 1. Dev User — "both" role, has active claim + history
   ('00000000-0000-0000-0010-000000000001',
    '00000000-0000-0000-0000-000000000001',
    'google', 'dev-user-001', 'dev@thanks.test',
-   NOW() - INTERVAL '90 days');
+   NOW() - INTERVAL '90 days'),
+
+  -- 2. Phượng — giver, business: Bánh Mì Phượng
+  ('00000000-0000-0000-0010-000000000002',
+   '00000000-0000-0000-0000-000000000002',
+   'google', 'seed-phuong-002', 'phuong@banhmi.com',
+   NOW() - INTERVAL '180 days'),
+
+  -- 3. Mai — giver, personal, top leaderboard
+  ('00000000-0000-0000-0010-000000000003',
+   '00000000-0000-0000-0000-000000000003',
+   'google', 'seed-mai-003', 'mai@gmail.com',
+   NOW() - INTERVAL '120 days'),
+
+  -- 4. Đức — receiver, org: Mái Ấm Thiên Tâm
+  ('00000000-0000-0000-0010-000000000004',
+   '00000000-0000-0000-0000-000000000004',
+   'google', 'seed-duc-004', 'duc@maiam.org',
+   NOW() - INTERVAL '60 days'),
+
+  -- 5. Hoa — receiver, personal
+  ('00000000-0000-0000-0010-000000000005',
+   '00000000-0000-0000-0000-000000000005',
+   'google', 'seed-hoa-005', 'hoa@gmail.com',
+   NOW() - INTERVAL '45 days'),
+
+  -- 6. Tuấn — giver, personal, Hà Nội
+  ('00000000-0000-0000-0010-000000000006',
+   '00000000-0000-0000-0000-000000000006',
+   'google', 'seed-tuan-006', 'tuan@gmail.com',
+   NOW() - INTERVAL '200 days');
 
 -- ── 5. POSTS ─────────────────────────────────────────────────────────────
 -- UUID scheme: 00000000-0000-0000-0003-00000000000X
@@ -611,5 +644,291 @@ VALUES
    'Bạn nhận được đánh giá mới',
    'Trần Thị Mai đánh giá bạn 4 sao: "Bạn đến đúng giờ và lịch sự."',
    true, NOW() - INTERVAL '22 days');
+
+-- ── 13. HISTORICAL COMPLETED POSTS (cho Dev User có lịch sử nhận đồ) ────
+-- UUID scheme: 00000000-0000-0000-0003-00000000000{8,9,10}
+INSERT INTO posts (id, user_id, business_id, title, description, category,
+                   quantity, quantity_remaining, limit_per_receiver,
+                   pickup_start, pickup_end, closes_at,
+                   latitude, longitude, address, city,
+                   status, is_recurring, ai_summary,
+                   created_at, updated_at)
+VALUES
+  -- Post 8: Áo khoác gió (Mai, personal, completed 2 weeks ago)
+  ('00000000-0000-0000-0003-000000000008',
+   '00000000-0000-0000-0000-000000000003', NULL,
+   'Áo khoác gió size L/XL còn mới 95%',
+   'Mua về không mặc, còn mới 95%, size L và XL. Tặng người cần, đến lấy tại nhà Quận 3.',
+   'clothes', 2, 0, NULL,
+   NOW() - INTERVAL '15 days', NOW() - INTERVAL '15 days' + INTERVAL '4 hours',
+   NOW() - INTERVAL '10 days',
+   10.7800, 106.7050, 'Quận 3, TP.HCM', 'Hồ Chí Minh',
+   'completed', false, 'Tặng 2 áo khoác gió size L/XL còn mới tại Quận 3.',
+   NOW() - INTERVAL '18 days', NOW() - INTERVAL '10 days'),
+
+  -- Post 9: Bánh mì que từ Bánh Mì Phượng (completed 3 weeks ago)
+  ('00000000-0000-0000-0003-000000000009',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0001-000000000001',
+   'Bánh mì que buổi chiều — hôm nay làm dư',
+   'Chiều nay tiệm làm dư 30 ổ bánh mì que, tặng miễn phí 15h–17h. Xuất trình mã pickup.',
+   'food', 30, 0, 3,
+   NOW() - INTERVAL '20 days', NOW() - INTERVAL '20 days' + INTERVAL '2 hours',
+   NOW() - INTERVAL '19 days',
+   10.7745, 106.7017, '2B Lê Lợi, Quận 1, TP.HCM', 'Hồ Chí Minh',
+   'completed', false, 'Tặng 30 ổ bánh mì que từ 15h–17h tại Quận 1.',
+   NOW() - INTERVAL '21 days', NOW() - INTERVAL '19 days'),
+
+  -- Post 10: Bàn phím Logitech (Tuấn, Hà Nội, completed 1 month ago)
+  ('00000000-0000-0000-0003-000000000010',
+   '00000000-0000-0000-0000-000000000006', NULL,
+   'Bàn phím Logitech K380 Bluetooth màu xanh',
+   'Dùng 1 năm, còn tốt nguyên vẹn. Tặng người cần học/làm việc. Ở Cầu Giấy, có thể ship COD phí người nhận.',
+   'tech', 1, 0, NULL,
+   NOW() - INTERVAL '30 days', NOW() - INTERVAL '30 days' + INTERVAL '6 hours',
+   NOW() - INTERVAL '25 days',
+   21.0285, 105.8542, 'Cầu Giấy, Hà Nội', 'Hà Nội',
+   'completed', false, 'Tặng bàn phím Logitech K380 Bluetooth tại Hà Nội.',
+   NOW() - INTERVAL '32 days', NOW() - INTERVAL '25 days');
+
+-- ── 13a. POST IMAGES cho posts mới ───────────────────────────────────────
+INSERT INTO post_images (id, post_id, url, position)
+VALUES
+  ('00000000-0000-0000-0004-000000000009', '00000000-0000-0000-0003-000000000008', 'https://picsum.photos/seed/jacket_windbreaker/800/600', 0),
+  ('00000000-0000-0000-0004-000000000010', '00000000-0000-0000-0003-000000000009', 'https://picsum.photos/seed/banhmi_que/800/600', 0),
+  ('00000000-0000-0000-0004-000000000011', '00000000-0000-0000-0003-000000000010', 'https://picsum.photos/seed/keyboard_logitech/800/600', 0);
+
+-- ── 14. HISTORICAL CLAIMS cho Dev User (receiver) ────────────────────────
+-- Dev User nhận đồ từ 3 givers khác nhau → shows "Done" section in Messages
+INSERT INTO claims (id, post_id, user_id, organization_id, quantity,
+                    pickup_code, status,
+                    confirmed_at, picked_up_at, cancelled_at,
+                    created_at, updated_at)
+VALUES
+  -- 11. Dev nhận áo khoác gió từ Mai (picked_up)
+  ('00000000-0000-0000-0005-000000000011',
+   '00000000-0000-0000-0003-000000000008',
+   '00000000-0000-0000-0000-000000000001',
+   NULL, 1, 'D9E0F1', 'picked_up',
+   NOW() - INTERVAL '16 days', NOW() - INTERVAL '15 days', NULL,
+   NOW() - INTERVAL '17 days', NOW() - INTERVAL '15 days'),
+
+  -- 12. Dev nhận bánh mì que từ Bánh Mì Phượng (picked_up)
+  ('00000000-0000-0000-0005-000000000012',
+   '00000000-0000-0000-0003-000000000009',
+   '00000000-0000-0000-0000-000000000001',
+   NULL, 3, 'G2H3I4', 'picked_up',
+   NOW() - INTERVAL '21 days', NOW() - INTERVAL '20 days', NULL,
+   NOW() - INTERVAL '22 days', NOW() - INTERVAL '20 days'),
+
+  -- 13. Dev nhận bàn phím từ Tuấn (shipped, picked_up 1 month ago)
+  ('00000000-0000-0000-0005-000000000013',
+   '00000000-0000-0000-0003-000000000010',
+   '00000000-0000-0000-0000-000000000001',
+   NULL, 1, 'J5K6L7', 'picked_up',
+   NOW() - INTERVAL '31 days', NOW() - INTERVAL '30 days', NULL,
+   NOW() - INTERVAL '32 days', NOW() - INTERVAL '30 days');
+
+-- ── 15. MESSAGES cho claims hiện tại CHƯA CÓ conversation ───────────────
+-- Claim 3: Hoa ↔ Mai (áo khoác mùa đông, completed)
+INSERT INTO messages (id, claim_id, sender_id, content, is_read, created_at)
+VALUES
+  ('00000000-0000-0000-0006-000000000008',
+   '00000000-0000-0000-0005-000000000003',
+   '00000000-0000-0000-0000-000000000005',
+   'Chị ơi áo size S–M có vừa không ạ? Mình hơi nhỏ người.',
+   true, NOW() - INTERVAL '24 days'),
+  ('00000000-0000-0000-0006-000000000009',
+   '00000000-0000-0000-0005-000000000003',
+   '00000000-0000-0000-0000-000000000003',
+   'Áo size M thôi bạn ơi, dáng hơi rộng thoải mái mặc lớp ngoài nhé. Sáng chủ nhật đến lấy được không?',
+   true, NOW() - INTERVAL '23 days' - INTERVAL '22 hours'),
+
+-- Claim 5: Hoa ↔ Phượng (cơm từ thiện, completed)
+  ('00000000-0000-0000-0006-000000000010',
+   '00000000-0000-0000-0005-000000000005',
+   '00000000-0000-0000-0000-000000000005',
+   'Anh ơi mình đến nhận cho 4 người được không? Nhà mình gần đây ạ.',
+   true, NOW() - INTERVAL '15 days'),
+  ('00000000-0000-0000-0006-000000000011',
+   '00000000-0000-0000-0005-000000000005',
+   '00000000-0000-0000-0000-000000000002',
+   'Được bạn! Nhớ đến trước 12h nhé. Đến hỏi anh Phượng là có ngay.',
+   true, NOW() - INTERVAL '14 days' - INTERVAL '22 hours'),
+
+-- Claim 7: Hoa ↔ Tuấn (tủ lạnh, picked_up)
+  ('00000000-0000-0000-0006-000000000012',
+   '00000000-0000-0000-0005-000000000007',
+   '00000000-0000-0000-0000-000000000005',
+   'Anh Tuấn ơi tủ lạnh còn không? Mình cần lắm ạ.',
+   true, NOW() - INTERVAL '5 days'),
+  ('00000000-0000-0000-0006-000000000013',
+   '00000000-0000-0000-0005-000000000007',
+   '00000000-0000-0000-0000-000000000006',
+   'Còn bạn! Tủ nặng nên bạn thuê xe tải nhỏ nhé. Mình có thể chờ đến cuối tuần.',
+   true, NOW() - INTERVAL '4 days' - INTERVAL '20 hours'),
+
+-- Claim 8: Đức ↔ Tuấn (điện thoại, completed)
+  ('00000000-0000-0000-0006-000000000014',
+   '00000000-0000-0000-0005-000000000008',
+   '00000000-0000-0000-0000-000000000004',
+   'Anh Tuấn ơi còn 1 máy nữa không? Mình cần cho tình nguyện viên dùng.',
+   true, NOW() - INTERVAL '7 days'),
+  ('00000000-0000-0000-0006-000000000015',
+   '00000000-0000-0000-0005-000000000008',
+   '00000000-0000-0000-0000-000000000006',
+   'Còn đúng 1 cái! Mình để sẵn, bạn xuống Cầu Giấy lấy nhé, nhắn trước 1 tiếng.',
+   true, NOW() - INTERVAL '6 days' - INTERVAL '23 hours');
+
+-- ── 15a. MESSAGES cho new claims (Dev User history) ──────────────────────
+INSERT INTO messages (id, claim_id, sender_id, content, is_read, created_at)
+VALUES
+  -- Claim 11: Dev ↔ Mai (áo khoác gió)
+  ('00000000-0000-0000-0006-000000000016',
+   '00000000-0000-0000-0005-000000000011',
+   '00000000-0000-0000-0000-000000000001',
+   'Chị Mai ơi còn áo size L không ạ?',
+   true, NOW() - INTERVAL '17 days'),
+  ('00000000-0000-0000-0006-000000000017',
+   '00000000-0000-0000-0005-000000000011',
+   '00000000-0000-0000-0000-000000000003',
+   'Còn đúng 1 cái size L! Chiều 5h bạn lấy được không?',
+   true, NOW() - INTERVAL '16 days' - INTERVAL '23 hours'),
+  ('00000000-0000-0000-0006-000000000018',
+   '00000000-0000-0000-0005-000000000011',
+   '00000000-0000-0000-0000-000000000001',
+   'Dạ được chị! Em đến đúng 5h. Cảm ơn chị nhiều!',
+   true, NOW() - INTERVAL '16 days' - INTERVAL '22 hours'),
+
+  -- Claim 12: Dev ↔ Phượng (bánh mì que)
+  ('00000000-0000-0000-0006-000000000019',
+   '00000000-0000-0000-0005-000000000012',
+   '00000000-0000-0000-0000-000000000002',
+   'Bạn ơi chiều nay qua lấy nhé, 15h–17h thôi, hết là hết.',
+   true, NOW() - INTERVAL '22 days'),
+  ('00000000-0000-0000-0006-000000000020',
+   '00000000-0000-0000-0005-000000000012',
+   '00000000-0000-0000-0000-000000000001',
+   'Dạ anh, em đến lúc 15h30 ạ. Cảm ơn anh Phượng!',
+   true, NOW() - INTERVAL '21 days' - INTERVAL '22 hours'),
+  ('00000000-0000-0000-0006-000000000021',
+   '00000000-0000-0000-0005-000000000012',
+   '00000000-0000-0000-0000-000000000002',
+   'Okay! Mình để sẵn 3 ổ nhé 👍',
+   true, NOW() - INTERVAL '21 days' - INTERVAL '20 hours'),
+
+  -- Claim 13: Dev ↔ Tuấn (bàn phím)
+  ('00000000-0000-0000-0006-000000000022',
+   '00000000-0000-0000-0005-000000000013',
+   '00000000-0000-0000-0000-000000000001',
+   'Anh Tuấn ơi bàn phím còn không ạ? Mình đang cần làm việc từ xa.',
+   true, NOW() - INTERVAL '32 days'),
+  ('00000000-0000-0000-0006-000000000023',
+   '00000000-0000-0000-0005-000000000013',
+   '00000000-0000-0000-0000-000000000006',
+   'Còn bạn! Mình ship COD được nếu bạn ở HCM, phí ship bạn chịu nhé.',
+   true, NOW() - INTERVAL '31 days' - INTERVAL '22 hours');
+
+-- ── 16. RATINGS cho new claims ────────────────────────────────────────────
+INSERT INTO ratings (id, claim_id, rater_id, rated_id, score, comment, created_at)
+VALUES
+  -- Dev → Mai (claim 11)
+  ('00000000-0000-0000-0007-000000000006',
+   '00000000-0000-0000-0005-000000000011',
+   '00000000-0000-0000-0000-000000000001',
+   '00000000-0000-0000-0000-000000000003',
+   5, 'Áo đúng mô tả, chị Mai nhiệt tình và đúng hẹn. Cảm ơn chị!',
+   NOW() - INTERVAL '15 days'),
+  -- Mai → Dev (claim 11)
+  ('00000000-0000-0000-0007-000000000007',
+   '00000000-0000-0000-0005-000000000011',
+   '00000000-0000-0000-0000-000000000003',
+   '00000000-0000-0000-0000-000000000001',
+   5, 'Bạn đến đúng giờ, lịch sự. Mừng vì đồ có chủ tốt!',
+   NOW() - INTERVAL '15 days'),
+  -- Dev → Phượng (claim 12)
+  ('00000000-0000-0000-0007-000000000008',
+   '00000000-0000-0000-0005-000000000012',
+   '00000000-0000-0000-0000-000000000001',
+   '00000000-0000-0000-0000-000000000002',
+   5, 'Bánh mì giòn ngon, anh Phượng và nhân viên rất thân thiện. Sẽ quay lại!',
+   NOW() - INTERVAL '20 days'),
+  -- Dev → Tuấn (claim 13)
+  ('00000000-0000-0000-0007-000000000009',
+   '00000000-0000-0000-0005-000000000013',
+   '00000000-0000-0000-0000-000000000001',
+   '00000000-0000-0000-0000-000000000006',
+   5, 'Bàn phím hoạt động hoàn hảo, anh Tuấn hỗ trợ ship tận nơi. Cảm ơn anh!',
+   NOW() - INTERVAL '30 days'),
+  -- Tuấn → Dev (claim 13)
+  ('00000000-0000-0000-0007-000000000010',
+   '00000000-0000-0000-0005-000000000013',
+   '00000000-0000-0000-0000-000000000006',
+   '00000000-0000-0000-0000-000000000001',
+   5, 'Bạn rất dễ trao đổi, thanh toán ship nhanh. Cảm ơn đã nhận đồ!',
+   NOW() - INTERVAL '30 days');
+
+-- ── 17. THANKS cho new claims ─────────────────────────────────────────────
+INSERT INTO thanks (id, claim_id, from_user_id, to_user_id,
+                    message, reaction_emoji, created_at)
+VALUES
+  -- Dev cảm ơn Mai (claim 11)
+  ('00000000-0000-0000-0008-000000000004',
+   '00000000-0000-0000-0005-000000000011',
+   '00000000-0000-0000-0000-000000000001',
+   '00000000-0000-0000-0000-000000000003',
+   'Cảm ơn chị Mai! Áo mặc vừa vặn và đẹp hơn mình nghĩ nhiều.',
+   '🙏', NOW() - INTERVAL '15 days'),
+  -- Dev cảm ơn Phượng (claim 12)
+  ('00000000-0000-0000-0008-000000000005',
+   '00000000-0000-0000-0005-000000000012',
+   '00000000-0000-0000-0000-000000000001',
+   '00000000-0000-0000-0000-000000000002',
+   'Cảm ơn anh Phượng! Bánh mì ngon lắm, cả nhà mình thích.',
+   '🍞', NOW() - INTERVAL '20 days'),
+  -- Dev cảm ơn Tuấn (claim 13)
+  ('00000000-0000-0000-0008-000000000006',
+   '00000000-0000-0000-0005-000000000013',
+   '00000000-0000-0000-0000-000000000001',
+   '00000000-0000-0000-0000-000000000006',
+   'Bàn phím tuyệt vời anh ơi! Giúp mình làm việc hiệu quả hơn nhiều. Cảm ơn anh!',
+   '⌨️', NOW() - INTERVAL '30 days');
+
+-- ── 18. ADDITIONAL NOTIFICATIONS ─────────────────────────────────────────
+INSERT INTO notifications (id, user_id, type, related_entity_id,
+                           title, body, is_read, created_at)
+VALUES
+  -- Dev nhận đánh giá từ Tuấn (claim 13)
+  ('00000000-0000-0000-0009-000000000004',
+   '00000000-0000-0000-0000-000000000001',
+   'rating_received',
+   '00000000-0000-0000-0007-000000000010',
+   'Bạn nhận được đánh giá mới',
+   'Hoàng Minh Tuấn đánh giá bạn 5 sao: "Rất dễ trao đổi, thanh toán ship nhanh."',
+   true, NOW() - INTERVAL '30 days'),
+  -- Dev nhận đánh giá từ Mai (claim 11)
+  ('00000000-0000-0000-0009-000000000005',
+   '00000000-0000-0000-0000-000000000001',
+   'rating_received',
+   '00000000-0000-0000-0007-000000000007',
+   'Bạn nhận được đánh giá mới',
+   'Trần Thị Mai đánh giá bạn 5 sao: "Đến đúng giờ, lịch sự. Mừng vì đồ có chủ tốt!"',
+   true, NOW() - INTERVAL '15 days'),
+  -- Phượng nhận claim mới từ Mái Ấm (claim 2, unread)
+  ('00000000-0000-0000-0009-000000000006',
+   '00000000-0000-0000-0000-000000000002',
+   'claim_created',
+   '00000000-0000-0000-0005-000000000002',
+   'Mái Ấm Thiên Tâm muốn nhận bánh mì',
+   'Mái Ấm Thiên Tâm đăng ký nhận 5 ổ bánh mì cho các em nhỏ.',
+   false, NOW() - INTERVAL '30 minutes'),
+  -- Mai nhận claim mới từ Dev (claim 11)
+  ('00000000-0000-0000-0009-000000000007',
+   '00000000-0000-0000-0000-000000000003',
+   'claim_created',
+   '00000000-0000-0000-0005-000000000011',
+   'Có người muốn nhận áo khoác của bạn',
+   'Dev User đăng ký nhận 1 áo khoác gió size L.',
+   true, NOW() - INTERVAL '17 days');
 
 COMMIT;
