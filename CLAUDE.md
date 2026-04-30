@@ -24,7 +24,7 @@
 - Docker Compose + PostgreSQL — `make up` là chạy, hot-reload với Air
 - Flutter app skeleton + Home Feed screen (mock data, match prototype)
 - App icon + branding (cream, terracotta, Plus Jakarta Sans 800)
-- Prototype → 26 screen descriptions (`idea_img_to_word/thanks_screens.md`)
+- Prototype → 27 static HTML screens (`idea_to_static_html/`)
 - API doc HTML (`api_and_doc/api_doc.html`) + DB schema diagram (`api_and_doc/schema.html`)
 
 ### Đang làm
@@ -59,9 +59,7 @@ thanks/                        ← working directory (repo coordination hub)
 ├── thanks-app/                ← Flutter app (iOS + Android)
 ├── thanks-backend/            ← Go + Gin backend
 ├── thanks-infra/              ← Docker Compose + Railway config
-├── idea_img_to_word/
-│   └── thanks_screens.md      ← mô tả 26 screens (đọc khi làm Flutter)
-├── idea_to_static_html/       ← prototype screens dạng static HTML
+├── idea_to_static_html/       ← 27 prototype screens dạng static HTML (source of truth cho UI)
 └── api_and_doc/
     ├── api_doc.html            ← API endpoints (đọc khi làm API)
     └── schema.html             ← DB schema diagram (đọc khi cần DB)
@@ -81,7 +79,7 @@ thanks/                        ← working directory (repo coordination hub)
 | Đang làm gì | Thì đọc |
 |-------------|---------|
 | Implement API endpoint | phần đó trong `api_and_doc/api_doc.html` |
-| Build Flutter screen | screen đó trong `idea_img_to_word/thanks_screens.md` |
+| Build Flutter screen | screen đó trong `idea_to_static_html/` |
 | Thiết kế / thay đổi DB | `api_and_doc/schema.html` + `thanks-backend/migrations/` |
 | Cần biết SQL schema | `thanks-backend/migrations/000001_init.up.sql` |
 
@@ -102,7 +100,6 @@ thanks/                        ← working directory (repo coordination hub)
 
 ### Tham chiếu nhanh
 - Mỗi API endpoint trong `api_doc.html` ghi rõ xuất phát từ screen nào
-- Mỗi screen trong `thanks_screens.md` ghi rõ từng element, từng field
 - DB schema SQL đầy đủ: `thanks-backend/migrations/000001_init.up.sql`
 
 ---
