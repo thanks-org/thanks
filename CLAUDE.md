@@ -111,17 +111,17 @@ thanks/                        ← working directory (repo coordination hub)
 
 Khi người dùng nói "start DB", "seed data", hoặc "chạy app", **hỏi trước**:
 
-> "Dùng **fake seed** (data prototype cho tất cả screens) hay **normal seed** (chỉ reference data)?"
+> "Dùng **dev seed** (data prototype cho tất cả screens) hay **prod seed** (chỉ reference data)?"
 
-| | Fake seed | Normal seed |
+| | Dev seed | Prod seed |
 |--|--|--|
 | Dùng khi | Dev / test / UI smoke | Staging / production baseline |
 | Dữ liệu | Prototype-quality, tất cả FKs connect | Chỉ reference (hiện chưa có gì) |
 | ⚠️ Destructive | Wipe toàn bộ app data trước | Không xóa gì |
-| Lệnh (từ `thanks-backend/`) | `make seed-fake` | `make seed-normal` |
+| Lệnh (từ `thanks-backend/`) | `make seed-dev` | `make seed-prod` |
 | Xóa không re-seed | `make seed-clear` | — |
 
-**Fake seed bao gồm:**
+**Dev seed bao gồm:**
 - 6 users: Dev User (test account), Nguyễn Văn Phượng (business giver), Trần Thị Mai (personal giver #1), Lê Minh Đức (org admin), Phạm Thị Hoa (personal receiver), Hoàng Minh Tuấn (personal giver #2)
 - 2 businesses: Bánh Mì Phượng (verified), Cà Phê Nhớ (pending — dev user's)
 - 1 organization: Mái Ấm Thiên Tâm (verified)
