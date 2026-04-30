@@ -125,8 +125,12 @@ body {
 .col-row.dim  { opacity: 0.38; }
 .col-row.added{ background: #fef5ec; }
 
+/* nullable FK: lighter blue to distinguish from required FK */
+.col-row.fk.nullable { background: #f7faff; }
+
 .col-icon { font-size: 9px; width: 12px; flex-shrink: 0; text-align: center; }
 .col-name { font-weight: 500; flex-shrink: 0; }
+.col-null { font-size: 9px; color: #c0c0c0; font-weight: 700; flex-shrink: 0; }
 .col-type {
   color: #a0a0a0;
   font-size: 10px;
@@ -143,6 +147,8 @@ body {
 .col-row.pk .col-name  { color: #C04E2A; font-weight: 700; }
 .col-row.fk .col-name  { color: #2563eb; }
 .col-row.fk .col-icon  { color: #2563eb; }
+.col-row.fk.nullable .col-name { color: #60a5fa; }
+.col-row.fk.nullable .col-icon { color: #60a5fa; }
 .col-row.added .col-icon { color: #D65A3A; font-weight: 700; }
 
 /* ── Legend ── */
@@ -161,16 +167,18 @@ body {
 .leg { display: flex; align-items: center; gap: 5px; }
 .leg-key  { width: 12px; height: 12px; border-radius: 3px; background: #fff9f6; border: 1.5px solid #C04E2A; }
 .leg-fk   { width: 12px; height: 12px; border-radius: 3px; background: #f0f5ff; border: 1.5px solid #2563eb; }
+.leg-fk-opt { width: 12px; height: 12px; border-radius: 3px; background: #f7faff; border: 1.5px solid #60a5fa; }
 .leg-add  { width: 12px; height: 12px; border-radius: 3px; background: #fef5ec; border: 1.5px solid #D65A3A; }
 .leg-new  { width: 12px; height: 12px; border-radius: 3px; background: #fff; box-shadow: 0 0 0 1.5px #D65A3A; }
 .leg-dim  { width: 12px; height: 12px; border-radius: 3px; background: #f5f5f5; border: 1.5px solid #ccc; }
 .leg-sep  { width: 1px; height: 16px; background: #e2d9ce; }
+.leg-null-mark { font-size: 10px; color: #c0c0c0; font-weight: 700; }
 </style>
 </head>
 <body>
 
 <div class="page-header">
-  <h1>thanks<span class="dot">!</span> <span class="subtitle">— Database Schema</span><span class="version">v2 · migration 000002</span></h1>
+  <h1>thanks<span class="dot">!</span> <span class="subtitle">— Database Schema</span><span class="version">v6 · migration 000006</span></h1>
   <a class="nav-link" href="api_doc.html">API Docs →</a>
 </div>
 
@@ -191,39 +199,48 @@ body {
     <div class="col">
 
       <!-- auth_providers -->
-      <div class="table-card new" id="tbl-auth-providers">
-        <div class="table-header"><span class="tbl-icon">▣</span>auth_providers<span class="tbl-tag">NEW</span></div>
+      <div class="table-card" id="tbl-auth-providers">
+        <div class="table-header"><span class="tbl-icon">▣</span>auth_providers</div>
         <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">user_id</span><span class="col-type">→ users</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">provider</span><span class="col-type">phone_otp|email|zalo|google|fb|apple</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">provider_user_id</span><span class="col-type">VARCHAR(255)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">email</span><span class="col-type">VARCHAR(255)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">metadata</span><span class="col-type">JSONB</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">provider_user_id</span><span class="col-null">?</span><span class="col-type">VARCHAR(255)</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">email</span><span class="col-null">?</span><span class="col-type">VARCHAR(255)</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">metadata</span><span class="col-null">?</span><span class="col-type">JSONB</span></div>
         <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
       </div>
 
       <!-- sessions -->
-      <div class="table-card new" id="tbl-sessions">
-        <div class="table-header"><span class="tbl-icon">▣</span>sessions<span class="tbl-tag">NEW</span></div>
+      <div class="table-card" id="tbl-sessions">
+        <div class="table-header"><span class="tbl-icon">▣</span>sessions</div>
         <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">user_id</span><span class="col-type">→ users</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">refresh_token</span><span class="col-type">VARCHAR(255) UNIQUE</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">user_agent</span><span class="col-type">TEXT</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">ip</span><span class="col-type">INET</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">user_agent</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">ip</span><span class="col-null">?</span><span class="col-type">INET</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">expires_at</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">revoked_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">revoked_at</span><span class="col-null">?</span><span class="col-type">TIMESTAMPTZ</span></div>
         <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
       </div>
 
       <!-- device_tokens -->
-      <div class="table-card new" id="tbl-device-tokens">
-        <div class="table-header"><span class="tbl-icon">▣</span>device_tokens<span class="tbl-tag">NEW</span></div>
+      <div class="table-card" id="tbl-device-tokens">
+        <div class="table-header"><span class="tbl-icon">▣</span>device_tokens</div>
         <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">user_id</span><span class="col-type">→ users</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">platform</span><span class="col-type">ios|android|web</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">token</span><span class="col-type">VARCHAR(500) UNIQUE</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">last_used_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">last_used_at</span><span class="col-null">?</span><span class="col-type">TIMESTAMPTZ</span></div>
         <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+      </div>
+
+      <!-- revoked_tokens (000003) -->
+      <div class="table-card new" id="tbl-revoked-tokens">
+        <div class="table-header"><span class="tbl-icon">▣</span>revoked_tokens<span class="tbl-tag">000003</span></div>
+        <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">jti</span><span class="col-type">TEXT</span></div>
+        <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">user_id</span><span class="col-type">→ users</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">expires_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">revoked_at</span><span class="col-type">TIMESTAMPTZ</span></div>
       </div>
 
     </div><!-- /col1 -->
@@ -235,35 +252,35 @@ body {
       <div class="table-card" id="tbl-users">
         <div class="table-header"><span class="tbl-icon">▣</span>users</div>
         <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">phone</span><span class="col-type">VARCHAR(15) UNIQUE</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">email</span><span class="col-type">VARCHAR(255) UNIQUE</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">name</span><span class="col-type">VARCHAR(100)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">avatar_url</span><span class="col-type">TEXT</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">bio</span><span class="col-type">TEXT</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">role_type</span><span class="col-type">giver|receiver|both</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">giver_type</span><span class="col-type">personal|business</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">receiver_type</span><span class="col-type">personal|organization</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">latitude / longitude</span><span class="col-type">DECIMAL(10,7)</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">address</span><span class="col-type">TEXT</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">city</span><span class="col-type">VARCHAR(100)</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">phone</span><span class="col-null">?</span><span class="col-type">VARCHAR(15) UNIQUE</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">email</span><span class="col-null">?</span><span class="col-type">VARCHAR(255) UNIQUE</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">name</span><span class="col-null">?</span><span class="col-type">VARCHAR(100)</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">avatar_url</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">bio</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">role_type</span><span class="col-type">giver|receiver|both</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">giver_type</span><span class="col-null">?</span><span class="col-type">personal|business</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">receiver_type</span><span class="col-null">?</span><span class="col-type">personal|organization</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">latitude / longitude</span><span class="col-null">?</span><span class="col-type">DECIMAL(10,7)</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">address</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">city</span><span class="col-null">?</span><span class="col-type">VARCHAR(100)</span></div>
         <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">is_business</span><span class="col-type">BOOLEAN <small>(legacy)</small></span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">is_verified</span><span class="col-type">BOOLEAN</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">rating_avg</span><span class="col-type">DECIMAL(3,2)</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">rating_count</span><span class="col-type">INT</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">deleted_at</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">updated_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">deleted_at</span><span class="col-null">?</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">notification_preferences</span><span class="col-type">JSONB</span></div>
+        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at / updated_at</span><span class="col-type">TIMESTAMPTZ</span></div>
       </div>
 
       <!-- notifications -->
-      <div class="table-card new" id="tbl-notifications">
-        <div class="table-header"><span class="tbl-icon">▣</span>notifications<span class="tbl-tag">NEW</span></div>
+      <div class="table-card" id="tbl-notifications">
+        <div class="table-header"><span class="tbl-icon">▣</span>notifications</div>
         <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">user_id</span><span class="col-type">→ users</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">type</span><span class="col-type">claim_received|new_message|…</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">related_entity_id</span><span class="col-type">UUID</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">related_entity_id</span><span class="col-null">?</span><span class="col-type">UUID</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">title</span><span class="col-type">TEXT</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">body</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">body</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">is_read</span><span class="col-type">BOOLEAN</span></div>
         <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
       </div>
@@ -274,45 +291,83 @@ body {
     <div class="col">
 
       <!-- businesses -->
-      <div class="table-card new" id="tbl-businesses">
-        <div class="table-header"><span class="tbl-icon">▣</span>businesses<span class="tbl-tag">NEW</span></div>
+      <div class="table-card" id="tbl-businesses">
+        <div class="table-header"><span class="tbl-icon">▣</span>businesses</div>
         <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">owner_user_id</span><span class="col-type">→ users</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">name</span><span class="col-type">VARCHAR(200)</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">category</span><span class="col-type">restaurant|bakery|…</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">logo_url</span><span class="col-type">TEXT</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">phone</span><span class="col-type">VARCHAR(15)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">description</span><span class="col-type">TEXT</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">address</span><span class="col-type">TEXT</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">latitude / longitude</span><span class="col-type">DECIMAL(10,7)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">city</span><span class="col-type">VARCHAR(100)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">verification_status</span><span class="col-type">pending|verified|rejected</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">verified_at</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">verified_by_user_id</span><span class="col-type">→ users</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">rejection_reason</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">logo_url</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">phone</span><span class="col-null">?</span><span class="col-type">VARCHAR(15)</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">description</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">address</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">address_detail</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">latitude / longitude</span><span class="col-null">?</span><span class="col-type">DECIMAL(10,7)</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">city</span><span class="col-null">?</span><span class="col-type">VARCHAR(100)</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">verification_status</span><span class="col-type">pending_review|verified|rejected|action_needed</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">verified_at</span><span class="col-null">?</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row fk nullable"><span class="col-icon">FK</span><span class="col-name">verified_by_user_id</span><span class="col-null">?</span><span class="col-type">→ users</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">rejection_reason</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">is_active</span><span class="col-type">BOOLEAN</span></div>
-        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">updated_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at / updated_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+      </div>
+
+      <!-- business_members (000006) -->
+      <div class="table-card new" id="tbl-business-members">
+        <div class="table-header"><span class="tbl-icon">▣</span>business_members<span class="tbl-tag">000006</span></div>
+        <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
+        <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">business_id</span><span class="col-type">→ businesses</span></div>
+        <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">user_id</span><span class="col-type">→ users</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">role</span><span class="col-type">owner|staff</span></div>
+        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">joined_at</span><span class="col-type">TIMESTAMPTZ</span></div>
       </div>
 
       <!-- organizations -->
-      <div class="table-card new" id="tbl-organizations">
-        <div class="table-header"><span class="tbl-icon">▣</span>organizations<span class="tbl-tag">NEW</span></div>
+      <div class="table-card" id="tbl-organizations">
+        <div class="table-header"><span class="tbl-icon">▣</span>organizations</div>
         <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">owner_user_id</span><span class="col-type">→ users</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">name</span><span class="col-type">VARCHAR(200)</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">category</span><span class="col-type">social|edu|healthcare|…</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">logo_url</span><span class="col-type">TEXT</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">phone</span><span class="col-type">VARCHAR(15)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">description</span><span class="col-type">TEXT</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">address</span><span class="col-type">TEXT</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">contact_person_name</span><span class="col-type">VARCHAR(100)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">latitude / longitude</span><span class="col-type">DECIMAL(10,7)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">city</span><span class="col-type">VARCHAR(100)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">verification_status</span><span class="col-type">pending|verified|…</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">logo_url</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">phone</span><span class="col-null">?</span><span class="col-type">VARCHAR(15)</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">description</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">address</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row added nullable"><span class="col-icon">+</span><span class="col-name">address_detail</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">contact_person_name</span><span class="col-null">?</span><span class="col-type">VARCHAR(100)</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">latitude / longitude</span><span class="col-null">?</span><span class="col-type">DECIMAL(10,7)</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">city</span><span class="col-null">?</span><span class="col-type">VARCHAR(100)</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">verification_status</span><span class="col-type">pending_review|verified|rejected|action_needed</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">verified_at</span><span class="col-null">?</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row fk nullable"><span class="col-icon">FK</span><span class="col-name">verified_by_user_id</span><span class="col-null">?</span><span class="col-type">→ users</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">rejection_reason</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">is_active</span><span class="col-type">BOOLEAN</span></div>
+        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at / updated_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+      </div>
+
+      <!-- org_members (000006) -->
+      <div class="table-card new" id="tbl-org-members">
+        <div class="table-header"><span class="tbl-icon">▣</span>org_members<span class="tbl-tag">000006</span></div>
+        <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
+        <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">org_id</span><span class="col-type">→ organizations</span></div>
+        <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">user_id</span><span class="col-type">→ users</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">role</span><span class="col-type">admin|member</span></div>
+        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">joined_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+      </div>
+
+      <!-- invites (000006) -->
+      <div class="table-card new" id="tbl-invites">
+        <div class="table-header"><span class="tbl-icon">▣</span>invites<span class="tbl-tag">000006</span></div>
+        <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">entity_type</span><span class="col-type">business|org</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">entity_id</span><span class="col-type">UUID (polymorphic)</span></div>
+        <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">inviter_id</span><span class="col-type">→ users</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">invitee_contact</span><span class="col-type">TEXT (email|phone)</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">role</span><span class="col-type">staff|member</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">token</span><span class="col-type">UUID UNIQUE</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">status</span><span class="col-type">pending|accepted|declined|expired</span></div>
         <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">updated_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">expires_at</span><span class="col-type">TIMESTAMPTZ (+7 days)</span></div>
       </div>
 
     </div><!-- /col3 -->
@@ -325,24 +380,23 @@ body {
         <div class="table-header"><span class="tbl-icon">▣</span>posts</div>
         <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">user_id</span><span class="col-type">→ users</span></div>
-        <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">business_id</span><span class="col-type">→ businesses</span></div>
+        <div class="col-row fk nullable"><span class="col-icon">FK</span><span class="col-name">business_id</span><span class="col-null">?</span><span class="col-type">→ businesses</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">title</span><span class="col-type">VARCHAR(200)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">description</span><span class="col-type">TEXT</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">category</span><span class="col-type">food|clothing|books|…</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">description</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">category</span><span class="col-null">?</span><span class="col-type">food|clothes|books|tech|furniture|other</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">quantity</span><span class="col-type">INT</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">quantity_remaining</span><span class="col-type">INT</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">limit_per_receiver</span><span class="col-type">INT</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">pickup_start</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">pickup_end</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">closes_at</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">latitude / longitude</span><span class="col-type">DECIMAL(10,7)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">address</span><span class="col-type">TEXT</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">city</span><span class="col-type">VARCHAR(100)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">status</span><span class="col-type">active|pending|completed|expired|cancelled</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">limit_per_receiver</span><span class="col-null">?</span><span class="col-type">INT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">pickup_start</span><span class="col-null">?</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">pickup_end</span><span class="col-null">?</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">closes_at</span><span class="col-null">?</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">latitude / longitude</span><span class="col-null">?</span><span class="col-type">DECIMAL(10,7)</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">address</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">city</span><span class="col-null">?</span><span class="col-type">VARCHAR(100)</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">status</span><span class="col-type">active|pending_delivery|completed|expired|cancelled</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">is_recurring</span><span class="col-type">BOOLEAN</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">ai_summary</span><span class="col-type">TEXT</span></div>
-        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">updated_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">ai_summary</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at / updated_at</span><span class="col-type">TIMESTAMPTZ</span></div>
       </div>
 
       <!-- post_images -->
@@ -355,8 +409,8 @@ body {
       </div>
 
       <!-- post_schedules -->
-      <div class="table-card new" id="tbl-post-schedules">
-        <div class="table-header"><span class="tbl-icon">▣</span>post_schedules<span class="tbl-tag">NEW</span></div>
+      <div class="table-card" id="tbl-post-schedules">
+        <div class="table-header"><span class="tbl-icon">▣</span>post_schedules</div>
         <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">post_id</span><span class="col-type">→ posts</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">day_of_week</span><span class="col-type">SMALLINT (0–6)</span></div>
@@ -375,17 +429,16 @@ body {
         <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">post_id</span><span class="col-type">→ posts</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">user_id</span><span class="col-type">→ users</span></div>
-        <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">organization_id</span><span class="col-type">→ organizations</span></div>
+        <div class="col-row fk nullable"><span class="col-icon">FK</span><span class="col-name">organization_id</span><span class="col-null">?</span><span class="col-type">→ organizations</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">quantity</span><span class="col-type">INT</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">pickup_code</span><span class="col-type">VARCHAR(6)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">status</span><span class="col-type">pending|confirmed|picked_up|no_show|…</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">confirmed_at</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">picked_up_at</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">no_show_at</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">cancelled_at</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">notes</span><span class="col-type">TEXT</span></div>
-        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
-        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">updated_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">pickup_code</span><span class="col-null">?</span><span class="col-type">VARCHAR(6)</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">status</span><span class="col-type">pending|confirmed|picked_up|no_show|cancelled|completed</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">confirmed_at</span><span class="col-null">?</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">picked_up_at</span><span class="col-null">?</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">no_show_at</span><span class="col-null">?</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">cancelled_at</span><span class="col-null">?</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">notes</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at / updated_at</span><span class="col-type">TIMESTAMPTZ</span></div>
       </div>
 
       <!-- ratings -->
@@ -396,19 +449,19 @@ body {
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">rater_id</span><span class="col-type">→ users</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">rated_id</span><span class="col-type">→ users</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">score</span><span class="col-type">INT (1–5)</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">comment</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">comment</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
         <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
       </div>
 
       <!-- thanks -->
-      <div class="table-card new" id="tbl-thanks">
-        <div class="table-header"><span class="tbl-icon">▣</span>thanks<span class="tbl-tag">NEW</span></div>
+      <div class="table-card" id="tbl-thanks">
+        <div class="table-header"><span class="tbl-icon">▣</span>thanks</div>
         <div class="col-row pk"><span class="col-icon">PK</span><span class="col-name">id</span><span class="col-type">UUID</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">claim_id</span><span class="col-type">→ claims</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">from_user_id</span><span class="col-type">→ users</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">to_user_id</span><span class="col-type">→ users</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">message</span><span class="col-type">TEXT</span></div>
-        <div class="col-row"><span class="col-icon">·</span><span class="col-name">reaction_emoji</span><span class="col-type">VARCHAR(8)</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">message</span><span class="col-null">?</span><span class="col-type">TEXT</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">reaction_emoji</span><span class="col-null">?</span><span class="col-type">VARCHAR(8)</span></div>
         <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
       </div>
 
@@ -419,8 +472,8 @@ body {
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">claim_id</span><span class="col-type">→ claims</span></div>
         <div class="col-row fk"><span class="col-icon">FK</span><span class="col-name">sender_id</span><span class="col-type">→ users</span></div>
         <div class="col-row"><span class="col-icon">·</span><span class="col-name">content</span><span class="col-type">TEXT</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">is_read</span><span class="col-type">BOOLEAN</span></div>
-        <div class="col-row added"><span class="col-icon">+</span><span class="col-name">read_at</span><span class="col-type">TIMESTAMPTZ</span></div>
+        <div class="col-row"><span class="col-icon">·</span><span class="col-name">is_read</span><span class="col-type">BOOLEAN</span></div>
+        <div class="col-row nullable"><span class="col-icon">·</span><span class="col-name">read_at</span><span class="col-null">?</span><span class="col-type">TIMESTAMPTZ</span></div>
         <div class="col-row dim"><span class="col-icon">·</span><span class="col-name">created_at</span><span class="col-type">TIMESTAMPTZ</span></div>
       </div>
 
@@ -431,9 +484,11 @@ body {
 
 <div class="legend">
   <div class="leg"><div class="leg-key"></div> Primary Key</div>
-  <div class="leg"><div class="leg-fk"></div> Foreign Key</div>
-  <div class="leg"><div class="leg-add"></div> Cột mới (migration 000002)</div>
-  <div class="leg"><div class="leg-new"></div> Bảng mới</div>
+  <div class="leg"><div class="leg-fk"></div> FK (required)</div>
+  <div class="leg"><div class="leg-fk-opt"></div> FK <span class="leg-null-mark">?</span> (optional)</div>
+  <div class="leg"><span class="leg-null-mark">?</span> nullable column</div>
+  <div class="leg"><div class="leg-add"></div> Cột mới (migration 000006)</div>
+  <div class="leg"><div class="leg-new"></div> Bảng mới (000003 / 000006)</div>
   <div class="leg"><div class="leg-dim"></div> Timestamps (dimmed)</div>
   <div class="leg-sep"></div>
   <div class="leg" style="margin-left:4px">
@@ -449,20 +504,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* Colour palette per relationship */
   const C = {
-    auth:           '#7c3aed',  // violet — auth domain
-    notif:          '#ec4899',  // pink
-    business:       '#0891b2',  // teal
-    org:            '#0d9488',  // teal-green
-    posts_user:     '#3b82f6',  // blue
-    posts_business: '#0891b2',  // teal
-    images:         '#8b5cf6',  // purple
-    schedules:      '#a855f7',  // fuchsia
-    claims_post:    '#f59e0b',  // amber
-    claims_user:    '#06b6d4',  // cyan
-    claims_org:     '#0d9488',  // teal-green
-    msgs:           '#10b981',  // emerald
-    ratings:        '#f97316',  // orange
-    thanks_rel:     '#ef4444',  // red
+    auth:              '#7c3aed',  // violet — auth domain
+    revoked:           '#dc2626',  // red — token denylist
+    notif:             '#ec4899',  // pink
+    business:          '#0891b2',  // teal
+    biz_members:       '#0891b2',  // teal (business_members → businesses)
+    org:               '#0d9488',  // teal-green
+    org_members_c:     '#0d9488',  // teal-green (org_members → organizations)
+    posts_user:        '#3b82f6',  // blue
+    posts_business:    '#0891b2',  // teal
+    images:            '#8b5cf6',  // purple
+    schedules:         '#a855f7',  // fuchsia
+    claims_post:       '#f59e0b',  // amber
+    claims_user:       '#06b6d4',  // cyan
+    claims_org:        '#0d9488',  // teal-green
+    msgs:              '#10b981',  // emerald
+    ratings:           '#f97316',  // orange
+    thanks_rel:        '#ef4444',  // red
   };
 
   const ns = (tag) => document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -575,38 +633,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ──────────────────────────────────────────────────────────
        Chỉ vẽ FK lines giữa các cột liền kề (tránh cắt qua cards).
-       Các FK xuyên cột (users→posts, users→claims, organizations
-       →claims, …) đã được ghi rõ trong card "FK col_name → table"
-       nên không vẽ line nữa.
-       Không vẽ label trên line — đỡ rối, FK name đã có trong card.
+       Cross-column FKs đã ghi rõ trong card, không vẽ line thêm.
     ────────────────────────────────────────────────────────── */
 
     /* Auth (col1 → col2 users) */
-    line('tbl-auth-providers', 'R', 0.45, 'tbl-users', 'L', 0.10, 'auth');
-    line('tbl-sessions',       'R', 0.45, 'tbl-users', 'L', 0.22, 'auth');
-    line('tbl-device-tokens',  'R', 0.45, 'tbl-users', 'L', 0.34, 'auth');
+    line('tbl-auth-providers',   'R', 0.45, 'tbl-users', 'L', 0.10, 'auth');
+    line('tbl-sessions',         'R', 0.45, 'tbl-users', 'L', 0.22, 'auth');
+    line('tbl-device-tokens',    'R', 0.45, 'tbl-users', 'L', 0.34, 'auth');
+    line('tbl-revoked-tokens',   'R', 0.50, 'tbl-users', 'L', 0.46, 'revoked');
 
     /* users → notifications (vertical trong col2) */
-    line('tbl-users',          'B', 0.50, 'tbl-notifications', 'T', 0.50, 'notif');
+    line('tbl-users',            'B', 0.50, 'tbl-notifications', 'T', 0.50, 'notif');
 
     /* Tenancy: users (col2) → businesses + organizations (col3) */
-    line('tbl-users',          'R', 0.36, 'tbl-businesses',    'L', 0.18, 'business');
-    line('tbl-users',          'R', 0.54, 'tbl-organizations', 'L', 0.18, 'org');
+    line('tbl-users',            'R', 0.36, 'tbl-businesses',    'L', 0.18, 'business');
+    line('tbl-users',            'R', 0.54, 'tbl-organizations', 'L', 0.18, 'org');
+
+    /* business_members → businesses (vertical trong col3) */
+    line('tbl-businesses',       'B', 0.50, 'tbl-business-members', 'T', 0.50, 'biz_members');
+
+    /* org_members → organizations (vertical trong col3) */
+    line('tbl-organizations',    'B', 0.50, 'tbl-org-members',   'T', 0.50, 'org_members_c');
 
     /* Content: businesses (col3) → posts (col4) */
-    line('tbl-businesses',     'R', 0.18, 'tbl-posts',         'L', 0.18, 'posts_business');
+    line('tbl-businesses',       'R', 0.18, 'tbl-posts',         'L', 0.18, 'posts_business');
 
     /* posts → images & schedules (vertical trong col4) */
-    line('tbl-posts',          'B', 0.30, 'tbl-post-images',   'T', 0.50, 'images');
-    line('tbl-posts',          'B', 0.70, 'tbl-post-schedules','T', 0.50, 'schedules');
+    line('tbl-posts',            'B', 0.30, 'tbl-post-images',   'T', 0.50, 'images');
+    line('tbl-posts',            'B', 0.70, 'tbl-post-schedules','T', 0.50, 'schedules');
 
     /* Transactions: posts (col4) → claims (col5) */
-    line('tbl-posts',          'R', 0.20, 'tbl-claims',        'L', 0.18, 'claims_post');
+    line('tbl-posts',            'R', 0.20, 'tbl-claims',        'L', 0.18, 'claims_post');
 
     /* claims → ratings/thanks/messages (vertical trong col5) */
-    line('tbl-claims',         'B', 0.30, 'tbl-ratings',       'T', 0.50, 'ratings');
-    line('tbl-claims',         'B', 0.55, 'tbl-thanks',        'T', 0.50, 'thanks_rel');
-    line('tbl-claims',         'B', 0.80, 'tbl-messages',      'T', 0.50, 'msgs');
+    line('tbl-claims',           'B', 0.30, 'tbl-ratings',       'T', 0.50, 'ratings');
+    line('tbl-claims',           'B', 0.55, 'tbl-thanks',        'T', 0.50, 'thanks_rel');
+    line('tbl-claims',           'B', 0.80, 'tbl-messages',      'T', 0.50, 'msgs');
   }
 
   draw();
