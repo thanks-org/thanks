@@ -490,6 +490,96 @@ VALUES
    'Cảm ơn anh Phượng! Cơm rất ngon và còn nóng. Gia đình mình cảm ơn nhiều lắm.',
    '❤️', NOW() - INTERVAL '13 days');
 
+-- ── 12a. ADDITIONAL MESSAGES ─────────────────────────────────────────────
+-- Claim 2: Mái Ấm Thiên Tâm ↔ Phượng (bánh mì pending — giver inbox preview)
+INSERT INTO messages (id, claim_id, sender_id, content, is_read, created_at)
+VALUES
+  ('00000000-0000-0000-0006-000000000004',
+   '00000000-0000-0000-0005-000000000002',
+   '00000000-0000-0000-0000-000000000004',
+   'Chào anh Phượng! Mái Ấm muốn nhận 5 ổ bánh mì cho các em, có thể đến 11h30 được không ạ?',
+   true, NOW() - INTERVAL '25 minutes'),
+
+  ('00000000-0000-0000-0006-000000000005',
+   '00000000-0000-0000-0005-000000000002',
+   '00000000-0000-0000-0000-000000000002',
+   'Được bạn ơi, 11h30 mình để sẵn 5 ổ nhé. Đến hỏi anh Phượng là được.',
+   false, NOW() - INTERVAL '20 minutes'),
+
+-- Claim 9: Đức ↔ Dev (sách completed — giver inbox preview)
+  ('00000000-0000-0000-0006-000000000006',
+   '00000000-0000-0000-0005-000000000009',
+   '00000000-0000-0000-0000-000000000001',
+   'Bộ sách còn mới 80%, em lấy về cho các bạn trong mái ấm nhé. Cuối tuần trước 12h anh.',
+   true, NOW() - INTERVAL '12 days'),
+
+  ('00000000-0000-0000-0006-000000000007',
+   '00000000-0000-0000-0005-000000000009',
+   '00000000-0000-0000-0000-000000000004',
+   'Dạ cảm ơn anh! Chủ nhật mình sẽ cử người đến lấy ạ.',
+   true, NOW() - INTERVAL '11 days' - INTERVAL '6 hours');
+
+-- ── 12b. ADDITIONAL RATINGS ───────────────────────────────────────────────
+-- Đức đánh giá Dev sau khi nhận sách (claim 9 → cập nhật rating_avg Dev)
+INSERT INTO ratings (id, claim_id, rater_id, rated_id, score, comment, created_at)
+VALUES
+  ('00000000-0000-0000-0007-000000000005',
+   '00000000-0000-0000-0005-000000000009',
+   '00000000-0000-0000-0000-000000000004',
+   '00000000-0000-0000-0000-000000000001',
+   5, 'Sách như mô tả, anh Dev rất nhiệt tình hỗ trợ các em trong mái ấm!',
+   NOW() - INTERVAL '9 days');
+
+-- ── 12c. ADDITIONAL THANKS ────────────────────────────────────────────────
+-- Đức cảm ơn Dev (to_user_id = dev → screen 2.2.9 hiện "1 note from receivers")
+INSERT INTO thanks (id, claim_id, from_user_id, to_user_id, message, reaction_emoji, created_at)
+VALUES
+  ('00000000-0000-0000-0008-000000000003',
+   '00000000-0000-0000-0005-000000000009',
+   '00000000-0000-0000-0000-000000000004',
+   '00000000-0000-0000-0000-000000000001',
+   'Anh ơi, sách rất tốt, các em trong mái ấm đang học ôn. Cảm ơn anh nhiều lắm!',
+   '📚', NOW() - INTERVAL '9 days');
+
+-- ── 12d. ADDITIONAL BUSINESSES ────────────────────────────────────────────
+-- Tiệm Ngọt Dev — rejected (screen 2.2.5: badge "Từ chối")
+INSERT INTO businesses (id, owner_user_id, name, category,
+                        logo_url, phone, description,
+                        address, latitude, longitude, city,
+                        verification_status, verified_at, is_active,
+                        created_at, updated_at)
+VALUES
+  ('00000000-0000-0000-0001-000000000003',
+   '00000000-0000-0000-0000-000000000001',
+   'Tiệm Ngọt Dev', 'bakery',
+   'https://picsum.photos/seed/biz_ngot/200/200',
+   '0901222222',
+   'Tiệm bánh ngọt nhỏ, muốn đăng ký tặng bánh mỗi tuần.',
+   '12 Trần Hưng Đạo, Quận 1, TP.HCM',
+   10.7730, 106.6990, 'Hồ Chí Minh',
+   'rejected', NULL, false,
+   NOW() - INTERVAL '20 days', NOW() - INTERVAL '15 days');
+
+-- ── 12e. ADDITIONAL ORGANIZATIONS ─────────────────────────────────────────
+-- Nhóm Hỗ Trợ Cộng Đồng Dev — pending_review (screen 2.3.3: badge "Chờ xét duyệt")
+INSERT INTO organizations (id, owner_user_id, name, category,
+                           logo_url, phone, description, address,
+                           contact_person_name, latitude, longitude, city,
+                           verification_status, verified_at, is_active,
+                           created_at, updated_at)
+VALUES
+  ('00000000-0000-0000-0002-000000000002',
+   '00000000-0000-0000-0000-000000000001',
+   'Nhóm Hỗ Trợ Cộng Đồng Dev', 'social',
+   'https://picsum.photos/seed/org_community/200/200',
+   '0901333333',
+   'Nhóm tình nguyện hỗ trợ người cao tuổi và trẻ em khó khăn trong khu phố.',
+   '5 Nguyễn Thị Minh Khai, Quận 1, TP.HCM',
+   'Dev Admin',
+   10.7760, 106.6980, 'Hồ Chí Minh',
+   'pending_review', NULL, true,
+   NOW() - INTERVAL '7 days', NOW() - INTERVAL '7 days');
+
 -- ── 12. NOTIFICATIONS ────────────────────────────────────────────────────
 -- UUID scheme: 00000000-0000-0000-0009-00000000000X
 INSERT INTO notifications (id, user_id, type, related_entity_id,

@@ -229,6 +229,22 @@
 | F-extra-1 | **Giver profile sections** — "Bài đăng đang tặng" + "Đánh giá gần đây" in `GiverPublicBusinessScreen` | TrungVT (sonnet exec) | [x] | Done [44ae6a4](https://github.com/thanks-org/thanks-app/commit/44ae6a4) — `UsersService` (`getUserPosts`/`getUserRatings`), `UserRating` model, parallel fetch in `initState`, skeleton/empty/error states per section, top-5 post rows + rating rows with star row + relative date. |
 | F-extra-2 | **Bottom nav bar on all sub-screens** — `AppBottomNavBar` widget reused across all pushed screens (except auth + screens with existing bottom CTA bars) | TrungVT (sonnet exec) | [x] | Done [44ae6a4](https://github.com/thanks-org/thanks-app/commit/44ae6a4) — `lib/shared/app_bottom_nav_bar.dart`; added to: `GiverPublicBusinessScreen`, `ReceiverPublicOrganizationScreen`, `NotificationsInboxScreen`, `ClaimConfirmedScreen`, `WhoClaimedScreen`, `MyItemsPersonalScreen`, `MyBusinessesScreen`, `ManageOrganizationsScreen`, `SettingsScreen`, `PublicProfileScreen`, `ThanksRatingsScreen`. Skipped: screens with existing bottom CTA bars (`ItemDetailScreen` _ClaimBar, `SubmitItemStep1/2`, `MessageThreadScreen`, `ManageBusinessesScreen`, `MyItemsBusinessScreen`, `AddBusinessScreen`, `AddOrganizationScreen`). |
 
+### Backend — Extra (Gaps từ audit 2026-04-30)
+
+| # | Task | Assignee | Status | Ghi chú |
+|---|------|----------|--------|---------|
+| B-new-1 | `POST /claims/:id/thanks` — gửi thank-you note sau pickup | _unassigned_ | [ ] | Screen 2.2.9 "Send a note" button. Bảng `thanks` đã có. Cần endpoint + Flutter F-new-1. |
+| B-new-2 | `GET /leaderboard` thêm `giver_type` + `period` filter | _unassigned_ | [ ] | Screen 2.1.2: tab All/Business/Personal × Week/Month/All-time. Backend hiện không có 2 params này. |
+| B-new-3 | Migration: `ALTER TABLE organizations ADD COLUMN address_detail TEXT` | _unassigned_ | [ ] | `AddOrganizationScreen` (F4-9) gửi `address_detail` nhưng column chưa có trong schema. |
+| B-new-4 | `PUT /me/notification-preferences` — persist push/email toggle | _unassigned_ | [ ] | Screen 2.1.4d Settings: toggle hiện chỉ local state. Cần `users.notification_preferences JSONB` + endpoint. |
+| B-new-5 | Wire `POST /uploads` (B4-1) sang R2/S3 | TrungCD | [ ] | Phụ thuộc I1-1. Storage interface đã có trong `internal/storage` — chỉ cần swap implementation. |
+
+### Flutter — Extra (Gaps từ audit 2026-04-30)
+
+| # | Task | Assignee | Status | Ghi chú |
+|---|------|----------|--------|---------|
+| F-new-1 | Screen 2.2.9 — "Send a note" button → `POST /claims/:id/thanks` | _unassigned_ | [ ] | Phụ thuộc B-new-1. Hiện button tĩnh, chưa có action. |
+
 ### Deferred — Phase 5
 > Block trên external dependencies, không vào sprint này.
 

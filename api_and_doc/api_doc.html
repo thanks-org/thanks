@@ -145,6 +145,8 @@
     <a href="#users-public"><span class="method-badge m-GET">GET</span>Public Profile</a>
     <a href="#users-posts"><span class="method-badge m-GET">GET</span>User Posts</a>
     <a href="#users-ratings"><span class="method-badge m-GET">GET</span>User Ratings</a>
+    <a href="#businesses-get"><span class="method-badge m-GET">GET</span>Business Detail</a>
+    <a href="#orgs-get"><span class="method-badge m-GET">GET</span>Org Detail</a>
   </div>
 
   <div class="sidebar-section">
@@ -179,6 +181,8 @@
     <a href="#messages-thread"><span class="method-badge m-GET">GET</span>Message Thread</a>
     <a href="#messages-send"><span class="method-badge m-POST">POST</span>Send Message</a>
     <a href="#ratings-create"><span class="method-badge m-POST">POST</span>Rate After Pickup</a>
+    <a href="#notifications-list"><span class="method-badge m-GET">GET</span>Notifications</a>
+    <a href="#notifications-read"><span class="method-badge m-POST">POST</span>Mark Read</a>
     <a href="#auth-logout"><span class="method-badge m-POST">POST</span>Logout</a>
   </div>
 </nav>
@@ -328,6 +332,8 @@
           <tr><td class="param-name">lng</td><td class="param-type">float</td><td><span class="optional">optional</span></td><td>User longitude</td></tr>
           <tr><td class="param-name">radius_km</td><td class="param-type">float</td><td><span class="optional">optional</span></td><td>Search radius in km (default: 10)</td></tr>
           <tr><td class="param-name">category</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td><div class="enum-list"><span class="enum-val">food</span><span class="enum-val">clothes</span><span class="enum-val">furniture</span><span class="enum-val">tech</span><span class="enum-val">books</span></div></td></tr>
+          <tr><td class="param-name">q</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Full-text search query (matches title + description, case-insensitive)</td></tr>
+          <tr><td class="param-name">sort</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td><div class="enum-list"><span class="enum-val">distance</span><span class="enum-val">recent</span><span class="enum-val">expiring</span></div> Default: <code>distance</code> khi có lat/lng, ngược lại <code>recent</code>. <code>distance</code> không có lat/lng tự fallback sang <code>recent</code>.</td></tr>
           <tr><td class="param-name">limit</td><td class="param-type">int</td><td><span class="optional">optional</span></td><td>Items per page (default: 20, max: 50)</td></tr>
           <tr><td class="param-name">offset</td><td class="param-type">int</td><td><span class="optional">optional</span></td><td>Pagination offset (default: 0)</td></tr>
         </table>
@@ -390,6 +396,8 @@
           <tr><th>Param</th><th>Type</th><th>Required</th><th>Description</th></tr>
           <tr><td class="param-name">limit</td><td class="param-type">int</td><td><span class="optional">optional</span></td><td>Number of results (default: 50, max: 200)</td></tr>
           <tr><td class="param-name">city</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>City slug filter, e.g. <code>hcmc</code>, <code>hanoi</code></td></tr>
+          <tr><td class="param-name">giver_type</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td><div class="enum-list"><span class="enum-val">personal</span><span class="enum-val">business</span></div> Filter by giver type (tab All/Personal/Business). Omit for All tab.</td></tr>
+          <tr><td class="param-name">period</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td><div class="enum-list"><span class="enum-val">week</span><span class="enum-val">month</span><span class="enum-val">all_time</span></div> Default: <code>all_time</code>. Filters completed claims by <code>picked_up_at</code> within window.</td></tr>
         </table>
         <div class="code-label">Example Response — 200 OK</div>
         <div class="code-block">{
@@ -511,6 +519,68 @@
   ],
   <span class="k">"next_cursor"</span>: <span class="b">null</span>,
   <span class="k">"summary"</span>: { <span class="k">"average"</span>: <span class="n">5.0</span>, <span class="k">"total"</span>: <span class="n">1</span> }
+}</div>
+      </div>
+    </div>
+
+    <!-- Business Detail -->
+    <div class="endpoint" id="businesses-get">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/businesses/:id</span>
+        <span class="endpoint-summary">Get public business detail</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.2.1 — Giver Public Profile (Business)</div>
+        <p class="endpoint-desc">Returns public details of a verified business. No auth required. 404 if not found.</p>
+        <div class="params-title">Path Parameters</div>
+        <table class="param-table">
+          <tr><th>Param</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">id</td><td class="param-type">uuid</td><td><span class="required">required</span></td><td>Business UUID</td></tr>
+        </table>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"id"</span>: <span class="s">"uuid-biz"</span>,
+  <span class="k">"name"</span>: <span class="s">"Bánh Mì Phượng"</span>,
+  <span class="k">"category"</span>: <span class="s">"restaurant"</span>,
+  <span class="k">"logo_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+  <span class="k">"phone"</span>: <span class="s">"0901234567"</span>,
+  <span class="k">"description"</span>: <span class="s">"Tiệm bánh mì gia truyền 20 năm..."</span>,
+  <span class="k">"address"</span>: <span class="s">"2B Lê Lợi, Quận 1, TP.HCM"</span>,
+  <span class="k">"city"</span>: <span class="s">"Hồ Chí Minh"</span>,
+  <span class="k">"verification_status"</span>: <span class="s">"verified"</span>,
+  <span class="k">"owner_user_id"</span>: <span class="s">"uuid-user"</span>
+}</div>
+      </div>
+    </div>
+
+    <!-- Organization Detail -->
+    <div class="endpoint" id="orgs-get">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/organizations/:id</span>
+        <span class="endpoint-summary">Get public organization detail</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.3.2 — Receiver Public Profile (Organization)</div>
+        <p class="endpoint-desc">Returns public details of an organization. No auth required. 404 if not found.</p>
+        <div class="params-title">Path Parameters</div>
+        <table class="param-table">
+          <tr><th>Param</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">id</td><td class="param-type">uuid</td><td><span class="required">required</span></td><td>Organization UUID</td></tr>
+        </table>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"id"</span>: <span class="s">"uuid-org"</span>,
+  <span class="k">"name"</span>: <span class="s">"Mái Ấm Thiên Tâm"</span>,
+  <span class="k">"category"</span>: <span class="s">"social"</span>,
+  <span class="k">"logo_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+  <span class="k">"description"</span>: <span class="s">"Tổ chức phi lợi nhuận..."</span>,
+  <span class="k">"address"</span>: <span class="s">"78 Đinh Tiên Hoàng, Quận 1, TP.HCM"</span>,
+  <span class="k">"city"</span>: <span class="s">"Hồ Chí Minh"</span>,
+  <span class="k">"contact_person_name"</span>: <span class="s">"Lê Minh Đức"</span>,
+  <span class="k">"verification_status"</span>: <span class="s">"verified"</span>,
+  <span class="k">"owner_user_id"</span>: <span class="s">"uuid-user"</span>
 }</div>
       </div>
     </div>
@@ -1185,6 +1255,70 @@
           <tr><td><span class="param-type">403</span></td><td class="param-name">forbidden</td><td>Caller is not the giver or receiver of this claim</td></tr>
           <tr><td><span class="param-type">404</span></td><td class="param-name">claim_not_found</td><td>Claim ID does not exist</td></tr>
         </table>
+      </div>
+    </div>
+
+    <!-- Notifications List -->
+    <div class="endpoint" id="notifications-list">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/me/notifications</span>
+        <span class="endpoint-summary">List notifications for current user</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen — Notifications Inbox (bell icon Home Feed)</div>
+        <p class="endpoint-desc">Returns paginated notifications for the logged-in user, newest first. Supports filtering to unread only.</p>
+        <div class="params-title">Query Parameters</div>
+        <table class="param-table">
+          <tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr>
+          <tr><td class="param-name">limit</td><td class="param-type">int</td><td>20</td><td>Max per page (cap 50)</td></tr>
+          <tr><td class="param-name">offset</td><td class="param-type">int</td><td>0</td><td>Pagination offset</td></tr>
+          <tr><td class="param-name">unread_only</td><td class="param-type">bool</td><td>false</td><td>Return only unread notifications</td></tr>
+        </table>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"total"</span>: <span class="n">3</span>,
+  <span class="k">"unread_count"</span>: <span class="n">2</span>,
+  <span class="k">"notifications"</span>: [
+    {
+      <span class="k">"id"</span>: <span class="s">"uuid-notif"</span>,
+      <span class="k">"type"</span>: <span class="s">"claim_confirmed"</span>,
+      <span class="k">"related_entity_id"</span>: <span class="s">"uuid-claim"</span>,
+      <span class="k">"title"</span>: <span class="s">"Yêu cầu của bạn đã được xác nhận"</span>,
+      <span class="k">"body"</span>: <span class="s">"Bánh Mì Phượng đã xác nhận bạn nhận 2 ổ. Mã pickup: A4B7C2"</span>,
+      <span class="k">"is_read"</span>: <span class="b">false</span>,
+      <span class="k">"created_at"</span>: <span class="s">"2026-04-30T08:00:00Z"</span>
+    }
+  ]
+}</div>
+        <div class="info-box">
+          <strong>Notification types:</strong> <code>claim_confirmed</code> · <code>new_message</code> · <code>rating_received</code> · <code>claim_cancelled</code><br>
+          <code>related_entity_id</code> points to the relevant claim/message/rating UUID depending on type.
+          <strong>Note:</strong> No <code>data</code> JSONB field — use <code>related_entity_id</code> + <code>type</code> to deep-link.
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications Mark Read -->
+    <div class="endpoint" id="notifications-read">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/me/notifications/read</span>
+        <span class="endpoint-summary">Mark notifications as read</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen — Notifications Inbox (open → auto-mark all read)</div>
+        <p class="endpoint-desc">Marks one or more notifications as read. Pass specific IDs or <code>all: true</code> to mark everything.</p>
+        <div class="params-title">Request Body</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">ids</td><td class="param-type">uuid[]</td><td><span class="optional">optional</span></td><td>List of notification IDs to mark read. Required if <code>all</code> is false.</td></tr>
+          <tr><td class="param-name">all</td><td class="param-type">bool</td><td><span class="optional">optional</span></td><td>If <code>true</code>, marks all notifications for this user as read. Ignores <code>ids</code>.</td></tr>
+        </table>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{ <span class="k">"updated"</span>: <span class="n">2</span> }</div>
       </div>
     </div>
 
