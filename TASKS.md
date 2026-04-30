@@ -257,6 +257,85 @@
 
 ---
 
+## Phase 6 — Journey Gaps (post-26-screens)
+> Mục tiêu: lấp gaps phát hiện qua audit 14 user journeys (`user_journeys.md`, 2026-04-30).
+> Mỗi task gắn với journey cụ thể để giữ context khi implement.
+>
+> **Đã có sẵn (không lặp ở đây):** `B-new-1` (thanks endpoint = Journey 1), `B-new-2` (leaderboard filters = Journey 2/7), `F-new-1` (thanks UI = Journey 1) — xem section "Backend/Flutter — Extra (Gaps từ audit 2026-04-30)" ở trên.
+
+### Backend — Phase 6
+
+| # | Task | Assignee | Status | Ghi chú |
+|---|------|----------|--------|---------|
+| B8-1 | Invite model schema — migration `business_members`, `organization_members`, `member_invites` (status pending/accepted/declined/revoked, role enum owner/admin/staff/member, unique business_id+user_id) | _unassigned_ | [ ] | Journey 5, 6. Foundation cho B8-2..B8-6 + F6-1..F6-3. |
+| B8-2 | `POST /businesses/:id/invites` — owner mời thành viên qua email/phone, sinh invite_token + notification | _unassigned_ | [ ] | Journey 5. Phụ thuộc B8-1. |
+| B8-3 | `POST /invites/:token/accept` + `POST /invites/:token/decline` — invitee respond | _unassigned_ | [ ] | Journey 5, 6. Sau accept → insert business_members/organization_members row. |
+| B8-4 | `GET /businesses/:id/members` + `DELETE /businesses/:id/members/:user_id` — list + remove members | _unassigned_ | [ ] | Journey 5. Owner-only. Same pattern cho organizations. |
+| B8-5 | Authorization gate — extend B4-2 (`POST /posts`), B4-3, B4-4 để member với role staff+ post được dưới business identity | _unassigned_ | [ ] | Journey 5. Hiện chỉ owner_user_id check; cần OR membership check. |
+| B8-6 | `POST /organizations/:id/invites` + accept/decline (mirror B8-2/B8-3 cho org) | _unassigned_ | [ ] | Journey 6. |
+| B8-8 | `POST /claims/:id/no-show` — giver mark receiver no-show, restore quantity_remaining, decrement receiver rating | _unassigned_ | [ ] | Journey 9. Gap D-07/K-08. Owner-only, idempotent, status='no_show'. Notification cho receiver. |
+| B8-10 | Claim under organization identity — extend B3-1 nhận `claim_as_org_id`, validate user là member của org, lưu `claimer_org_id` | _unassigned_ | [ ] | Journey 6. Gap E-10 backend. Phụ thuộc B8-1. |
+| B8-11 | `GET /posts/:id/similar` — items cùng category trong bán kính 5km, exclude completed/cancelled | _unassigned_ | [ ] | Journey 11. Recommendation khi item hết hàng. Không cần ML — query SQL đơn giản. |
+| B8-12 | `POST /requests` + `GET /requests` — org đăng request cần nhận đồ (category, quantity, deadline, reason) | _unassigned_ | [ ] | Journey 13. Tính năng mới — bảng `requests`, mirror posts shape. Org-only initially. |
+
+### Flutter — Phase 6
+
+| # | Task | Assignee | Status | Ghi chú |
+|---|------|----------|--------|---------|
+| F6-1 | Screen Member Management — list members + invite form (email/phone + role) trong Manage Businesses + Organizations | _unassigned_ | [ ] | Journey 5, 6. Phụ thuộc B8-2/B8-4/B8-6. |
+| F6-2 | Invite Inbox — incoming invites trong Notifications inbox với accept/decline buttons | _unassigned_ | [ ] | Journey 5, 6. Phụ thuộc B8-3. |
+| F6-3 | Identity picker khi create post — dropdown chọn personal/business/managed-business để post under | _unassigned_ | [ ] | Journey 5. Phụ thuộc B8-5 + B6-2. |
+| F6-5 | Mark no-show button — Who's Claimed (F2-6) thêm action "Đánh dấu không đến" với confirm dialog → `POST /claims/:id/no-show` | _unassigned_ | [ ] | Journey 9. Phụ thuộc B8-8. |
+| F6-6 | Leaderboard filter UI — Givers screen (F3-6) thêm tabs "Tất cả/Cá nhân/Doanh nghiệp/Tổ chức" + period dropdown | _unassigned_ | [ ] | Journey 2, 7. Phụ thuộc B-new-2. |
+| F6-7 | Claim-as-org picker — Item Detail (F1-6) "Nhận" button → bottom sheet chọn personal/managed-org identity | _unassigned_ | [ ] | Journey 6. Phụ thuộc B8-10. |
+| F6-8 | "Similar items" carousel khi item hết hàng — Item Detail show 3-5 cards từ `GET /posts/:id/similar` | _unassigned_ | [ ] | Journey 11. Phụ thuộc B8-11. |
+| F6-9 | Re-post suggestion — My Items Personal (F2-4) item đã expires hiện CTA "Đăng lại" với prefilled draft | _unassigned_ | [ ] | Journey 10. Frontend-only (không cần backend mới). |
+| F6-10 | Org request screens — list requests (browse) + create request form (org admin) | _unassigned_ | [ ] | Journey 13. Phụ thuộc B8-12. |
+
+### Infra / Admin — Phase 6
+
+| # | Task | Assignee | Status | Ghi chú |
+|---|------|----------|--------|---------|
+| G6-1 | Admin panel cho business/org verification (approve/reject pending) | _unassigned_ | [ ] | Journey 4. Gap G-05. Hiện verify thủ công qua DB UPDATE. Có thể dùng Retool/Forest/in-house dashboard. |
+
+---
+
+## Phase 7 — Screen Coverage Gaps (audit 2026-04-30)
+> Mục tiêu: lấp các màn hình/UI flows journeys cần nhưng 26 screens hiện tại không cover.
+> Audit method: cross-check `idea_to_static_html/` × `user_journeys.md` × Flutter `lib/features/`.
+>
+> **Phát hiện schema sẵn nhưng chưa có endpoint/UI:** `claims.no_show_at` + status `no_show`/`picked_up`, `businesses.rejection_reason`, `organizations.rejection_reason`, `post_schedules` table — chỉ thiếu handler + Flutter.
+
+### Backend — Phase 7
+
+| # | Task | Assignee | Status | Ghi chú |
+|---|------|----------|--------|---------|
+| B9-1 | `POST /claims/:id/confirm-pickup` — giver verify pickup code → transition `confirmed/pending` → `picked_up`, set timestamp | _unassigned_ | [ ] | Journey 1, 2, 3. Status `picked_up` đã có trong CHECK constraint nhưng chưa có endpoint. Body `{pickup_code: "X3K9P1"}`, owner-only, 422 nếu code sai. |
+| B9-2 | `POST /claims/:id/confirm` — giver xác nhận claim trước pickup (`pending` → `confirmed`) | _unassigned_ | [ ] | Journey 1, 8. Hiện claim auto-pending; giver chưa có UI/endpoint accept-before-pickup. Notification cho receiver. |
+| B9-3 | `POST /posts/:id/schedules` + cron worker — recurring post (daily/weekly), tự generate post mới mỗi chu kỳ | _unassigned_ | [ ] | Journey 2, 12. Bảng `post_schedules` đã có schema; thiếu CRUD endpoint + background worker. |
+| B9-4 | `GET /users/:id` + `/me` expose `no_show_count` field — derive from `COUNT(claims WHERE status='no_show' AND user_id=:id)` | _unassigned_ | [ ] | Journey 8, 9. Givers thấy badge cảnh báo trên profile receiver. Cheap query, no schema change. |
+| B9-5 | `businesses` + `organizations` thêm `license_url` column + `POST /businesses` accept license upload | _unassigned_ | [ ] | Journey 4. Hiện chỉ có logo. Migration `ALTER TABLE businesses ADD COLUMN license_url TEXT` + parse từ `POST /uploads`. |
+| B9-6 | `GET /organizations/:id/claims` — list tất cả claims do bất kỳ member nào trong org đã claim | _unassigned_ | [ ] | Journey 6. Đức track dashboard org. JOIN `claims` × `organization_members` WHERE org_id. Member-only. |
+| B9-7 | `GET /me/businesses/:id` + `/me/organizations/:id` expose `rejection_reason` field (đã có column) | _unassigned_ | [ ] | Journey 4. Schema có sẵn, repo SELECT chưa project. Owner-only. |
+
+### Flutter — Phase 7
+
+| # | Task | Assignee | Status | Ghi chú |
+|---|------|----------|--------|---------|
+| F7-1 | **Pickup Confirmation Screen (Giver POV)** — giver nhập/scan 4-digit pickup code → `POST /claims/:id/confirm-pickup` → success state | _unassigned_ | [ ] | Journey 1, 2, 3. Mới hoàn toàn — không có trong 26 screens. Truy cập từ Who's Claimed (F2-6) row tap. Phụ thuộc B9-1. |
+| F7-2 | **Rating Composer Screen** — sau pickup completed, full-screen rating (1–5 sao + text) cho cả 2 phía | _unassigned_ | [ ] | Journey 1, 8. Hiện F3-8 chỉ có dialog nhỏ trong Messages; cần screen riêng đẹp hơn cho hai-way rating. `POST /claims/:id/ratings` (B5-10) đã có. |
+| F7-3 | **Recurring schedule UI trong Submit Item Step 2** — toggle "Đăng lặp lại" + chu kỳ (mỗi ngày/tuần) + ngày kết thúc | _unassigned_ | [ ] | Journey 2, 12. Hiện chỉ có pickup days multi-select (1 lần). Phụ thuộc B9-3. |
+| F7-4 | **Business license upload field trong Add Business (F4-5)** — file picker (PDF/JPG) cho giấy phép kinh doanh | _unassigned_ | [ ] | Journey 4. Phụ thuộc B9-5. UploadService đã có; chỉ thêm field vào form. |
+| F7-5 | **Verification rejection feedback** — Manage Businesses/Organizations (F4-4/F4-8) row "rejected" hiện reason + CTA "Sửa và gửi lại" | _unassigned_ | [ ] | Journey 4. Phụ thuộc B9-7 (rejection_reason exposure). |
+| F7-6 | **Edit Post screen / Re-post from expired** — full edit form (mở rộng từ F6-9 CTA) prefilled từ post cũ → `PUT /posts/:id` hoặc `POST /posts` với draft | _unassigned_ | [ ] | Journey 10. F6-9 mới là CTA; cần screen edit thực tế. `PUT /posts/:id` (B4-3) đã có. |
+| F7-7 | **No-show warning badge trên Receiver Public Profile (F3-3, F4-6)** — chip "⚠ X lần không đến" nếu `no_show_count > 0` | _unassigned_ | [ ] | Journey 8, 9. Phụ thuộc B9-4. |
+| F7-8 | **Org Dashboard screen** — list claims do tất cả members trong org đã claim, filter status, group by member | _unassigned_ | [ ] | Journey 6. Truy cập từ Manage Organizations (F4-8) → tap org. Phụ thuộc B9-6. |
+| F7-9 | **Wire notification toggles trong Settings (F3-4) vào `PUT /me/notification-preferences`** | _unassigned_ | [ ] | Journey hỗ trợ. Hiện toggle local-state only; persist sang backend. Phụ thuộc B-new-4. |
+| F7-10 | **Confirm/Reject claim button trong Who's Claimed (F2-6)** — giver accept/decline pending claim trước pickup | _unassigned_ | [ ] | Journey 1, 8. Hiện rows chỉ display, không có action. Phụ thuộc B9-2. |
+| F7-11 | **Pickup code QR display trong Claim Confirmed (F1-7)** — render QR cho 4-digit code để giver scan | _unassigned_ | [ ] | Journey 1, 3. Hiện chỉ show 4 số; QR scan nhanh hơn cho giver dùng F7-1. Frontend-only, dep `qr_flutter`. |
+
+---
+
 ## Dependency map (tóm tắt)
 
 ```
