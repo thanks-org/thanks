@@ -350,7 +350,7 @@
 | F7-8 | **Org Dashboard screen** — list claims do tất cả members trong org đã claim, filter status, group by member | _unassigned_ | [ ] | Journey 6. Truy cập từ Manage Organizations (F4-8) → tap org. Phụ thuộc B9-6. |
 | F7-9 | **Wire notification toggles trong Settings (F3-4) vào `PUT /me/notification-preferences`** | _unassigned_ | [ ] | Journey hỗ trợ. Hiện toggle local-state only; persist sang backend. Phụ thuộc B-new-4. |
 | F7-10 | **Confirm/Reject claim button trong Who's Claimed (F2-6)** — giver accept/decline pending claim trước pickup | Claude Code | [x] | [77a98f0](https://github.com/thanks-org/thanks-app/commit/77a98f0) — pending: Xác nhận/Từ chối buttons; confirmed: "Xác nhận nhận hàng" → PickupConfirmationScreen |
-| F7-11 | **Pickup code QR display trong Claim Confirmed (F1-7)** — render QR cho 4-digit code để giver scan | _unassigned_ | [ ] | Journey 1, 3. Hiện chỉ show 4 số; QR scan nhanh hơn cho giver dùng F7-1. Frontend-only, dep `qr_flutter`. |
+| F7-11 | **Pickup code QR display trong Claim Confirmed (F1-7)** — render QR cho 4-digit code để giver scan | Claude Code | [x] | [47d6afa](https://github.com/thanks-org/thanks-app/commit/47d6afa) — `qr_flutter ^4.1.0`, QrImageView 120×120 phía trên 4 chữ số trong _PickupCodeBlock |
 
 ---
 
