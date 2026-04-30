@@ -49,6 +49,7 @@ Giver có thể là cá nhân hoặc doanh nghiệp. Receiver có thể là cá 
 | A-10 | Xem Givers Leaderboard — tab All / Business / Personal | Guest | 2.1.2 | 🚧 UI done, `giver_type` filter chưa có backend (B-new-2) |
 | A-11 | Leaderboard filter theo thời gian: Week / Month / All-time | Guest | 2.1.2 | 🚧 UI done, `period` filter chưa có backend (B-new-2) |
 | A-12 | Top Business Givers strip trên Home Feed | Guest | 2.1.1 | ✅ |
+| A-13 | Xem "Similar items" khi Item Detail hết slot / đã đóng | Guest | 2.4.1 | ❌ Chưa có recommendation (F-new-6) |
 
 ---
 
@@ -110,6 +111,7 @@ Giver có thể là cá nhân hoặc doanh nghiệp. Receiver có thể là cá 
 | E-09 | Gửi thank-you note cho giver sau pickup | Receiver | 2.2.9 | ❌ Backend chưa có `POST /claims/:id/thanks` (B-new-1), Flutter F-new-1 |
 | E-10 | Claim dưới danh nghĩa tổ chức (gắn organization_id) | Org Receiver | 2.4.1 | 🚧 Schema có `claims.organization_id`, UI chưa có flow chọn org khi claim |
 | E-11 | Xem lịch sử claims của tôi (My Claims) | Receiver | 2.1.4c | ✅ |
+| E-12 | Org đăng "request cần nhận" loại đồ nào (demand posting) | Org Receiver | — (tính năng mới) | ❌ Tính năng mới — hiện chỉ givers post offer (Journey 13, B-new-13) |
 
 ---
 
@@ -136,6 +138,11 @@ Giver có thể là cá nhân hoặc doanh nghiệp. Receiver có thể là cá 
 | G-03 | Xem badge status: Verified / Pending / Rejected / Action needed | Giver | 2.2.5 | ✅ |
 | G-04 | Chỉnh sửa thông tin business | Giver | 2.2.6 | ✅ |
 | G-05 | Business được admin verify → có thể đăng bài dưới business name | Admin | — | 🚧 Backend status column có, chưa có admin panel |
+| G-06 | Owner mời staff vào business (nhập email/phone, role `staff` → gửi invite) | Business Owner (`owner`) | — (F-new-4) | ❌ Invite model chưa implement (B-new-8/9, F-new-4) |
+| G-07 | Staff chấp nhận invite → business xuất hiện trong Manage Businesses với badge "Nhân viên" | Giver (invitee) | — (F-new-8) | ❌ Phụ thuộc G-06 (B-new-11, F-new-8) |
+| G-08 | Owner xoá staff → mất quyền post/confirm dưới business ngay lập tức | Business Owner (`owner`) | — (F-new-4) | ❌ Phụ thuộc G-06 (B-new-12) |
+| G-09 | Owner xem danh sách thành viên business (tên, role, ngày tham gia) | Business Owner | — (F-new-4) | ❌ Phụ thuộc B-new-14, F-new-4 |
+| G-10 | Invitee từ chối lời mời vào business | Giver (invitee) | — (F-new-8) | ❌ Phụ thuộc B-new-15, F-new-8 |
 
 ---
 
@@ -148,6 +155,11 @@ Giver có thể là cá nhân hoặc doanh nghiệp. Receiver có thể là cá 
 | H-03 | Xem badge status: Verified / Pending / Rejected / Action needed | Receiver | 2.3.3 | ✅ |
 | H-04 | Chỉnh sửa thông tin organization | Receiver | 2.3.4 | ✅ |
 | H-05 | Org được admin verify → có thể claim dưới tên tổ chức | Admin | — | 🚧 Backend status column có, chưa có admin panel |
+| H-06 | Admin mời member vào org (nhập email/phone, role `member` → gửi invite) | Org Admin (`admin`) | — (F-new-5) | ❌ Invite model chưa implement (B-new-8/10, F-new-5) |
+| H-07 | Member chấp nhận invite → có thể claim dưới danh nghĩa org khi browse feed | Org Member (invitee) | — (F-new-8) | ❌ Phụ thuộc H-06 (B-new-11, F-new-8) |
+| H-08 | Admin xoá member → mất quyền claim dưới danh nghĩa org ngay lập tức | Org Admin (`admin`) | — (F-new-5) | ❌ Phụ thuộc H-06 (B-new-12) |
+| H-09 | Admin xem danh sách thành viên org (tên, role, ngày tham gia, số lần claim) | Org Admin | — (F-new-5) | ❌ Phụ thuộc B-new-14, F-new-5 |
+| H-10 | Invitee từ chối lời mời vào org | Org Member (invitee) | — (F-new-8) | ❌ Phụ thuộc B-new-15, F-new-8 |
 
 ---
 
@@ -197,6 +209,7 @@ Giver có thể là cá nhân hoặc doanh nghiệp. Receiver có thể là cá 
 | K-12 | Business / Org đang pending_review → giver chờ admin duyệt | UI hiện badge "Đang xét duyệt" | ✅ |
 | K-13 | Business / Org bị rejected → giver nhận thông báo action needed | UI hiện badge "Từ chối" | 🚧 Notification row chưa có cho rejected event |
 | K-14 | Limit per receiver: giver set max quantity một người được nhận | `claims.quantity` validate với `posts.limit_per_receiver` | ✅ backend; Flutter form có field |
+| K-15 | Item hết hạn (expires mà không ai pickup) → app gợi ý re-post | Giver | 2.2.3 / notif | ❌ Chưa có re-post suggestion (Journey 10, F-new-7) |
 
 ---
 
@@ -204,7 +217,11 @@ Giver có thể là cá nhân hoặc doanh nghiệp. Receiver có thể là cá 
 
 | Tổng | ✅ Done | 🚧 Partial | ❌ Chưa làm | ⏸ Deferred |
 |------|---------|------------|------------|------------|
-| 67 scenarios | 47 | 12 | 6 | 2 |
+| 103 scenarios | 70 | 10 | 18 | 5 |
+
+> Cập nhật 2026-04-30: đếm lại thực tế từng dòng (count cũ "67" là stale từ trước Phase 5 audit).
+> ⏸ gồm: B-04, B-05, B-06, B-07 (social login providers), C-05 (AI suggest).
+> ❌ 18 gồm: D-07, E-09, E-12, F-07, G-06→10, H-06→10, J-08, K-08, K-15.
 
 ### Những gì quan trọng nhất còn thiếu
 
@@ -213,8 +230,11 @@ Giver có thể là cá nhân hoặc doanh nghiệp. Receiver có thể là cá 
 3. **H-01 / B-new-3** — `organizations.address_detail` column (migration)
 4. **I-05 / B-new-4** — Notification preferences persist
 5. **J-08 / I4-1** — FCM push notifications thật
-6. **B-07** — Phone + OTP (blocked ESMS/Twilio)
-7. **E-10** — Claim dưới danh nghĩa org (UI flow)
-8. **F-07** — Real-time messaging (WebSocket)
-9. **K-08 / D-07** — Giver mark receiver no-show
+6. **G-06→10 / H-06→10** — Invite model (business + org members): B-new-8→12/14/15, F-new-4/5/8
+7. **E-10 / F-new-3** — Claim dưới danh nghĩa org (UI flow)
+8. **D-07 / K-08 / B-new-6** — Giver mark receiver no-show
+9. **F-07** — Real-time messaging (WebSocket)
 10. **K-11 / F5-8** — Empty/error states chuẩn hóa
+11. **A-13 / F-new-6** — Similar items recommendation khi item hết slot
+12. **K-15 / F-new-7** — Re-post gợi ý sau khi item hết hạn
+13. **E-12 / B-new-13** — Org đăng "request cần nhận" (tính năng mới, post-MVP)

@@ -160,6 +160,9 @@
     <a href="#businesses-list"><span class="method-badge m-GET">GET</span>My Businesses</a>
     <a href="#businesses-create"><span class="method-badge m-POST">POST</span>Add Business</a>
     <a href="#businesses-update"><span class="method-badge m-PUT">PUT</span>Update Business</a>
+    <a href="#businesses-members-list"><span class="method-badge m-GET">GET</span>Business Members</a>
+    <a href="#businesses-members-invite"><span class="method-badge m-POST">POST</span>Invite to Business</a>
+    <a href="#businesses-members-remove"><span class="method-badge m-DELETE">DEL</span>Remove from Business</a>
     <a href="#impact"><span class="method-badge m-GET">GET</span>My Impact</a>
   </div>
 
@@ -171,6 +174,9 @@
     <a href="#orgs-list"><span class="method-badge m-GET">GET</span>My Orgs</a>
     <a href="#orgs-create"><span class="method-badge m-POST">POST</span>Add Org</a>
     <a href="#orgs-update"><span class="method-badge m-PUT">PUT</span>Update Org</a>
+    <a href="#orgs-members-list"><span class="method-badge m-GET">GET</span>Org Members</a>
+    <a href="#orgs-members-invite"><span class="method-badge m-POST">POST</span>Invite to Org</a>
+    <a href="#orgs-members-remove"><span class="method-badge m-DELETE">DEL</span>Remove from Org</a>
   </div>
 
   <div class="sidebar-section">
@@ -181,6 +187,12 @@
     <a href="#messages-thread"><span class="method-badge m-GET">GET</span>Message Thread</a>
     <a href="#messages-send"><span class="method-badge m-POST">POST</span>Send Message</a>
     <a href="#ratings-create"><span class="method-badge m-POST">POST</span>Rate After Pickup</a>
+    <a href="#claims-thanks"><span class="method-badge m-POST">POST</span>Send Thanks Note</a>
+    <a href="#claims-noshow"><span class="method-badge m-PATCH">PATCH</span>Mark No-Show</a>
+    <a href="#me-invites"><span class="method-badge m-GET">GET</span>My Invites</a>
+    <a href="#invites-accept"><span class="method-badge m-POST">POST</span>Accept Invite</a>
+    <a href="#invites-decline"><span class="method-badge m-POST">POST</span>Decline Invite</a>
+    <a href="#me-notif-prefs"><span class="method-badge m-PUT">PUT</span>Notif Preferences</a>
     <a href="#notifications-list"><span class="method-badge m-GET">GET</span>Notifications</a>
     <a href="#notifications-read"><span class="method-badge m-POST">POST</span>Mark Read</a>
     <a href="#auth-logout"><span class="method-badge m-POST">POST</span>Logout</a>
@@ -577,6 +589,7 @@
   <span class="k">"logo_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
   <span class="k">"description"</span>: <span class="s">"Tổ chức phi lợi nhuận..."</span>,
   <span class="k">"address"</span>: <span class="s">"78 Đinh Tiên Hoàng, Quận 1, TP.HCM"</span>,
+  <span class="k">"address_detail"</span>: <span class="s">null</span>,
   <span class="k">"city"</span>: <span class="s">"Hồ Chí Minh"</span>,
   <span class="k">"contact_person_name"</span>: <span class="s">"Lê Minh Đức"</span>,
   <span class="k">"verification_status"</span>: <span class="s">"verified"</span>,
@@ -811,6 +824,79 @@
       </div>
     </div>
 
+    <!-- Business Members: List -->
+    <div class="endpoint" id="businesses-members-list">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/businesses/:id/members</span>
+        <span class="endpoint-summary">List members of a business</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Business Member Management screen (F-new-4)</div>
+        <p class="endpoint-desc">Returns all members of a business with their roles. Owner-only. 403 if caller is not the business owner.</p>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">[
+  {
+    <span class="k">"user_id"</span>: <span class="s">"uuid-user"</span>,
+    <span class="k">"name"</span>: <span class="s">"Ngân Trần"</span>,
+    <span class="k">"avatar_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+    <span class="k">"role"</span>: <span class="s">"staff"</span>,
+    <span class="k">"joined_at"</span>: <span class="s">"2026-04-01T00:00:00Z"</span>
+  },
+  {
+    <span class="k">"user_id"</span>: <span class="s">"uuid-owner"</span>,
+    <span class="k">"name"</span>: <span class="s">"Long Phạm"</span>,
+    <span class="k">"avatar_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+    <span class="k">"role"</span>: <span class="s">"owner"</span>,
+    <span class="k">"joined_at"</span>: <span class="s">"2026-01-01T00:00:00Z"</span>
+  }
+]</div>
+      </div>
+    </div>
+
+    <!-- Business Members: Invite -->
+    <div class="endpoint" id="businesses-members-invite">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/businesses/:id/invites</span>
+        <span class="endpoint-summary">Invite a staff member to a business</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Business Member Management screen (F-new-4)</div>
+        <p class="endpoint-desc">Sends an invite to a user by phone or email to join the business as <code>staff</code>. Owner-only. Creates a row in <code>invites</code> with a token UUID valid for 7 days. A notification is sent to the invitee.</p>
+        <div class="params-title">Request Body</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">contact</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Phone or email of the person to invite</td></tr>
+        </table>
+        <div class="code-label">Example Response — 201 Created</div>
+        <div class="code-block">{
+  <span class="k">"invite_id"</span>: <span class="s">"uuid-invite"</span>,
+  <span class="k">"token"</span>: <span class="s">"uuid-token"</span>,
+  <span class="k">"expires_at"</span>: <span class="s">"2026-05-07T00:00:00Z"</span>
+}</div>
+        <div class="info-box">Returns <strong>409</strong> if the contact is already a member. Returns <strong>403</strong> if caller is not the owner.</div>
+      </div>
+    </div>
+
+    <!-- Business Members: Remove -->
+    <div class="endpoint" id="businesses-members-remove">
+      <div class="endpoint-header">
+        <span class="method method-DELETE">DELETE</span>
+        <span class="endpoint-path">/businesses/:id/members/:user_id</span>
+        <span class="endpoint-summary">Remove a staff member from a business</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Business Member Management screen (F-new-4)</div>
+        <p class="endpoint-desc">Removes a <code>staff</code> member from the business. Owner-only. Owner cannot remove themselves. Takes effect immediately — the removed user loses access to post under this business.</p>
+        <div class="code-label">Example Response — 204 No Content</div>
+        <div class="info-box">Returns <strong>403</strong> if caller is not the owner, or if trying to remove the owner. Returns <strong>404</strong> if user is not a member.</div>
+      </div>
+    </div>
+
     <!-- Impact -->
     <div class="endpoint" id="impact">
       <div class="endpoint-header">
@@ -990,6 +1076,7 @@
     <span class="k">"phone"</span>: <span class="s">"0901111222"</span>,
     <span class="k">"description"</span>: <span class="s">"Hỗ trợ người có hoàn cảnh khó khăn"</span>,
     <span class="k">"address"</span>: <span class="s">"45 Nguyễn Trãi"</span>,
+    <span class="k">"address_detail"</span>: <span class="s">"Tầng 1"</span>,
     <span class="k">"contact_person_name"</span>: <span class="s">"Trần Thị B"</span>,
     <span class="k">"city"</span>: <span class="s">"hcmc"</span>,
     <span class="k">"verification_status"</span>: <span class="s">"pending_review"</span>,
@@ -1020,6 +1107,7 @@
           <tr><td class="param-name">phone</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Contact phone, max 15 chars</td></tr>
           <tr><td class="param-name">description</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Mission statement / about</td></tr>
           <tr><td class="param-name">address</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Operating address</td></tr>
+          <tr><td class="param-name">address_detail</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Floor, unit, extra details</td></tr>
           <tr><td class="param-name">contact_person_name</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Name of primary contact person</td></tr>
           <tr><td class="param-name">latitude</td><td class="param-type">float</td><td><span class="optional">optional</span></td><td>Location latitude</td></tr>
           <tr><td class="param-name">longitude</td><td class="param-type">float</td><td><span class="optional">optional</span></td><td>Location longitude</td></tr>
@@ -1046,6 +1134,7 @@
           <tr><td class="param-name">phone</td><td class="param-type">string</td><td>Contact phone, max 15 chars</td></tr>
           <tr><td class="param-name">description</td><td class="param-type">string</td><td>Mission statement / about</td></tr>
           <tr><td class="param-name">address</td><td class="param-type">string</td><td>Operating address</td></tr>
+          <tr><td class="param-name">address_detail</td><td class="param-type">string</td><td>Floor, unit, extra details</td></tr>
           <tr><td class="param-name">contact_person_name</td><td class="param-type">string</td><td>Name of primary contact person</td></tr>
           <tr><td class="param-name">latitude</td><td class="param-type">float</td><td>Location latitude</td></tr>
           <tr><td class="param-name">longitude</td><td class="param-type">float</td><td>Location longitude</td></tr>
@@ -1054,6 +1143,79 @@
       </div>
     </div>
   </div>
+
+    <!-- Org Members: List -->
+    <div class="endpoint" id="orgs-members-list">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/organizations/:id/members</span>
+        <span class="endpoint-summary">List members of an organization</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Org Member Management screen (F-new-5)</div>
+        <p class="endpoint-desc">Returns all members of an organization with their roles. Admin-only. 403 if caller is not the org admin.</p>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">[
+  {
+    <span class="k">"user_id"</span>: <span class="s">"uuid-user"</span>,
+    <span class="k">"name"</span>: <span class="s">"Lan Nguyễn"</span>,
+    <span class="k">"avatar_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+    <span class="k">"role"</span>: <span class="s">"member"</span>,
+    <span class="k">"joined_at"</span>: <span class="s">"2026-04-01T00:00:00Z"</span>
+  },
+  {
+    <span class="k">"user_id"</span>: <span class="s">"uuid-admin"</span>,
+    <span class="k">"name"</span>: <span class="s">"Đức Lê"</span>,
+    <span class="k">"avatar_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+    <span class="k">"role"</span>: <span class="s">"admin"</span>,
+    <span class="k">"joined_at"</span>: <span class="s">"2026-01-01T00:00:00Z"</span>
+  }
+]</div>
+      </div>
+    </div>
+
+    <!-- Org Members: Invite -->
+    <div class="endpoint" id="orgs-members-invite">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/organizations/:id/invites</span>
+        <span class="endpoint-summary">Invite a member to an organization</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Org Member Management screen (F-new-5)</div>
+        <p class="endpoint-desc">Sends an invite to a user by phone or email to join the org as <code>member</code>. Admin-only. Token valid for 7 days. A notification is sent to the invitee.</p>
+        <div class="params-title">Request Body</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">contact</td><td class="param-type">string</td><td><span class="required">required</span></td><td>Phone or email of the person to invite</td></tr>
+        </table>
+        <div class="code-label">Example Response — 201 Created</div>
+        <div class="code-block">{
+  <span class="k">"invite_id"</span>: <span class="s">"uuid-invite"</span>,
+  <span class="k">"token"</span>: <span class="s">"uuid-token"</span>,
+  <span class="k">"expires_at"</span>: <span class="s">"2026-05-07T00:00:00Z"</span>
+}</div>
+        <div class="info-box">Returns <strong>409</strong> if already a member. Returns <strong>403</strong> if caller is not the admin.</div>
+      </div>
+    </div>
+
+    <!-- Org Members: Remove -->
+    <div class="endpoint" id="orgs-members-remove">
+      <div class="endpoint-header">
+        <span class="method method-DELETE">DELETE</span>
+        <span class="endpoint-path">/organizations/:id/members/:user_id</span>
+        <span class="endpoint-summary">Remove a member from an organization</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Org Member Management screen (F-new-5)</div>
+        <p class="endpoint-desc">Removes a <code>member</code> from the organization. Admin-only. Admin cannot remove themselves. Takes effect immediately — the removed user can no longer claim under this org.</p>
+        <div class="code-label">Example Response — 204 No Content</div>
+        <div class="info-box">Returns <strong>403</strong> if caller is not the admin, or if trying to remove the admin. Returns <strong>404</strong> if user is not a member.</div>
+      </div>
+    </div>
 
   <!-- ────────────────────────────────────────────
        SECTION: SHARED
@@ -1094,6 +1256,10 @@
     <span class="k">"total_posts"</span>: <span class="n">12</span>,
     <span class="k">"total_claims"</span>: <span class="n">3</span>,
     <span class="k">"total_thanks_received"</span>: <span class="n">23</span>
+  },
+  <span class="k">"notification_preferences"</span>: {
+    <span class="k">"push_enabled"</span>: <span class="b">true</span>,
+    <span class="k">"email_enabled"</span>: <span class="b">false</span>
   },
   <span class="k">"identity_list"</span>: [
     { <span class="k">"provider"</span>: <span class="s">"google"</span>, <span class="k">"email"</span>: <span class="s">"user@gmail.com"</span>, <span class="k">"created_at"</span>: <span class="s">"2026-01-01T00:00:00Z"</span> }
@@ -1255,6 +1421,149 @@
           <tr><td><span class="param-type">403</span></td><td class="param-name">forbidden</td><td>Caller is not the giver or receiver of this claim</td></tr>
           <tr><td><span class="param-type">404</span></td><td class="param-name">claim_not_found</td><td>Claim ID does not exist</td></tr>
         </table>
+      </div>
+    </div>
+
+    <!-- Send Thanks Note -->
+    <div class="endpoint" id="claims-thanks">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/claims/:id/thanks</span>
+        <span class="endpoint-summary">Send a thank-you note after pickup</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.2.9 — Thanks &amp; Ratings ("Send a note" button)</div>
+        <p class="endpoint-desc">Receiver sends a thank-you note to the giver after a completed pickup. Stored in the <code>thanks</code> table. One note per claim per sender (UNIQUE). A notification row is written to the giver.</p>
+        <div class="params-title">Request Body</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">message</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Text message, max 500 chars</td></tr>
+          <tr><td class="param-name">reaction_emoji</td><td class="param-type">string</td><td><span class="optional">optional</span></td><td>Single emoji e.g. <code>❤️</code>, <code>🙏</code></td></tr>
+        </table>
+        <div class="code-label">Example Response — 201 Created</div>
+        <div class="code-block">{
+  <span class="k">"id"</span>: <span class="s">"uuid-thanks"</span>,
+  <span class="k">"claim_id"</span>: <span class="s">"uuid-claim"</span>,
+  <span class="k">"from_user_id"</span>: <span class="s">"uuid-receiver"</span>,
+  <span class="k">"to_user_id"</span>: <span class="s">"uuid-giver"</span>,
+  <span class="k">"message"</span>: <span class="s">"Cảm ơn anh! Áo đẹp lắm."</span>,
+  <span class="k">"reaction_emoji"</span>: <span class="s">"🙏"</span>,
+  <span class="k">"created_at"</span>: <span class="s">"2026-04-30T10:00:00Z"</span>
+}</div>
+        <div class="info-box">Returns <strong>409</strong> if a thanks note already exists for this claim from this sender. Returns <strong>403</strong> if caller is not the receiver of the claim.</div>
+      </div>
+    </div>
+
+    <!-- Mark No-Show -->
+    <div class="endpoint" id="claims-noshow">
+      <div class="endpoint-header">
+        <span class="method method-PATCH">PATCH</span>
+        <span class="endpoint-path">/claims/:id/no-show</span>
+        <span class="endpoint-summary">Mark a receiver as no-show</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.4.3 — Who's Claimed (giver action)</div>
+        <p class="endpoint-desc">Giver marks a confirmed claim as no-show after the pickup window passes. Sets <code>claims.no_show_at</code> and <code>claims.status = 'no_show'</code>. Frees up the slot (restores <code>quantity_remaining</code>). Reduces receiver's rating. Notifies the receiver.</p>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"claim_id"</span>: <span class="s">"uuid-claim"</span>,
+  <span class="k">"status"</span>: <span class="s">"no_show"</span>,
+  <span class="k">"no_show_at"</span>: <span class="s">"2026-04-30T12:00:00Z"</span>
+}</div>
+        <div class="info-box">Returns <strong>403</strong> if caller is not the giver of the post. Returns <strong>409</strong> if claim is already no_show, cancelled, or completed.</div>
+      </div>
+    </div>
+
+    <!-- My Invites -->
+    <div class="endpoint" id="me-invites">
+      <div class="endpoint-header">
+        <span class="method method-GET">GET</span>
+        <span class="endpoint-path">/me/invites</span>
+        <span class="endpoint-summary">List pending invites for current user</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Accept/Decline Invite screen (F-new-8)</div>
+        <p class="endpoint-desc">Returns all pending invites where <code>invitee_contact</code> matches the caller's phone or email. Expired invites are excluded.</p>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">[
+  {
+    <span class="k">"invite_id"</span>: <span class="s">"uuid-invite"</span>,
+    <span class="k">"token"</span>: <span class="s">"uuid-token"</span>,
+    <span class="k">"entity_type"</span>: <span class="s">"business"</span>,
+    <span class="k">"entity_id"</span>: <span class="s">"uuid-business"</span>,
+    <span class="k">"entity_name"</span>: <span class="s">"Bún Bò Long — Q3"</span>,
+    <span class="k">"entity_logo_url"</span>: <span class="s">"https://cdn.thanks.vn/..."</span>,
+    <span class="k">"role"</span>: <span class="s">"staff"</span>,
+    <span class="k">"inviter_name"</span>: <span class="s">"Long Phạm"</span>,
+    <span class="k">"expires_at"</span>: <span class="s">"2026-05-07T00:00:00Z"</span>
+  }
+]</div>
+      </div>
+    </div>
+
+    <!-- Accept Invite -->
+    <div class="endpoint" id="invites-accept">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/invites/:token/accept</span>
+        <span class="endpoint-summary">Accept an invite to a business or organization</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Accept/Decline Invite screen (F-new-8)</div>
+        <p class="endpoint-desc">Accepts a pending invite. Creates a row in <code>business_members</code> or <code>org_members</code> with the specified role. Sets invite <code>status = 'accepted'</code>. The entity will appear in caller's Manage Businesses / Manage Organizations.</p>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"entity_type"</span>: <span class="s">"business"</span>,
+  <span class="k">"entity_id"</span>: <span class="s">"uuid-business"</span>,
+  <span class="k">"role"</span>: <span class="s">"staff"</span>
+}</div>
+        <div class="info-box">Returns <strong>404</strong> if token not found. Returns <strong>409</strong> if invite is not pending (already accepted/declined/expired). Returns <strong>403</strong> if caller's phone/email does not match <code>invitee_contact</code>.</div>
+      </div>
+    </div>
+
+    <!-- Decline Invite -->
+    <div class="endpoint" id="invites-decline">
+      <div class="endpoint-header">
+        <span class="method method-POST">POST</span>
+        <span class="endpoint-path">/invites/:token/decline</span>
+        <span class="endpoint-summary">Decline an invite</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Accept/Decline Invite screen (F-new-8)</div>
+        <p class="endpoint-desc">Declines a pending invite. Sets <code>status = 'declined'</code>. No member row is created.</p>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{ <span class="k">"status"</span>: <span class="s">"declined"</span> }</div>
+        <div class="info-box">Returns <strong>404</strong> if token not found. Returns <strong>409</strong> if invite is not pending.</div>
+      </div>
+    </div>
+
+    <!-- Notification Preferences -->
+    <div class="endpoint" id="me-notif-prefs">
+      <div class="endpoint-header">
+        <span class="method method-PUT">PUT</span>
+        <span class="endpoint-path">/me/notification-preferences</span>
+        <span class="endpoint-summary">Update notification preferences</span>
+        <span class="auth-badge">AUTH</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="screen-source">Screen 2.1.4d — Settings (push/email toggles)</div>
+        <p class="endpoint-desc">Persists the user's notification toggle preferences. Stored in <code>users.notification_preferences</code> JSONB. All fields optional — only provided fields are updated (merge, not replace).</p>
+        <div class="params-title">Request Body (all optional)</div>
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td class="param-name">push_enabled</td><td class="param-type">bool</td><td>Enable/disable push notifications</td></tr>
+          <tr><td class="param-name">email_enabled</td><td class="param-type">bool</td><td>Enable/disable email notifications</td></tr>
+        </table>
+        <div class="code-label">Example Response — 200 OK</div>
+        <div class="code-block">{
+  <span class="k">"push_enabled"</span>: <span class="b">true</span>,
+  <span class="k">"email_enabled"</span>: <span class="b">false</span>
+}</div>
       </div>
     </div>
 

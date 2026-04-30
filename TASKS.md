@@ -235,15 +235,33 @@
 |---|------|----------|--------|---------|
 | B-new-1 | `POST /claims/:id/thanks` — gửi thank-you note sau pickup | _unassigned_ | [ ] | Screen 2.2.9 "Send a note" button. Bảng `thanks` đã có. Cần endpoint + Flutter F-new-1. |
 | B-new-2 | `GET /leaderboard` thêm `giver_type` + `period` filter | _unassigned_ | [ ] | Screen 2.1.2: tab All/Business/Personal × Week/Month/All-time. Backend hiện không có 2 params này. |
-| B-new-3 | Migration: `ALTER TABLE organizations ADD COLUMN address_detail TEXT` | _unassigned_ | [ ] | `AddOrganizationScreen` (F4-9) gửi `address_detail` nhưng column chưa có trong schema. |
+| B-new-3 | Migration: `ALTER TABLE organizations ADD COLUMN address_detail TEXT` | Luân | [x] | Done — trong `000006_invite_model_and_extras.up.sql`. api_doc updated (POST/PUT/GET orgs + public org detail). |
 | B-new-4 | `PUT /me/notification-preferences` — persist push/email toggle | _unassigned_ | [ ] | Screen 2.1.4d Settings: toggle hiện chỉ local state. Cần `users.notification_preferences JSONB` + endpoint. |
 | B-new-5 | Wire `POST /uploads` (B4-1) sang R2/S3 | TrungCD | [ ] | Phụ thuộc I1-1. Storage interface đã có trong `internal/storage` — chỉ cần swap implementation. |
+| B-new-6 | `PATCH /claims/:id/no-show` — giver đánh dấu receiver no-show | _unassigned_ | [ ] | Scenario D-07/K-08. Schema có `claims.no_show_at`. Cần handler set timestamp + tác động rating receiver. Flutter: F-new-2. |
+| B-new-7 | Emit notification row khi business/org bị rejected | _unassigned_ | [ ] | Scenario K-13. Backend không viết notification khi admin set status=rejected. Phụ thuộc: cần admin panel (gap G-05/H-05) để trigger đúng event. |
+| B-new-8 | Migration: bảng `business_members`, `org_members`, `invites` | Luân | [x] | Done — `000006_invite_model_and_extras.up.sql`. Backfill owner/admin rows cho existing data. Indexes đầy đủ incl. partial index cho pending invites. |
+| B-new-9 | `POST /businesses/:id/invites` — owner mời staff vào business | _unassigned_ | [ ] | Phụ thuộc B-new-8. Gửi invite row + notification. Scenario G-06. |
+| B-new-10 | `POST /organizations/:id/invites` — admin mời member vào org | _unassigned_ | [ ] | Phụ thuộc B-new-8. Scenario H-06. |
+| B-new-11 | `POST /invites/:token/accept` — invitee chấp nhận (business hoặc org) | _unassigned_ | [ ] | Phụ thuộc B-new-8. Tạo row trong `business_members` hoặc `org_members`. Scenario G-07/H-07. |
+| B-new-12 | `DELETE /businesses/:id/members/:user_id` + `DELETE /organizations/:id/members/:user_id` | _unassigned_ | [ ] | Phụ thuộc B-new-8. Scenario G-08/H-08. |
+| B-new-13 | `POST /organizations/:id/requests` — org đăng "cần nhận" loại đồ | _unassigned_ | [ ] | Tính năng mới (Journey 13, Scenario E-12). Phức tạp — ngoài MVP; track để không quên. |
+| B-new-14 | `GET /businesses/:id/members` + `GET /organizations/:id/members` — list members với role | _unassigned_ | [ ] | Phụ thuộc B-new-8. Owner-only cho business, admin-only cho org. Response: `[{user_id, name, avatar_url, role, joined_at}]`. Cần cho F-new-4/5 hiển thị danh sách. Scenario G-09, H-09. |
+| B-new-15 | `GET /me/invites` — pending invites · `POST /invites/:token/decline` — từ chối invite | _unassigned_ | [ ] | Phụ thuộc B-new-8. `GET /me/invites` trả invites đang pending cho user hiện tại (filter by invitee_contact = phone/email của user). `POST /invites/:token/decline` set status='declined'. Cần cho F-new-8. Scenario G-10, H-10. |
+| B-new-16 | API doc update — thêm sections Business Members + Org Members + Invites + Thanks + No-show + Notif Prefs | Luân | [x] | Done — `api_and_doc/api_doc.html`. Thêm 11 endpoint sections mới + nav links + address_detail cho orgs + notification_preferences cho GET /me. |
 
 ### Flutter — Extra (Gaps từ audit 2026-04-30)
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
 | F-new-1 | Screen 2.2.9 — "Send a note" button → `POST /claims/:id/thanks` | _unassigned_ | [ ] | Phụ thuộc B-new-1. Hiện button tĩnh, chưa có action. |
+| F-new-2 | No-show button trong Who's Claimed → `PATCH /claims/:id/no-show` | _unassigned_ | [ ] | Phụ thuộc B-new-6. Scenario D-07/K-08. Confirm dialog trước khi mark. |
+| F-new-3 | Claim dưới danh nghĩa org — UI dropdown chọn org trong Item Detail (E-10) | _unassigned_ | [ ] | Schema ok (`claims.organization_id`). Cần hiện dropdown khi user là org member và org đã verified. |
+| F-new-4 | Business member management screen (invite, list, remove) | _unassigned_ | [ ] | Phụ thuộc B-new-9/11/12/14. Scenario G-06→09. Entry: Manage Businesses → tap business → "Quản lý thành viên". UI: list members (avatar + tên + role badge "Chủ"/"Nhân viên" + ngày tham gia) + nút "Mời thành viên" (input email/phone → gọi B-new-9) + swipe-to-remove (owner-only, B-new-12). Owner không thể xoá chính mình. |
+| F-new-5 | Org member management screen (invite, list, remove) | _unassigned_ | [ ] | Phụ thuộc B-new-10/11/12/14. Scenario H-06→09. Mirror F-new-4 nhưng role badge "Quản trị"/"Tình nguyện viên". Admin-only actions. |
+| F-new-8 | Accept / Decline invite screen (notification → in-app flow) | _unassigned_ | [ ] | Phụ thuộc B-new-11/15. Scenario G-07/G-10/H-07/H-10. Khi nhận notification invite → tap → mở InviteDetailScreen: tên entity + role được mời + inviter + nút "Chấp nhận" / "Từ chối". Sau accept: entity xuất hiện trong Manage Businesses hoặc Manage Organizations của invitee. Cũng cần `GET /me/invites` để hiển thị nếu user mở app trực tiếp (không qua notification). |
+| F-new-6 | "Similar items" section trong Item Detail khi hết slot / đã đóng (A-13) | _unassigned_ | [ ] | Dùng `GET /posts?category=X&limit=5`, lọc bỏ item hiện tại. Hiện screen chỉ disable Claim button mà không gợi ý. |
+| F-new-7 | Re-post gợi ý sau khi item hết hạn — My Items + notification tap (K-15) | _unassigned_ | [ ] | Journey 10: nút "Đăng lại" từ expired item card, pre-fill Submit Item Step 1 từ dữ liệu item cũ. |
 
 ### Deferred — Phase 5
 > Block trên external dependencies, không vào sprint này.

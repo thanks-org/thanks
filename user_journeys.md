@@ -109,20 +109,29 @@
 
 > Anh Long có 3 chi nhánh. Mỗi chi nhánh manager cần tự post được mà không cần qua Long.
 
-**Personas:** Long (Giver, chủ chuỗi Bún Bò Long 3 chi nhánh) · Ngân (quản lý chi nhánh Quận 3)
+**Personas:** Long (Giver, chủ chuỗi Bún Bò Long 3 chi nhánh, role `owner`) · Ngân (quản lý chi nhánh Quận 3, role `staff`)
+
+**Role model — Business:**
+
+| Role | Quyền |
+|------|-------|
+| `owner` | Post · Edit · Cancel post · Confirm claim · Xem Who's Claimed · Quản lý thành viên (invite / remove) · Xoá business |
+| `staff` | Post · Edit post của mình · Confirm claim · Xem Who's Claimed — **không được** manage members, xoá business |
+
+> Owner là người tạo business (`businesses.user_id`). Staff thêm vào qua invite, lưu trong `business_members`.
 
 **Diễn biến:**
 
 1. Long đăng ký Giver, thêm 3 businesses: "Bún Bò Long — Q1", "Bún Bò Long — Q3", "Bún Bò Long — Bình Thạnh". Cả 3 được verified.
-2. Long vào "Bún Bò Long — Q3" → **Quản lý thành viên** → Mời thành viên → nhập email/phone của Ngân, role: Staff.
+2. Long vào "Bún Bò Long — Q3" → **Quản lý thành viên** → Mời thành viên → nhập email/phone của Ngân, role: `staff`.
 3. Ngân nhận notification invite. Ngân mở app (đã có Giver account), bấm **Chấp nhận**.
-4. Ngân vào app, thấy "Bún Bò Long — Q3" xuất hiện trong Manage Businesses của mình.
+4. Ngân vào app, thấy "Bún Bò Long — Q3" xuất hiện trong Manage Businesses của mình (badge role: "Nhân viên").
 5. Ngân post items dưới tên chi nhánh Q3 mà không cần liên hệ Long.
 6. Long vào dashboard của mình vẫn thấy items từ cả 3 chi nhánh. Long không cần làm gì thêm.
 7. Khi Ngân nghỉ việc, Long vào Manage Members → xoá Ngân. Ngân mất quyền ngay lập tức.
 
-**Screens:** 2.2.5 → 2.2.6 → (member management screen — chưa có)
-**Gaps:** Toàn bộ invite model chưa implement (B-new schema + endpoints + Flutter)
+**Screens:** 2.2.5 → 2.2.6 → (member management screen — F-new-4) → (accept invite screen — F-new-8)
+**Gaps:** Invite model chưa implement — B-new-8→12, B-new-14/15; Flutter F-new-4, F-new-8
 
 ---
 
@@ -130,21 +139,30 @@
 
 > Mái Ấm Thiên Tâm cần 30 bộ quần áo cho trẻ em. Không thể chỉ 1 người đi nhận hết.
 
-**Personas:** Đức (Receiver, admin Mái Ấm Thiên Tâm) · Lan (tình nguyện viên) · Mai (giver)
+**Personas:** Đức (Receiver, admin Mái Ấm Thiên Tâm, role `admin`) · Lan (tình nguyện viên, role `member`) · Mai (giver)
+
+**Role model — Organization:**
+
+| Role | Quyền |
+|------|-------|
+| `admin` | Claim dưới danh nghĩa org · Quản lý thành viên (invite / remove) · Xem dashboard lịch sử toàn org · Xoá org |
+| `member` | Claim dưới danh nghĩa org · Xem lịch sử claim của bản thân trong org — **không được** manage members, xem toàn bộ dashboard |
+
+> Admin là người tạo org (`organizations.user_id`). Member thêm vào qua invite, lưu trong `org_members`.
 
 **Diễn biến:**
 
 1. Đức đăng ký tài khoản Receiver, thêm org "Mái Ấm Thiên Tâm" — upload giấy tờ hoạt động phi lợi nhuận.
 2. Org được admin verified sau 2 ngày.
-3. Đức invite Lan (tình nguyện viên hay đi nhận đồ) vào org, role: Member.
-4. Lan accept invite. Giờ khi Lan browse và claim, Lan có thể chọn claim dưới danh nghĩa **Mái Ấm Thiên Tâm**.
+3. Đức invite Lan (tình nguyện viên hay đi nhận đồ) vào org, role: `member`.
+4. Lan nhận notification invite, mở app, bấm **Chấp nhận**. Giờ khi Lan browse và claim, Lan có thể chọn claim dưới danh nghĩa **Mái Ấm Thiên Tâm**.
 5. Mai đăng 15 bộ áo trẻ em. Lan thấy trên feed, claim 15 bộ dưới tên Mái Ấm, điền lý do cần nhiều.
 6. Mai thấy claimant là tổ chức verified → confirm ngay, không cần hỏi thêm.
 7. Lan đến pickup, show code. Mai đưa 15 bộ áo.
 8. Đức vào dashboard org thấy đầy đủ lịch sử: Lan đã claim gì, khi nào, từ ai.
 
-**Screens:** 2.3.4 → 2.3.3 → 2.4.1 → 2.4.2 → 2.1.3a → 2.3.2
-**Gaps:** Invite model org chưa implement; E-10 (claim under org UI chưa có)
+**Screens:** 2.3.4 → 2.3.3 → 2.4.1 → 2.4.2 → 2.1.3a → 2.3.2 → (member management screen — F-new-5) → (accept invite — F-new-8)
+**Gaps:** Invite model org chưa implement — B-new-8/10/11/12, B-new-14/15; E-10 (claim under org UI — F-new-3)
 
 ---
 
@@ -321,12 +339,12 @@
 
 | Gap | Journey liên quan | Task |
 |-----|------------------|------|
-| Invite model (business + org members) | 5, 6 | B-new (chưa có task — cần tạo) |
-| Claim dưới danh nghĩa org | 6 | E-10 |
+| Invite model (business + org members) | 5, 6 | B-new-8→12 (backend), F-new-4/5 (Flutter) |
+| Claim dưới danh nghĩa org | 6 | E-10 (scenario), F-new-3 (Flutter) |
 | `POST /claims/:id/thanks` (thank-you note) | 1 | B-new-1, F-new-1 |
-| Mark no-show | 9 | D-07 / K-08 |
+| Mark no-show | 9 | D-07 / K-08 (scenario), B-new-6 (backend), F-new-2 (Flutter) |
 | Leaderboard `giver_type` + `period` | 2, 7 | B-new-2 |
 | FCM push notifications | 12 | I4-1 |
-| Org đăng "request cần nhận" | 13 | Chưa có task — tính năng mới |
-| Re-post gợi ý sau khi item expires | 10 | Chưa có task |
-| "Similar items" recommendation | 11 | Chưa có task |
+| Org đăng "request cần nhận" | 13 | E-12 (scenario), B-new-13 (post-MVP) |
+| Re-post gợi ý sau khi item expires | 10 | K-15 (scenario), F-new-7 (Flutter) |
+| "Similar items" recommendation | 11 | A-13 (scenario), F-new-6 (Flutter) |
