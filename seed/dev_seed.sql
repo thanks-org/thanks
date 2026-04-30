@@ -1,5 +1,5 @@
 -- =============================================================
--- seed/fake_seed.sql — Prototype-quality connected seed data
+-- seed/dev_seed.sql — Prototype-quality connected seed data
 -- =============================================================
 -- Covers all screens in the Thanks app. All foreign keys are
 -- internally consistent. Data mirrors the UI prototype.

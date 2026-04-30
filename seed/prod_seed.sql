@@ -1,5 +1,5 @@
 -- =============================================================
--- seed/normal_seed.sql — Baseline reference data
+-- seed/prod_seed.sql — Baseline reference data
 -- =============================================================
 -- Safe to run on any environment (staging, production).
 -- Does NOT truncate user data. Only inserts reference/config rows
