@@ -328,8 +328,8 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| B9-1 | `POST /claims/:id/confirm-pickup` — giver verify pickup code → transition `confirmed/pending` → `picked_up`, set timestamp | _unassigned_ | [ ] | Journey 1, 2, 3. Status `picked_up` đã có trong CHECK constraint nhưng chưa có endpoint. Body `{pickup_code: "X3K9P1"}`, owner-only, 422 nếu code sai. |
-| B9-2 | `POST /claims/:id/confirm` — giver xác nhận claim trước pickup (`pending` → `confirmed`) | _unassigned_ | [ ] | Journey 1, 8. Hiện claim auto-pending; giver chưa có UI/endpoint accept-before-pickup. Notification cho receiver. |
+| B9-1 | `POST /claims/:id/confirm-pickup` — giver verify pickup code → transition `confirmed/pending` → `picked_up`, set timestamp | Claude Code | [x] | [634fae0](https://github.com/thanks-org/thanks-backend/commit/634fae0) — owner check JOIN posts, wrong-code 422, notification to receiver |
+| B9-2 | `POST /claims/:id/confirm` — giver xác nhận claim trước pickup (`pending` → `confirmed`) | Claude Code | [x] | [634fae0](https://github.com/thanks-org/thanks-backend/commit/634fae0) — owner check, notification to receiver |
 | B9-3 | `POST /posts/:id/schedules` + cron worker — recurring post (daily/weekly), tự generate post mới mỗi chu kỳ | _unassigned_ | [ ] | Journey 2, 12. Bảng `post_schedules` đã có schema; thiếu CRUD endpoint + background worker. |
 | B9-4 | `GET /users/:id` + `/me` expose `no_show_count` field — derive from `COUNT(claims WHERE status='no_show' AND user_id=:id)` | _unassigned_ | [ ] | Journey 8, 9. Givers thấy badge cảnh báo trên profile receiver. Cheap query, no schema change. |
 | B9-5 | `businesses` + `organizations` thêm `license_url` column + `POST /businesses` accept license upload | _unassigned_ | [ ] | Journey 4. Hiện chỉ có logo. Migration `ALTER TABLE businesses ADD COLUMN license_url TEXT` + parse từ `POST /uploads`. |
@@ -340,7 +340,7 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| F7-1 | **Pickup Confirmation Screen (Giver POV)** — giver nhập/scan 4-digit pickup code → `POST /claims/:id/confirm-pickup` → success state | _unassigned_ | [ ] | Journey 1, 2, 3. Mới hoàn toàn — không có trong 26 screens. Truy cập từ Who's Claimed (F2-6) row tap. Phụ thuộc B9-1. |
+| F7-1 | **Pickup Confirmation Screen (Giver POV)** — giver nhập/scan 4-digit pickup code → `POST /claims/:id/confirm-pickup` → success state | Claude Code | [x] | [77a98f0](https://github.com/thanks-org/thanks-app/commit/77a98f0) — PickupConfirmationScreen mới: 4-digit input + paste support + success state |
 | F7-2 | **Rating Composer Screen** — sau pickup completed, full-screen rating (1–5 sao + text) cho cả 2 phía | _unassigned_ | [ ] | Journey 1, 8. Hiện F3-8 chỉ có dialog nhỏ trong Messages; cần screen riêng đẹp hơn cho hai-way rating. `POST /claims/:id/ratings` (B5-10) đã có. |
 | F7-3 | **Recurring schedule UI trong Submit Item Step 2** — toggle "Đăng lặp lại" + chu kỳ (mỗi ngày/tuần) + ngày kết thúc | _unassigned_ | [ ] | Journey 2, 12. Hiện chỉ có pickup days multi-select (1 lần). Phụ thuộc B9-3. |
 | F7-4 | **Business license upload field trong Add Business (F4-5)** — file picker (PDF/JPG) cho giấy phép kinh doanh | _unassigned_ | [ ] | Journey 4. Phụ thuộc B9-5. UploadService đã có; chỉ thêm field vào form. |
@@ -349,7 +349,7 @@
 | F7-7 | **No-show warning badge trên Receiver Public Profile (F3-3, F4-6)** — chip "⚠ X lần không đến" nếu `no_show_count > 0` | _unassigned_ | [ ] | Journey 8, 9. Phụ thuộc B9-4. |
 | F7-8 | **Org Dashboard screen** — list claims do tất cả members trong org đã claim, filter status, group by member | _unassigned_ | [ ] | Journey 6. Truy cập từ Manage Organizations (F4-8) → tap org. Phụ thuộc B9-6. |
 | F7-9 | **Wire notification toggles trong Settings (F3-4) vào `PUT /me/notification-preferences`** | _unassigned_ | [ ] | Journey hỗ trợ. Hiện toggle local-state only; persist sang backend. Phụ thuộc B-new-4. |
-| F7-10 | **Confirm/Reject claim button trong Who's Claimed (F2-6)** — giver accept/decline pending claim trước pickup | _unassigned_ | [ ] | Journey 1, 8. Hiện rows chỉ display, không có action. Phụ thuộc B9-2. |
+| F7-10 | **Confirm/Reject claim button trong Who's Claimed (F2-6)** — giver accept/decline pending claim trước pickup | Claude Code | [x] | [77a98f0](https://github.com/thanks-org/thanks-app/commit/77a98f0) — pending: Xác nhận/Từ chối buttons; confirmed: "Xác nhận nhận hàng" → PickupConfirmationScreen |
 | F7-11 | **Pickup code QR display trong Claim Confirmed (F1-7)** — render QR cho 4-digit code để giver scan | _unassigned_ | [ ] | Journey 1, 3. Hiện chỉ show 4 số; QR scan nhanh hơn cho giver dùng F7-1. Frontend-only, dep `qr_flutter`. |
 
 ---
