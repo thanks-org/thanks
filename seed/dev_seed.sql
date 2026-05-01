@@ -58,7 +58,7 @@ VALUES
    'https://i.pravatar.cc/150?img=68',
    'Thích chia sẻ đồ dùng còn tốt. P. Cát Lái, TP.HCM.',
    'both', 'personal', 'personal',
-   'Hồ Chí Minh', true, 4.90, 5,
+   'Hồ Chí Minh', true, 4.90, 12,
    NOW() - INTERVAL '120 days', NOW()),
 
   -- 2. Trần Minh Nam — displays "Nam T.", receiver, admin Mái Ấm Hoa Sen
