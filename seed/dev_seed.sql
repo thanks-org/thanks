@@ -786,8 +786,8 @@ INSERT INTO post_images (id, post_id, url, position) VALUES
 
 -- ── 8. CLAIMS ─────────────────────────────────────────────────────────────────
 -- Leaderboard (SUM claim.quantity WHERE status IN confirmed/picked_up/completed):
---   Bento Cooky  (P06 14+P08 15+P09 8+P10 12+P11 13+P26 3+P27 2+P30 1) = 68  rank #1
---   Gam Coffee   (P12 4+P13 30+P14 10+P28 5+P29 2)                      = 51  rank #2
+--   Bento Cooky  (P06 14+P08 12+P09 8+P10 12+P11 13+P26 1+P27 1+P30 1) = 62  rank #1
+--   Gam Coffee   (P12 4+P13 28+P14 10+P28 1+P29 1)                      = 44  rank #2
 --   Minh H. personal (P01 2conf+P03 2+P04 1+P05 1+P23 1) = 7  rank #3 (C52 cancelled)
 --   Tous Les Jours   (P15 2 + P16 4)                      =  6  rank #4
 --   Linh H.          (P18 5)                               =  5  rank #5
@@ -1003,7 +1003,7 @@ VALUES
    '00000000-0000-0000-0003-000000000008',
    '00000000-0000-0000-0000-000000000002',
    '00000000-0000-0000-0002-000000000001',
-   8, 'BO0801', 'completed',
+   5, 'BO0801', 'completed',
    NOW() - INTERVAL '1 day' - INTERVAL '2 hours',
    NOW() - INTERVAL '1 day' - INTERVAL '1 hour', NULL,
    NOW() - INTERVAL '1 day' - INTERVAL '3 hours',
@@ -1132,7 +1132,7 @@ VALUES
    '00000000-0000-0000-0003-000000000013',
    '00000000-0000-0000-0000-000000000002',
    '00000000-0000-0000-0002-000000000001',
-   15, 'CF1301', 'completed',
+   13, 'CF1301', 'completed',
    NOW() - INTERVAL '1 day' - INTERVAL '5 hours',
    NOW() - INTERVAL '1 day' - INTERVAL '4 hours 30 minutes', NULL,
    NOW() - INTERVAL '1 day' - INTERVAL '6 hours',
@@ -1909,7 +1909,7 @@ VALUES
    '00000000-0000-0000-0003-000000000026',
    '00000000-0000-0000-0000-000000000002',
    '00000000-0000-0000-0002-000000000001',
-   3, 'BT2601', 'completed',
+   1, 'BT2601', 'completed',
    NOW()-INTERVAL '5 weeks'-INTERVAL '2 hours',
    NOW()-INTERVAL '5 weeks'-INTERVAL '1 hour', NULL,
    NOW()-INTERVAL '5 weeks'-INTERVAL '3 hours',
@@ -1920,7 +1920,7 @@ VALUES
    '00000000-0000-0000-0003-000000000027',
    '00000000-0000-0000-0000-000000000002',
    '00000000-0000-0000-0002-000000000001',
-   2, 'BT2701', 'completed',
+   1, 'BT2701', 'completed',
    NOW()-INTERVAL '7 weeks'-INTERVAL '2 hours',
    NOW()-INTERVAL '7 weeks'-INTERVAL '1 hour', NULL,
    NOW()-INTERVAL '7 weeks'-INTERVAL '3 hours',
@@ -1931,7 +1931,7 @@ VALUES
    '00000000-0000-0000-0003-000000000028',
    '00000000-0000-0000-0000-000000000002',
    '00000000-0000-0000-0002-000000000001',
-   5, 'GA2801', 'completed',
+   1, 'GA2801', 'completed',
    NOW()-INTERVAL '6 weeks'-INTERVAL '2 hours',
    NOW()-INTERVAL '6 weeks'-INTERVAL '1 hour', NULL,
    NOW()-INTERVAL '6 weeks'-INTERVAL '3 hours',
@@ -1942,7 +1942,7 @@ VALUES
    '00000000-0000-0000-0003-000000000029',
    '00000000-0000-0000-0000-000000000002',
    '00000000-0000-0000-0002-000000000001',
-   2, 'GA2901', 'completed',
+   1, 'GA2901', 'completed',
    NOW()-INTERVAL '8 weeks'-INTERVAL '2 hours',
    NOW()-INTERVAL '8 weeks'-INTERVAL '1 hour', NULL,
    NOW()-INTERVAL '8 weeks'-INTERVAL '3 hours',
