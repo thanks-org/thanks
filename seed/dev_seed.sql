@@ -175,13 +175,13 @@ VALUES
    'Hồ Chí Minh', false, 4.80, 3,
    NOW() - INTERVAL '70 days', NOW()),
 
-  -- 14. Đức Nguyễn — displays "Duc N.", receiver
-  --     Rated Minh H. ★5 for sách kinh doanh
+  -- 14. Đức Nguyễn — displays "Duc N.", giver+receiver
+  --     Giver for P32 (áo sơ mi, home feed); receiver/claimant elsewhere
   ('00000000-0000-0000-0000-000000000014',
    'Đức Nguyễn', '0901111114', NULL,
    'https://i.pravatar.cc/150?img=11',
    NULL,
-   'receiver', NULL, 'personal',
+   'both', 'personal', 'personal',
    'Hồ Chí Minh', false, 4.80, 5,
    NOW() - INTERVAL '110 days', NOW()),
 
@@ -778,7 +778,11 @@ INSERT INTO post_images (id, post_id, url, position) VALUES
   ('00000000-0000-0000-0004-000000000010','00000000-0000-0000-0003-000000000017','https://picsum.photos/seed/pizza4ps/800/600',0),
   ('00000000-0000-0000-0004-000000000011','00000000-0000-0000-0003-000000000018','https://picsum.photos/seed/kids_books/800/600',0),
   ('00000000-0000-0000-0004-000000000012','00000000-0000-0000-0003-000000000005','https://picsum.photos/seed/stroller/800/600',0),
-  ('00000000-0000-0000-0004-000000000013','00000000-0000-0000-0003-000000000024','https://picsum.photos/seed/iced_latte2/800/600',0);
+  ('00000000-0000-0000-0004-000000000013','00000000-0000-0000-0003-000000000024','https://picsum.photos/seed/iced_latte2/800/600',0),
+  ('00000000-0000-0000-0004-000000000014','00000000-0000-0000-0003-000000000031','https://picsum.photos/seed/baguettes/800/600',0),
+  ('00000000-0000-0000-0004-000000000015','00000000-0000-0000-0003-000000000032','https://picsum.photos/seed/mens_shirts/800/600',0),
+  ('00000000-0000-0000-0004-000000000016','00000000-0000-0000-0003-000000000033','https://picsum.photos/seed/wooden_chair/800/600',0),
+  ('00000000-0000-0000-0004-000000000017','00000000-0000-0000-0003-000000000034','https://picsum.photos/seed/biz_books/800/600',0);
 
 -- ── 8. CLAIMS ─────────────────────────────────────────────────────────────────
 -- Leaderboard (SUM claim.quantity WHERE status IN confirmed/picked_up/completed):
@@ -1953,6 +1957,82 @@ VALUES
    NOW()-INTERVAL '10 weeks'-INTERVAL '1 hour', NULL,
    NOW()-INTERVAL '10 weeks'-INTERVAL '3 hours',
    NOW()-INTERVAL '10 weeks'-INTERVAL '1 hour');
+
+-- ── 13g. HOME FEED ACTIVE POSTS (P31–P34) ────────────────────────────────────
+-- 4 thêm active posts để khớp 8 cards trong prototype 2_1_1 home feed:
+-- P31: Tous Les Jours "Baguettes & pastries (8)" qty 5/5 · closes in 5 days
+-- P32: Đức Nguyễn "Men's shirts, size L" qty 1/3 · closes in 3 days
+-- P33: Huyền Phạm "Wooden dining chair" qty 1/1 · closes in 12 days
+-- P34: Khánh Vũ "Business books (stack of 8)" qty 8/8 · closes in 6 days
+INSERT INTO posts (id, user_id, business_id, title, description, category,
+                   quantity, quantity_remaining, limit_per_receiver,
+                   pickup_start, pickup_end, closes_at,
+                   latitude, longitude, address, city,
+                   status, is_recurring, ai_summary,
+                   created_at, updated_at)
+VALUES
+  -- P31. Tous Les Jours bánh mì & bánh ngọt (active)
+  ('00000000-0000-0000-0003-000000000031',
+   '00000000-0000-0000-0000-000000000016',
+   '00000000-0000-0000-0001-000000000003',
+   'Bánh mì Pháp & bánh ngọt',
+   '5 bánh mì Pháp và bánh ngọt cuối ngày còn tươi. Tặng trước khi đóng cửa.',
+   'food', 5, 5, 1,
+   NOW()::date + TIME '16:00',
+   NOW()::date + TIME '20:00',
+   NOW() + INTERVAL '5 days',
+   10.7773, 106.7030,
+   '55 Lê Thánh Tôn, Phường Bến Nghé, Quận 1, TP.HCM',
+   'Hồ Chí Minh',
+   'active', false,
+   'Tous Les Jours tặng bánh mì Pháp và bánh ngọt cuối ngày tại Q.1.',
+   NOW() - INTERVAL '4 hours', NOW()),
+
+  -- P32. Đức Nguyễn áo sơ mi (active) — prototype "Men's shirts, size L (4)" qty 1/3
+  ('00000000-0000-0000-0003-000000000032',
+   '00000000-0000-0000-0000-000000000014',
+   NULL,
+   'Áo sơ mi nam size L (4 cái)',
+   '3 áo sơ mi công sở nam size L còn mới. Chỉ còn 1 áo chưa được nhận.',
+   'clothes', 3, 1, 1,
+   NOW()::date + TIME '17:00',
+   NOW()::date + TIME '20:00',
+   NOW() + INTERVAL '3 days',
+   10.7730, 106.6975,
+   '23 Lý Tự Trọng, Phường Sài Gòn, Quận 1, TP.HCM',
+   'Hồ Chí Minh',
+   'active', false, NULL,
+   NOW() - INTERVAL '2 days', NOW()),
+
+  -- P33. Huyền Phạm ghế ăn gỗ (active) — prototype "Wooden dining chair" qty 1/1
+  ('00000000-0000-0000-0003-000000000033',
+   '00000000-0000-0000-0000-000000000006',
+   NULL,
+   'Ghế ăn gỗ',
+   'Ghế ăn gỗ tròn, còn chắc, chân chưa bị lung lay. Tặng cho gia đình nào cần.',
+   'furniture', 1, 1, 1,
+   NULL, NULL,
+   NOW() + INTERVAL '12 days',
+   10.7960, 106.7200,
+   '8 Nguyễn Xí, Phường 26, Quận Bình Thạnh, TP.HCM',
+   'Hồ Chí Minh',
+   'active', false, NULL,
+   NOW() - INTERVAL '3 hours', NOW()),
+
+  -- P34. Khánh Vũ sách kinh doanh (active) — prototype "Business books (stack of 8)" qty 8/8
+  ('00000000-0000-0000-0003-000000000034',
+   '00000000-0000-0000-0000-000000000007',
+   NULL,
+   'Sách kinh doanh (8 quyển)',
+   '8 quyển sách về kinh doanh, quản trị, marketing. Tặng cho bạn đang học hoặc khởi nghiệp.',
+   'books', 8, 8, NULL,
+   NULL, NULL,
+   NOW() + INTERVAL '6 days',
+   10.7700, 106.7010,
+   '15 Bến Chương Dương, Phường Cầu Ông Lãnh, Quận 1, TP.HCM',
+   'Hồ Chí Minh',
+   'active', false, NULL,
+   NOW() - INTERVAL '5 hours', NOW());
 
 -- ── 13. BUSINESS_MEMBERS & ORG_MEMBERS ───────────────────────────────────────
 -- Migration 006 backfills from businesses/organizations tables automatically,
