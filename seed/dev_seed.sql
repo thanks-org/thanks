@@ -67,7 +67,7 @@ VALUES
    'https://i.pravatar.cc/150?img=53',
    'Quản lý Mái Ấm Hoa Sen. P. Bàn Cờ, TP.HCM.',
    'receiver', NULL, 'personal',
-   'Hồ Chí Minh', true, 4.80, 9,
+   'Hồ Chí Minh', true, 4.80, 6,
    NOW() - INTERVAL '200 days', NOW()),
 
   -- 3. Lê Thị Linh — displays "Linh H.", personal giver, leaderboard #5
@@ -408,7 +408,7 @@ VALUES
    '00000000-0000-0000-0000-000000000001', NULL,
    'Máy cắt tóc Kemei (mới 90%)',
    '5 chiếc máy cắt tóc Kemei KM-1990, dùng 1–2 lần, còn như mới. Tặng thợ tóc hoặc người cần tự cắt. Nhận Thứ 7–CN 14h–18h.',
-   'other', 5, 5, NULL,
+   'tech', 5, 5, NULL,
    (NOW() + INTERVAL '6 days')::date + TIME '14:00',
    (NOW() + INTERVAL '6 days')::date + TIME '18:00',
    NOW() + INTERVAL '30 days',
@@ -777,20 +777,21 @@ INSERT INTO post_images (id, post_id, url, position) VALUES
   ('00000000-0000-0000-0004-000000000009','00000000-0000-0000-0003-000000000015','https://picsum.photos/seed/baguette/800/600',0),
   ('00000000-0000-0000-0004-000000000010','00000000-0000-0000-0003-000000000017','https://picsum.photos/seed/pizza4ps/800/600',0),
   ('00000000-0000-0000-0004-000000000011','00000000-0000-0000-0003-000000000018','https://picsum.photos/seed/kids_books/800/600',0),
-  ('00000000-0000-0000-0004-000000000012','00000000-0000-0000-0003-000000000005','https://picsum.photos/seed/stroller/800/600',0);
+  ('00000000-0000-0000-0004-000000000012','00000000-0000-0000-0003-000000000005','https://picsum.photos/seed/stroller/800/600',0),
+  ('00000000-0000-0000-0004-000000000013','00000000-0000-0000-0003-000000000024','https://picsum.photos/seed/iced_latte2/800/600',0);
 
 -- ── 8. CLAIMS ─────────────────────────────────────────────────────────────────
 -- Leaderboard (SUM claim.quantity WHERE status IN confirmed/picked_up/completed):
---   Bento Cooky  (P06 14 + P08 15 + P09 8 + P10 12 + P11 13)  = 62 ✅  rank #1
---   Gam Coffee   (P12 4  + P13 30 + P14 10)                   = 44 ✅  rank #2
---   Minh H. personal (P01 2conf + P03 2 + P04 1 + P05 1 + P23 1) = 7 ✅  rank #3
---   Tous Les Jours   (P15 2 + P16 4)                          =  6 ✅  rank #4
---   Linh H.          (P18 5)                                  =  5 ✅  rank #5
---   Phuong L.        (P19 4)                                  =  4 ✅  rank #6
---   Khanh L.         (P20 4)                                  =  4 ✅  rank #7
---   Pizza 4P's       (P17 4)                                  =  4 ✅  rank #8
---   Huyen P.         (P21 3)                                  =  3 ✅  rank #9
---   Khanh V.         (P22 2)                                  =  2 ✅  rank #10
+--   Bento Cooky  (P06 14+P08 15+P09 8+P10 12+P11 13+P26 3+P27 2+P30 1) = 68  rank #1
+--   Gam Coffee   (P12 4+P13 30+P14 10+P28 5+P29 2)                      = 51  rank #2
+--   Minh H. personal (P01 2conf+P03 2+P04 1+P05 1+P23 1) = 7  rank #3 (C52 cancelled)
+--   Tous Les Jours   (P15 2 + P16 4)                      =  6  rank #4
+--   Linh H.          (P18 5)                               =  5  rank #5
+--   Phuong L.        (P19 4)                               =  4  rank #6
+--   Khanh L.         (P20 4)                               =  4  rank #7
+--   Pizza 4P's       (P17 4)                               =  4  rank #8
+--   Huyen P.         (P21 3)                               =  3  rank #9
+--   Khanh V.         (P22 2)                               =  2  rank #10
 --   P07 Mixed soups: 3 PENDING → does not count toward leaderboard
 INSERT INTO claims (id, post_id, user_id, organization_id, quantity,
                     pickup_code, status,
@@ -800,10 +801,11 @@ VALUES
 
   -- ── P01: Lacoste T-shirts (2 confirmed, 1 remaining) ──
   -- C01: Linh P. — confirmed, shows in 2_2_3 claimant list
+  --     pickup_code='4286' matches prototype 2_4_2 ("4 · 2 · 8 · 6")
   ('00000000-0000-0000-0005-000000000001',
    '00000000-0000-0000-0003-000000000001',
    '00000000-0000-0000-0000-000000000008',
-   NULL, 1, NULL, 'confirmed',
+   NULL, 1, '4286', 'confirmed',
    NOW() - INTERVAL '20 hours', NULL, NULL,
    NOW() - INTERVAL '1 day', NOW() - INTERVAL '20 hours'),
 
@@ -1491,7 +1493,15 @@ VALUES
    '00000000-0000-0000-0000-000000000001',
    '00000000-0000-0000-0000-000000000003',
    'Cháu thích lắm chị ơi! Đặc biệt bộ Conan, đọc một mạch hết luôn. Cảm ơn chị Linh nhiều!',
-   '📖', NOW() - INTERVAL '7 days');
+   '📖', NOW() - INTERVAL '7 days'),
+
+  -- Thao → Minh H. (ghế văn phòng, C06/P04) — 5th thanks, screen 2_2_9 "5 people said thanks"
+  ('00000000-0000-0000-0008-000000000007',
+   '00000000-0000-0000-0005-000000000006',
+   '00000000-0000-0000-0000-000000000009',
+   '00000000-0000-0000-0000-000000000001',
+   'Ghế vẫn còn rất tốt! Em kê vào góc học tập rồi, ngồi làm việc thoải mái lắm. Cảm ơn anh nhiều!',
+   '🪑', NOW() - INTERVAL '18 days');
 
 -- ── 12. NOTIFICATIONS (for Dev User / Minh H.) ───────────────────────────────
 INSERT INTO notifications (id, user_id, type, related_entity_id,
@@ -1560,6 +1570,389 @@ VALUES
    'Bento Cooky có claim mới',
    'Nam T. muốn nhận 1 phần Bento Cơm Gà.',
    false, NOW() - INTERVAL '3 minutes');
+
+-- ── 13a. ADDITIONAL POSTS (screens 2_1_3a, 2_1_4a) ──────────────────────────
+-- P24: Gam Coffee iced latte (completed 3 days ago)
+--      Needed so Dev User has a "Done: 1 Iced Latte · Gam Coffee" in receiver inbox 2_1_3a
+-- P25: Minh H. personal wood bookshelf (completed ~25 days ago)
+--      Needed so 2_1_4a shows "2 active · 5 closed" (was only 4 closed)
+INSERT INTO posts (id, user_id, business_id, title, description, category,
+                   quantity, quantity_remaining, limit_per_receiver,
+                   pickup_start, pickup_end, closes_at,
+                   latitude, longitude, address, city,
+                   status, is_recurring, ai_summary,
+                   created_at, updated_at)
+VALUES
+  ('00000000-0000-0000-0003-000000000024',
+   '00000000-0000-0000-0000-000000000001',
+   '00000000-0000-0000-0001-000000000002',
+   'Iced latte (8 ly)',
+   '8 ly iced latte Gam Coffee còn dư buổi chiều hôm đó. Uống ngon nhất trong 2 giờ.',
+   'food', 8, 0, 1,
+   NOW()-INTERVAL '3 days'+TIME '14:00',
+   NOW()-INTERVAL '3 days'+TIME '17:00',
+   NOW()-INTERVAL '3 days'+TIME '17:00',
+   10.7769, 106.7039,
+   '15 Nguyễn Huệ, Phường Sài Gòn, Quận 1, TP.HCM',
+   'Hồ Chí Minh',
+   'completed', false, NULL,
+   NOW()-INTERVAL '3 days'-INTERVAL '1 hour', NOW()-INTERVAL '3 days'),
+
+  ('00000000-0000-0000-0003-000000000025',
+   '00000000-0000-0000-0000-000000000001', NULL,
+   'Kệ sách gỗ 5 tầng',
+   'Kệ sách gỗ tần bì 5 tầng, cao 180cm, đã dùng 4 năm còn tốt. Dọn nhà cho đi. Người nhận tự vận chuyển.',
+   'furniture', 1, 0, NULL,
+   NOW()-INTERVAL '25 days'+TIME '08:00',
+   NOW()-INTERVAL '25 days'+TIME '12:00',
+   NOW()-INTERVAL '23 days',
+   10.7320, 106.7600,
+   '12 Đường Số 7, Phường Cát Lái, Quận 2, TP.HCM',
+   'Hồ Chí Minh',
+   'completed', false, NULL,
+   NOW()-INTERVAL '27 days', NOW()-INTERVAL '23 days');
+
+-- ── 13b. ADDITIONAL CLAIMS ────────────────────────────────────────────────────
+-- C51: Minh H. (Dev User as receiver) — picked_up iced latte from Gam Coffee (P24)
+--      Shows in receiver inbox 2_1_3a "Done: 1 Iced Latte · PICKED UP · rated ★5"
+-- C52: Nam T. — cancelled bookshelf claim on P25 (no pickup, so P25 doesn't affect leaderboard)
+INSERT INTO claims (id, post_id, user_id, organization_id, quantity,
+                    pickup_code, status,
+                    confirmed_at, picked_up_at, cancelled_at,
+                    created_at, updated_at)
+VALUES
+  ('00000000-0000-0000-0005-000000000051',
+   '00000000-0000-0000-0003-000000000024',
+   '00000000-0000-0000-0000-000000000001',
+   NULL, 1, 'GA2451', 'picked_up',
+   NOW()-INTERVAL '3 days'-INTERVAL '1 hour',
+   NOW()-INTERVAL '3 days'-INTERVAL '30 minutes', NULL,
+   NOW()-INTERVAL '3 days'-INTERVAL '90 minutes',
+   NOW()-INTERVAL '3 days'-INTERVAL '30 minutes'),
+
+  ('00000000-0000-0000-0005-000000000052',
+   '00000000-0000-0000-0003-000000000025',
+   '00000000-0000-0000-0000-000000000002',
+   NULL, 1, NULL, 'cancelled',
+   NULL, NULL, NOW()-INTERVAL '24 days',
+   NOW()-INTERVAL '25 days'-INTERVAL '2 hours',
+   NOW()-INTERVAL '24 days');
+
+-- ── 13c. ADDITIONAL MESSAGES ──────────────────────────────────────────────────
+-- M14: Minh H. (receiver) in C51 — "Got it, thank you so much 🙏"
+--      Preview shown in receiver inbox Done section (2_1_3a)
+INSERT INTO messages (id, claim_id, sender_id, content, is_read, created_at)
+VALUES
+  ('00000000-0000-0000-0006-000000000014',
+   '00000000-0000-0000-0005-000000000051',
+   '00000000-0000-0000-0000-000000000001',
+   'Got it, thank you so much 🙏',
+   true, NOW()-INTERVAL '3 days'-INTERVAL '30 minutes');
+
+-- ── 13d. ADDITIONAL RATINGS ───────────────────────────────────────────────────
+-- Bento Cooky rating batch: 9 receivers rate Minh H. ★5 for P06 picked_up claims
+-- Increases Bento Cooky's visible rating count closer to prototype "★ 4.9 · 28 rates"
+-- Minh H. (receiver) rates Gam Coffee ★5 for C51 iced latte
+INSERT INTO ratings (id, claim_id, rater_id, rated_id, score, comment, created_at)
+VALUES
+  ('00000000-0000-0000-0007-000000000011',
+   '00000000-0000-0000-0005-000000000011',
+   '00000000-0000-0000-0000-000000000011',
+   '00000000-0000-0000-0000-000000000001',
+   5, 'Bento ngon tuyệt! Cảm ơn Bento Cooky nhiều ạ.',
+   NOW()-INTERVAL '48 minutes'),
+
+  ('00000000-0000-0000-0007-000000000012',
+   '00000000-0000-0000-0005-000000000012',
+   '00000000-0000-0000-0000-000000000013',
+   '00000000-0000-0000-0000-000000000001',
+   5, 'Cơm gà ngon lắm, đúng bữa trưa đói.',
+   NOW()-INTERVAL '1 hour'),
+
+  ('00000000-0000-0000-0007-000000000013',
+   '00000000-0000-0000-0005-000000000016',
+   '00000000-0000-0000-0000-000000000005',
+   '00000000-0000-0000-0000-000000000001',
+   5, 'Hộp cơm sạch sẽ, đầy đủ. Cảm ơn!',
+   NOW()-INTERVAL '65 minutes'),
+
+  ('00000000-0000-0000-0007-000000000014',
+   '00000000-0000-0000-0005-000000000017',
+   '00000000-0000-0000-0000-000000000003',
+   '00000000-0000-0000-0000-000000000001',
+   5, 'Đồ ăn ngon, dịch vụ tốt.',
+   NOW()-INTERVAL '75 minutes'),
+
+  ('00000000-0000-0000-0007-000000000015',
+   '00000000-0000-0000-0005-000000000018',
+   '00000000-0000-0000-0000-000000000004',
+   '00000000-0000-0000-0000-000000000001',
+   4, 'Ngon. Hơi bận nhưng được.',
+   NOW()-INTERVAL '85 minutes'),
+
+  ('00000000-0000-0000-0007-000000000016',
+   '00000000-0000-0000-0005-000000000049',
+   '00000000-0000-0000-0000-000000000014',
+   '00000000-0000-0000-0000-000000000001',
+   5, 'Quá tuyệt! Bento Cooky 10 điểm.',
+   NOW()-INTERVAL '85 minutes'),
+
+  ('00000000-0000-0000-0007-000000000017',
+   '00000000-0000-0000-0005-000000000050',
+   '00000000-0000-0000-0000-000000000015',
+   '00000000-0000-0000-0000-000000000001',
+   5, 'Rất ngon, cảm ơn!',
+   NOW()-INTERVAL '95 minutes'),
+
+  ('00000000-0000-0000-0007-000000000018',
+   '00000000-0000-0000-0005-000000000024',
+   '00000000-0000-0000-0000-000000000012',
+   '00000000-0000-0000-0000-000000000001',
+   5, 'Bento bò mềm ngon! Đại diện cả nhóm cảm ơn.',
+   NOW()-INTERVAL '1 day'-INTERVAL '30 minutes'),
+
+  ('00000000-0000-0000-0007-000000000019',
+   '00000000-0000-0000-0005-000000000025',
+   '00000000-0000-0000-0000-000000000013',
+   '00000000-0000-0000-0000-000000000001',
+   5, 'Ngon lắm. Cảm ơn!',
+   NOW()-INTERVAL '1 day'-INTERVAL '2 hours'),
+
+  -- Minh H. (receiver) → Minh H. (giver = owner of Gam Coffee) for C51 iced latte
+  ('00000000-0000-0000-0007-000000000020',
+   '00000000-0000-0000-0005-000000000051',
+   '00000000-0000-0000-0000-000000000001',
+   '00000000-0000-0000-0000-000000000001',
+   5, 'Latte ngon và mát! Cảm ơn Gam Coffee.',
+   NOW()-INTERVAL '3 days'-INTERVAL '20 minutes');
+
+-- ── 13e. ADDITIONAL THANKS ────────────────────────────────────────────────────
+-- Brings thanks_received for Minh H. from 5 → 9 (to match "9 notes" in 2_1_4a profile)
+INSERT INTO thanks (id, claim_id, from_user_id, to_user_id,
+                    message, reaction_emoji, created_at)
+VALUES
+  -- T08: Phong V. → Minh H. (C12/P06 Bento, picked_up)
+  ('00000000-0000-0000-0008-000000000008',
+   '00000000-0000-0000-0005-000000000012',
+   '00000000-0000-0000-0000-000000000013',
+   '00000000-0000-0000-0000-000000000001',
+   'Cơm gà ngon lắm! Cảm ơn Bento Cooky đã tặng bữa trưa. Hôm nào ghé quán ủng hộ thêm nhé!',
+   '🍱', NOW()-INTERVAL '1 hour'),
+
+  -- T09: An H. → Minh H. (C11/P06 Bento, picked_up)
+  ('00000000-0000-0000-0008-000000000009',
+   '00000000-0000-0000-0005-000000000011',
+   '00000000-0000-0000-0000-000000000011',
+   '00000000-0000-0000-0000-000000000001',
+   'Bento ngon tuyệt! Cảm ơn anh/chị nhiều ạ. Rất vui được nhận.',
+   '🙏', NOW()-INTERVAL '48 minutes'),
+
+  -- T10: Linh H. → Minh H. (C17/P06 Bento, picked_up)
+  ('00000000-0000-0000-0008-000000000010',
+   '00000000-0000-0000-0005-000000000017',
+   '00000000-0000-0000-0000-000000000003',
+   '00000000-0000-0000-0000-000000000001',
+   'Cảm ơn Bento Cooky! Hộp cơm đẹp và ngon. Sẽ nhắc bạn bè ủng hộ.',
+   '❤️', NOW()-INTERVAL '75 minutes'),
+
+  -- T11: Khanh L. → Minh H. (C16/P06 Bento, picked_up)
+  ('00000000-0000-0000-0008-000000000011',
+   '00000000-0000-0000-0005-000000000016',
+   '00000000-0000-0000-0000-000000000005',
+   '00000000-0000-0000-0000-000000000001',
+   'Ngon quá! Bento đúng bữa trưa đói bụng. Cảm ơn anh nhiều!',
+   '👍', NOW()-INTERVAL '65 minutes'),
+
+  -- T12: Nam T. → Minh H. (C36/P13 Gam Coffee cà phê sáng)
+  -- Nam T. "6 notes to givers" count: T03(C23)+T12(C36)+T13(C43)+T14(C53)+T15(C55)+T16(C57)=6
+  ('00000000-0000-0000-0008-000000000012',
+   '00000000-0000-0000-0005-000000000036',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0000-000000000001',
+   'Cà phê sáng ngon tuyệt! Cả nhà được buổi sáng thật ý nghĩa. Cảm ơn Gam Coffee nhiều!',
+   '☕', NOW()-INTERVAL '1 day'-INTERVAL '4 hours'),
+
+  -- T13: Nam T. → Phuong L. (C43/P19 Đồ gia dụng)
+  ('00000000-0000-0000-0008-000000000013',
+   '00000000-0000-0000-0005-000000000043',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0000-000000000004',
+   'Đồ dùng rất tiện và còn tốt. Mái Ấm chúng mình dùng hàng ngày luôn. Cảm ơn chị Phương!',
+   '🏡', NOW()-INTERVAL '14 days'),
+
+  -- T14: Nam T. → Minh H. (C53/P26 Bento sườn)
+  ('00000000-0000-0000-0008-000000000014',
+   '00000000-0000-0000-0005-000000000053',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0000-000000000001',
+   'Bento sườn nướng ngon hơn mình tưởng! Các bé ở Mái Ấm thích lắm. Cảm ơn Bento Cooky!',
+   '🍱', NOW()-INTERVAL '5 weeks'),
+
+  -- T15: Nam T. → Minh H. (C55/P28 Gam Coffee filter)
+  ('00000000-0000-0000-0008-000000000015',
+   '00000000-0000-0000-0005-000000000055',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0000-000000000001',
+   'Cà phê filter thơm ngon, buổi sáng tuyệt vời cho anh chị em Mái Ấm. Cảm ơn Gam Coffee!',
+   '☕', NOW()-INTERVAL '6 weeks'),
+
+  -- T16: Nam T. → Minh H. (C57/P30 Bento cơm thịt kho)
+  ('00000000-0000-0000-0008-000000000016',
+   '00000000-0000-0000-0005-000000000057',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0000-000000000001',
+   'Cơm thịt kho tàu đậm đà, đúng vị miền Nam. Trẻ em nhà Mái Ấm đều thích. Cảm ơn Bento Cooky!',
+   '❤️', NOW()-INTERVAL '10 weeks');
+
+-- ── 13f. NAM T. CLAIM HISTORY (for "1 active · 8 completed" in profile 2_1_4c) ─────
+-- Nam T. completed claims: C23(P08)+C36(P13)+C43(P19)+C53(P26)+C54(P27)+C55(P28)+C56(P29)+C57(P30)=8
+-- C52 is cancelled so P25 does not add to Minh H. personal leaderboard (stays at 7)
+-- New posts are Bento Cooky / Gam Coffee business posts → business leaderboard only
+INSERT INTO posts (id, user_id, business_id, title, description, category,
+                   quantity, quantity_remaining, limit_per_receiver,
+                   pickup_start, pickup_end, closes_at,
+                   latitude, longitude, address, city,
+                   status, is_recurring, ai_summary,
+                   created_at, updated_at)
+VALUES
+  -- P26: Bento Cooky (5 weeks ago)
+  ('00000000-0000-0000-0003-000000000026',
+   '00000000-0000-0000-0000-000000000001',
+   '00000000-0000-0000-0001-000000000001',
+   'Bento cơm sườn (6 phần)',
+   '6 hộp bento cơm sườn nướng còn dư cuối ngày.',
+   'food', 6, 0, NULL,
+   NOW()-INTERVAL '5 weeks'+TIME '11:00',
+   NOW()-INTERVAL '5 weeks'+TIME '14:00',
+   NOW()-INTERVAL '5 weeks'+TIME '14:00',
+   10.7754, 106.7022,
+   '248 Lê Lai, Phường Bến Thành, Quận 1, TP.HCM',
+   'Hồ Chí Minh',
+   'completed', false, NULL,
+   NOW()-INTERVAL '5 weeks'-INTERVAL '2 hours', NOW()-INTERVAL '5 weeks'),
+
+  -- P27: Bento Cooky (7 weeks ago)
+  ('00000000-0000-0000-0003-000000000027',
+   '00000000-0000-0000-0000-000000000001',
+   '00000000-0000-0000-0001-000000000001',
+   'Xôi gà (8 phần)',
+   '8 phần xôi gà xé cuối buổi sáng, tặng trước 11h30.',
+   'food', 8, 0, NULL,
+   NOW()-INTERVAL '7 weeks'+TIME '10:30',
+   NOW()-INTERVAL '7 weeks'+TIME '11:30',
+   NOW()-INTERVAL '7 weeks'+TIME '11:30',
+   10.7754, 106.7022,
+   '248 Lê Lai, Phường Bến Thành, Quận 1, TP.HCM',
+   'Hồ Chí Minh',
+   'completed', false, NULL,
+   NOW()-INTERVAL '7 weeks'-INTERVAL '2 hours', NOW()-INTERVAL '7 weeks'),
+
+  -- P28: Gam Coffee (6 weeks ago)
+  ('00000000-0000-0000-0003-000000000028',
+   '00000000-0000-0000-0000-000000000001',
+   '00000000-0000-0000-0001-000000000002',
+   'Cà phê filter (10 ly)',
+   '10 ly cà phê filter sáng sớm còn dư, uống ngon nhất trong 1 giờ.',
+   'food', 10, 0, NULL,
+   NOW()-INTERVAL '6 weeks'+TIME '07:30',
+   NOW()-INTERVAL '6 weeks'+TIME '09:00',
+   NOW()-INTERVAL '6 weeks'+TIME '09:00',
+   10.7769, 106.7039,
+   '15 Nguyễn Huệ, Phường Sài Gòn, Quận 1, TP.HCM',
+   'Hồ Chí Minh',
+   'completed', false, NULL,
+   NOW()-INTERVAL '6 weeks'-INTERVAL '2 hours', NOW()-INTERVAL '6 weeks'),
+
+  -- P29: Gam Coffee (8 weeks ago)
+  ('00000000-0000-0000-0003-000000000029',
+   '00000000-0000-0000-0000-000000000001',
+   '00000000-0000-0000-0001-000000000002',
+   'Matcha latte (5 ly)',
+   '5 ly matcha latte pha sáng còn dư hôm nay.',
+   'food', 5, 0, NULL,
+   NOW()-INTERVAL '8 weeks'+TIME '09:00',
+   NOW()-INTERVAL '8 weeks'+TIME '11:00',
+   NOW()-INTERVAL '8 weeks'+TIME '11:00',
+   10.7769, 106.7039,
+   '15 Nguyễn Huệ, Phường Sài Gòn, Quận 1, TP.HCM',
+   'Hồ Chí Minh',
+   'completed', false, NULL,
+   NOW()-INTERVAL '8 weeks'-INTERVAL '2 hours', NOW()-INTERVAL '8 weeks'),
+
+  -- P30: Bento Cooky (10 weeks ago)
+  ('00000000-0000-0000-0003-000000000030',
+   '00000000-0000-0000-0000-000000000001',
+   '00000000-0000-0000-0001-000000000001',
+   'Cơm thịt kho (4 phần)',
+   '4 phần cơm thịt kho tàu cuối ca trưa.',
+   'food', 4, 0, NULL,
+   NOW()-INTERVAL '10 weeks'+TIME '13:00',
+   NOW()-INTERVAL '10 weeks'+TIME '15:00',
+   NOW()-INTERVAL '10 weeks'+TIME '15:00',
+   10.7754, 106.7022,
+   '248 Lê Lai, Phường Bến Thành, Quận 1, TP.HCM',
+   'Hồ Chí Minh',
+   'completed', false, NULL,
+   NOW()-INTERVAL '10 weeks'-INTERVAL '2 hours', NOW()-INTERVAL '10 weeks');
+
+INSERT INTO claims (id, post_id, user_id, organization_id, quantity,
+                    pickup_code, status,
+                    confirmed_at, picked_up_at, cancelled_at,
+                    created_at, updated_at)
+VALUES
+  -- C53: Nam T. via Mái Ấm on P26 (Bento sườn, 5 weeks ago)
+  ('00000000-0000-0000-0005-000000000053',
+   '00000000-0000-0000-0003-000000000026',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0002-000000000001',
+   3, 'BT2601', 'completed',
+   NOW()-INTERVAL '5 weeks'-INTERVAL '2 hours',
+   NOW()-INTERVAL '5 weeks'-INTERVAL '1 hour', NULL,
+   NOW()-INTERVAL '5 weeks'-INTERVAL '3 hours',
+   NOW()-INTERVAL '5 weeks'-INTERVAL '1 hour'),
+
+  -- C54: Nam T. via Mái Ấm on P27 (Xôi gà, 7 weeks ago)
+  ('00000000-0000-0000-0005-000000000054',
+   '00000000-0000-0000-0003-000000000027',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0002-000000000001',
+   2, 'BT2701', 'completed',
+   NOW()-INTERVAL '7 weeks'-INTERVAL '2 hours',
+   NOW()-INTERVAL '7 weeks'-INTERVAL '1 hour', NULL,
+   NOW()-INTERVAL '7 weeks'-INTERVAL '3 hours',
+   NOW()-INTERVAL '7 weeks'-INTERVAL '1 hour'),
+
+  -- C55: Nam T. via Mái Ấm on P28 (Gam Coffee filter, 6 weeks ago)
+  ('00000000-0000-0000-0005-000000000055',
+   '00000000-0000-0000-0003-000000000028',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0002-000000000001',
+   5, 'GA2801', 'completed',
+   NOW()-INTERVAL '6 weeks'-INTERVAL '2 hours',
+   NOW()-INTERVAL '6 weeks'-INTERVAL '1 hour', NULL,
+   NOW()-INTERVAL '6 weeks'-INTERVAL '3 hours',
+   NOW()-INTERVAL '6 weeks'-INTERVAL '1 hour'),
+
+  -- C56: Nam T. via Mái Ấm on P29 (Gam Coffee matcha, 8 weeks ago)
+  ('00000000-0000-0000-0005-000000000056',
+   '00000000-0000-0000-0003-000000000029',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0002-000000000001',
+   2, 'GA2901', 'completed',
+   NOW()-INTERVAL '8 weeks'-INTERVAL '2 hours',
+   NOW()-INTERVAL '8 weeks'-INTERVAL '1 hour', NULL,
+   NOW()-INTERVAL '8 weeks'-INTERVAL '3 hours',
+   NOW()-INTERVAL '8 weeks'-INTERVAL '1 hour'),
+
+  -- C57: Nam T. personal on P30 (Bento cơm thịt kho, 10 weeks ago)
+  ('00000000-0000-0000-0005-000000000057',
+   '00000000-0000-0000-0003-000000000030',
+   '00000000-0000-0000-0000-000000000002',
+   NULL, 1, 'BT3001', 'completed',
+   NOW()-INTERVAL '10 weeks'-INTERVAL '2 hours',
+   NOW()-INTERVAL '10 weeks'-INTERVAL '1 hour', NULL,
+   NOW()-INTERVAL '10 weeks'-INTERVAL '3 hours',
+   NOW()-INTERVAL '10 weeks'-INTERVAL '1 hour');
 
 -- ── 13. BUSINESS_MEMBERS & ORG_MEMBERS ───────────────────────────────────────
 -- Migration 006 backfills from businesses/organizations tables automatically,
