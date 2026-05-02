@@ -233,7 +233,7 @@
 
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
-| B-new-1 | `POST /claims/:id/thanks` — gửi thank-you note sau pickup | _unassigned_ | [ ] | Screen 2.2.9 "Send a note" button. Bảng `thanks` đã có. Cần endpoint + Flutter F-new-1. |
+| B-new-1 | `POST /claims/:id/thanks` — gửi thank-you note sau pickup | Claude | [x] | [f313cd8](https://github.com/thanks-org/thanks-backend/commit/f313cd8) — validate picked_up + UNIQUE(claim_id,from_user_id), 409 duplicate, 422 not picked_up |
 | B-new-2 | `GET /leaderboard` thêm `giver_type` + `period` filter | _unassigned_ | [ ] | Screen 2.1.2: tab All/Business/Personal × Week/Month/All-time. Backend hiện không có 2 params này. |
 | B-new-3 | Migration: `ALTER TABLE organizations ADD COLUMN address_detail TEXT` | Luân | [x] | Done — trong `000006_invite_model_and_extras.up.sql`. api_doc updated (POST/PUT/GET orgs + public org detail). |
 | B-new-4 | `PUT /me/notification-preferences` — persist push/email toggle | _unassigned_ | [ ] | Screen 2.1.4d Settings: toggle hiện chỉ local state. Cần `users.notification_preferences JSONB` + endpoint. |
@@ -249,9 +249,9 @@
 | B-new-14 | `GET /businesses/:id/members` + `GET /organizations/:id/members` — list members với role | _unassigned_ | [ ] | Phụ thuộc B-new-8. Owner-only cho business, admin-only cho org. Response: `[{user_id, name, avatar_url, role, joined_at}]`. Cần cho F-new-4/5 hiển thị danh sách. Scenario G-09, H-09. |
 | B-new-15 | `GET /me/invites` — pending invites · `POST /invites/:token/decline` — từ chối invite | _unassigned_ | [ ] | Phụ thuộc B-new-8. `GET /me/invites` trả invites đang pending cho user hiện tại (filter by invitee_contact = phone/email của user). `POST /invites/:token/decline` set status='declined'. Cần cho F-new-8. Scenario G-10, H-10. |
 | B-new-16 | API doc update — thêm sections Business Members + Org Members + Invites + Thanks + No-show + Notif Prefs | Luân | [x] | Done — `api_and_doc/api_doc.html`. Thêm 11 endpoint sections mới + nav links + address_detail cho orgs + notification_preferences cho GET /me. |
-| B-new-17 | **Role enforcement — backend guard cho claim + post endpoints** | _unassigned_ | [ ] | **Bug:** user có `role_type='giver'` hiện vẫn gọi được `POST /posts/:id/claims`. Fix: (1) claim endpoint check `caller.role_type = 'receiver'` → 403 `forbidden_role` nếu giver; (2) post creation `POST /posts` check `caller.role_type = 'giver'` → 403 `forbidden_role` nếu receiver. **Edge cases:** (a) business staff: business identity luôn là giver, member có `role_type='giver'` → guard check `role_type` của user, không phải membership. (b) org claim (B8-10): khi claim dưới danh nghĩa org, org phải là `receiver`-type org (verified). (c) new user chưa có `role_type` (NULL): block hết cho đến khi B-new-18 hoàn thành. Phụ thuộc B-new-19 (migration đổi constraint). |
-| B-new-18 | **Role onboarding endpoint** — extend `PUT /me` để set `role_type` lần đầu | _unassigned_ | [ ] | Khi user đăng ký lần đầu qua social auth (B6-1), `role_type` = NULL. Cần: field `role_type` trong `PUT /me` chỉ nhận `'giver'` hoặc `'receiver'`; trả 422 `invalid_role` nếu sai hoặc cố set giá trị khác. **Lưu ý:** role là cố định sau khi chọn — không có upgrade/downgrade. Nếu user cần đổi role (edge case), phải qua support. Phụ thuộc B-new-19. |
-| B-new-19 | **DB migration — drop `both` khỏi role_type CHECK constraint** | _unassigned_ | [ ] | Migration 000007: (1) `UPDATE users SET role_type = NULL WHERE role_type = 'both'` — rollback existing 'both' users về NULL, họ sẽ chọn lại khi login; (2) drop CHECK constraint cũ; (3) add CHECK `role_type IN ('giver','receiver')`; (4) đổi DEFAULT từ `'both'` → NULL. Down migration: restore về `IN ('giver','receiver','both')` DEFAULT 'both'. Phải chạy trước B-new-17/18. |
+| B-new-17 | **Role enforcement — backend guard cho claim + post endpoints** | Claude | [x] | [f313cd8](https://github.com/thanks-org/thanks-backend/commit/f313cd8) — CreateClaim requires role_type='receiver'; CreatePost requires 'giver'; NULL → 403 forbidden_role |
+| B-new-18 | **Role onboarding endpoint** — extend `PUT /me` để set `role_type` lần đầu | Claude | [x] | [f313cd8](https://github.com/thanks-org/thanks-backend/commit/f313cd8) — 422 invalid_role nếu sai value; role immutable sau khi đã set (pre-check current role) |
+| B-new-19 | **DB migration — drop `both` khỏi role_type CHECK constraint** | Claude | [x] | [f313cd8](https://github.com/thanks-org/thanks-backend/commit/f313cd8) — migration file 000007 đã đúng; AllowedRoleTypes loại bỏ 'both' |
 
 ### Flutter — Extra (Gaps từ audit 2026-04-30)
 
@@ -298,7 +298,7 @@
 | B8-6 | `POST /organizations/:id/invites` + accept/decline (mirror B8-2/B8-3 cho org) | _unassigned_ | [ ] | Journey 6. |
 | B8-8 | `POST /claims/:id/no-show` — giver mark receiver no-show, restore quantity_remaining, decrement receiver rating | _unassigned_ | [ ] | Journey 9. Gap D-07/K-08. Owner-only, idempotent, status='no_show'. Notification cho receiver. |
 | B8-10 | Claim under organization identity — extend B3-1 nhận `claim_as_org_id`, validate user là member của org, lưu `claimer_org_id` | _unassigned_ | [ ] | Journey 6. Gap E-10 backend. Phụ thuộc B8-1. |
-| B8-11 | `GET /posts/:id/similar` — items cùng category trong bán kính 5km, exclude completed/cancelled | _unassigned_ | [ ] | Journey 11. Recommendation khi item hết hàng. Không cần ML — query SQL đơn giản. |
+| B8-11 | `GET /posts/:id/similar` — items cùng category trong bán kính 5km, exclude completed/cancelled | Claude | [x] | [f313cd8](https://github.com/thanks-org/thanks-backend/commit/f313cd8) — Haversine 5km, same category, active only, limit 5, public endpoint |
 | B8-12 | `POST /requests` + `GET /requests` — org đăng request cần nhận đồ (category, quantity, deadline, reason) | _unassigned_ | [ ] | Journey 13. Tính năng mới — bảng `requests`, mirror posts shape. Org-only initially. |
 
 ### Flutter — Phase 6
