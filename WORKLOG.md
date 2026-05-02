@@ -37,6 +37,7 @@
 
 | Task | Ai làm | Ngày xong | Commit / PR |
 |------|--------|-----------|-------------|
+| F8-4 + F8-5 + F8-6 + F8-7 + F8-10 — Phase 8 complete: verify F8-4/5/6 done (real API screens, dev_seed post_images already correct); fix F8-7 dev_seed.sql post_images for My Items (P03→photo-1503602642458, P04 add photo-1556228720, P07→photo-1546069901, P08 add photo-1606787366850); F8-10 N/A (device picker) | Claude | 2026-05-02 | seed [TBD] |
 | F8-1 + F8-2 + F8-3 + F8-8 + F8-9 — Sync Unsplash photo IDs: item.dart mock data (8 items, match prototype 2_1_1) + dev_seed.sql business logos (Bento Cooky / Gam Coffee / Tous Les Jours) + post_images (17 entries, picsum → Unsplash) | Claude | 2026-05-02 | app [ad66df0](https://github.com/thanks-org/thanks-app/commit/ad66df0), seed [ec1c36e](https://github.com/thanks-org/thanks/commit/ec1c36e) |
 | F-extra-1 + F-extra-2 — Giver profile sections (posts + ratings) + bottom nav bar on all sub-screens | TrungVT (sonnet exec) | 2026-04-29 | [44ae6a4](https://github.com/thanks-org/thanks-app/commit/44ae6a4) |
 | B-extra-1 + B-extra-2 — `GET /users/:id/posts` + `GET /users/:id/ratings` cho Giver Public Profile screen. Keyset cursor pagination (base64 created_at), status filter, rater+post join, aggregate summary. Docs updated in api_doc.html. | TrungVT (sonnet exec) | 2026-04-29 | [5a22e03](https://github.com/thanks-org/thanks-backend/commit/5a22e03) |

@@ -2021,13 +2021,17 @@ INSERT INTO post_images (id, post_id, url, position) VALUES
   ('00000000-0000-0000-0004-000000000002','00000000-0000-0000-0003-000000000001','https://images.unsplash.com/photo-1598522325074-042db73aa4e5?w=800&q=80&auto=format&fit=crop',1),
   -- P02 Kemei haircut machine (2_1_1 item 2)
   ('00000000-0000-0000-0004-000000000003','00000000-0000-0000-0003-000000000002','https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=80&auto=format&fit=crop',0),
-  -- P03 Sách kinh doanh (completed, 2_1_1 item 8 equivalent)
-  ('00000000-0000-0000-0004-000000000004','00000000-0000-0000-0003-000000000003','https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=800&q=80&auto=format&fit=crop',0),
+  -- P03 Sách kinh doanh (completed, 2_2_3 my items personal item 3)
+  ('00000000-0000-0000-0004-000000000004','00000000-0000-0000-0003-000000000003','https://images.unsplash.com/photo-1503602642458-232111445657?w=800&q=80&auto=format&fit=crop',0),
+  -- P04 Ghế văn phòng (completed, 2_2_3 my items personal item 4)
+  ('00000000-0000-0000-0004-000000000018','00000000-0000-0000-0003-000000000004','https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&q=80&auto=format&fit=crop',0),
   -- P06 20 Hộp Cơm Gà — Bento Cooky (2_1_1 item 3, 2_1_3 message thread)
   ('00000000-0000-0000-0004-000000000005','00000000-0000-0000-0003-000000000006','https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=800&q=80&auto=format&fit=crop',0),
   ('00000000-0000-0000-0004-000000000006','00000000-0000-0000-0003-000000000006','https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80&auto=format&fit=crop',1),
-  -- P07 Canh chua cá hú thập cẩm (message thread soup)
-  ('00000000-0000-0000-0004-000000000007','00000000-0000-0000-0003-000000000007','https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&q=80&auto=format&fit=crop',0),
+  -- P07 Súp hỗn hợp (2_2_4 my items business item 2 — Mixed soups)
+  ('00000000-0000-0000-0004-000000000007','00000000-0000-0000-0003-000000000007','https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80&auto=format&fit=crop',0),
+  -- P08 Bento Bò 15 (completed, 2_2_4 my items business item 3)
+  ('00000000-0000-0000-0004-000000000019','00000000-0000-0000-0003-000000000008','https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=800&q=80&auto=format&fit=crop',0),
   -- P12 Iced lattes — Gam Coffee (2_1_1 item 4, 2_1_3 message thread)
   ('00000000-0000-0000-0004-000000000008','00000000-0000-0000-0003-000000000012','https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=800&q=80&auto=format&fit=crop',0),
   -- P15 Baguettes & pastries — Tous Les Jours (2_1_1 item 5)
