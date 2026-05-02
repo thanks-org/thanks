@@ -37,6 +37,7 @@
 
 | Task | Ai làm | Ngày xong | Commit / PR |
 |------|--------|-----------|-------------|
+| F8-1 + F8-2 + F8-3 + F8-8 + F8-9 — Sync Unsplash photo IDs: item.dart mock data (8 items, match prototype 2_1_1) + dev_seed.sql business logos (Bento Cooky / Gam Coffee / Tous Les Jours) + post_images (17 entries, picsum → Unsplash) | Claude | 2026-05-02 | TBD |
 | F-extra-1 + F-extra-2 — Giver profile sections (posts + ratings) + bottom nav bar on all sub-screens | TrungVT (sonnet exec) | 2026-04-29 | [44ae6a4](https://github.com/thanks-org/thanks-app/commit/44ae6a4) |
 | B-extra-1 + B-extra-2 — `GET /users/:id/posts` + `GET /users/:id/ratings` cho Giver Public Profile screen. Keyset cursor pagination (base64 created_at), status filter, rater+post join, aggregate summary. Docs updated in api_doc.html. | TrungVT (sonnet exec) | 2026-04-29 | [5a22e03](https://github.com/thanks-org/thanks-backend/commit/5a22e03) |
 | Hotfix F-bugfix-3 — "Xem tất cả →" Givers screen mất bottom nav (Navigator.push thay vì switch tab) | TrungVT (sonnet exec) | 2026-04-29 | [0589d76](https://github.com/thanks-org/thanks-app/commit/0589d76) |

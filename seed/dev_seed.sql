@@ -227,7 +227,7 @@ VALUES
   ('00000000-0000-0000-0001-000000000001',
    '00000000-0000-0000-0000-000000000001',
    'Bento Cooky', 'restaurant',
-   'https://picsum.photos/seed/bento_cooky/200/200',
+   'https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=200&q=80&auto=format&fit=crop',
    '0281111001',
    'Nhà hàng bento tươi ngon. Tặng bento thừa sau giờ cao điểm cho người cần. 248 Lê Lai, P. Sài Gòn, Q.1.',
    '248 Lê Lai, Phường Sài Gòn, Quận 1, TP.HCM',
@@ -239,7 +239,7 @@ VALUES
   ('00000000-0000-0000-0001-000000000002',
    '00000000-0000-0000-0000-000000000001',
    'Gam Coffee', 'cafe',
-   'https://picsum.photos/seed/gam_coffee/200/200',
+   'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=200&q=80&auto=format&fit=crop',
    '0281111002',
    'Quán cà phê specialty. Tặng cà phê ngày hôm trước cho sáng hôm sau. 15 Nguyễn Huệ, P. Sài Gòn, Q.1.',
    '15 Nguyễn Huệ, Phường Sài Gòn, Quận 1, TP.HCM',
@@ -251,7 +251,7 @@ VALUES
   ('00000000-0000-0000-0001-000000000003',
    '00000000-0000-0000-0000-000000000016',
    'Tous Les Jours', 'bakery',
-   'https://picsum.photos/seed/tous_les_jours/200/200',
+   'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200&q=80&auto=format&fit=crop',
    '0281111003',
    'Chuỗi bánh mì và bánh ngọt phong cách Pháp–Hàn. Tặng bánh sắp hết hạn cuối ngày.',
    '55 Lê Thánh Tôn, Phường Bến Nghé, Quận 1, TP.HCM',
@@ -2016,23 +2016,38 @@ VALUES
 
 -- ── 7. POST IMAGES ────────────────────────────────────────────────────────────
 INSERT INTO post_images (id, post_id, url, position) VALUES
-  ('00000000-0000-0000-0004-000000000001','00000000-0000-0000-0003-000000000001','https://picsum.photos/seed/lacoste1/800/600',0),
-  ('00000000-0000-0000-0004-000000000002','00000000-0000-0000-0003-000000000001','https://picsum.photos/seed/lacoste2/800/600',1),
-  ('00000000-0000-0000-0004-000000000003','00000000-0000-0000-0003-000000000002','https://picsum.photos/seed/kemei1/800/600',0),
-  ('00000000-0000-0000-0004-000000000004','00000000-0000-0000-0003-000000000003','https://picsum.photos/seed/books_biz/800/600',0),
-  ('00000000-0000-0000-0004-000000000005','00000000-0000-0000-0003-000000000006','https://picsum.photos/seed/bento_ga1/800/600',0),
-  ('00000000-0000-0000-0004-000000000006','00000000-0000-0000-0003-000000000006','https://picsum.photos/seed/bento_ga2/800/600',1),
-  ('00000000-0000-0000-0004-000000000007','00000000-0000-0000-0003-000000000007','https://picsum.photos/seed/soup_mix/800/600',0),
-  ('00000000-0000-0000-0004-000000000008','00000000-0000-0000-0003-000000000012','https://picsum.photos/seed/iced_latte/800/600',0),
-  ('00000000-0000-0000-0004-000000000009','00000000-0000-0000-0003-000000000015','https://picsum.photos/seed/baguette/800/600',0),
-  ('00000000-0000-0000-0004-000000000010','00000000-0000-0000-0003-000000000017','https://picsum.photos/seed/pizza4ps/800/600',0),
-  ('00000000-0000-0000-0004-000000000011','00000000-0000-0000-0003-000000000018','https://picsum.photos/seed/kids_books/800/600',0),
-  ('00000000-0000-0000-0004-000000000012','00000000-0000-0000-0003-000000000005','https://picsum.photos/seed/stroller/800/600',0),
-  ('00000000-0000-0000-0004-000000000013','00000000-0000-0000-0003-000000000024','https://picsum.photos/seed/iced_latte2/800/600',0),
-  ('00000000-0000-0000-0004-000000000014','00000000-0000-0000-0003-000000000031','https://picsum.photos/seed/baguettes/800/600',0),
-  ('00000000-0000-0000-0004-000000000015','00000000-0000-0000-0003-000000000032','https://picsum.photos/seed/mens_shirts/800/600',0),
-  ('00000000-0000-0000-0004-000000000016','00000000-0000-0000-0003-000000000033','https://picsum.photos/seed/wooden_chair/800/600',0),
-  ('00000000-0000-0000-0004-000000000017','00000000-0000-0000-0003-000000000034','https://picsum.photos/seed/biz_books/800/600',0);
+  -- P01 Lacoste shirts (screen 2_4_1 hero, 2_1_1 item 1)
+  ('00000000-0000-0000-0004-000000000001','00000000-0000-0000-0003-000000000001','https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=800&q=80&auto=format&fit=crop',0),
+  ('00000000-0000-0000-0004-000000000002','00000000-0000-0000-0003-000000000001','https://images.unsplash.com/photo-1598522325074-042db73aa4e5?w=800&q=80&auto=format&fit=crop',1),
+  -- P02 Kemei haircut machine (2_1_1 item 2)
+  ('00000000-0000-0000-0004-000000000003','00000000-0000-0000-0003-000000000002','https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=80&auto=format&fit=crop',0),
+  -- P03 Sách kinh doanh (completed, 2_1_1 item 8 equivalent)
+  ('00000000-0000-0000-0004-000000000004','00000000-0000-0000-0003-000000000003','https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=800&q=80&auto=format&fit=crop',0),
+  -- P06 20 Hộp Cơm Gà — Bento Cooky (2_1_1 item 3, 2_1_3 message thread)
+  ('00000000-0000-0000-0004-000000000005','00000000-0000-0000-0003-000000000006','https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=800&q=80&auto=format&fit=crop',0),
+  ('00000000-0000-0000-0004-000000000006','00000000-0000-0000-0003-000000000006','https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80&auto=format&fit=crop',1),
+  -- P07 Canh chua cá hú thập cẩm (message thread soup)
+  ('00000000-0000-0000-0004-000000000007','00000000-0000-0000-0003-000000000007','https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&q=80&auto=format&fit=crop',0),
+  -- P12 Iced lattes — Gam Coffee (2_1_1 item 4, 2_1_3 message thread)
+  ('00000000-0000-0000-0004-000000000008','00000000-0000-0000-0003-000000000012','https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=800&q=80&auto=format&fit=crop',0),
+  -- P15 Baguettes & pastries — Tous Les Jours (2_1_1 item 5)
+  ('00000000-0000-0000-0004-000000000009','00000000-0000-0000-0003-000000000015','https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80&auto=format&fit=crop',0),
+  -- P17 Pizza — Pizza 4P's
+  ('00000000-0000-0000-0004-000000000010','00000000-0000-0000-0003-000000000017','https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80&auto=format&fit=crop',0),
+  -- P18 Sách thiếu nhi — Linh H.
+  ('00000000-0000-0000-0004-000000000011','00000000-0000-0000-0003-000000000018','https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=800&q=80&auto=format&fit=crop',0),
+  -- P05 Xe đẩy em bé (2_2_9 thanks screen)
+  ('00000000-0000-0000-0004-000000000012','00000000-0000-0000-0003-000000000005','https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=800&q=80&auto=format&fit=crop',0),
+  -- P24 Iced latte (second Gam Coffee post, 2_1_3 messages)
+  ('00000000-0000-0000-0004-000000000013','00000000-0000-0000-0003-000000000024','https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=800&q=80&auto=format&fit=crop',0),
+  -- P31 Bánh mì Pháp & bánh ngọt — Tous Les Jours (active home feed, 2_1_1 item 5)
+  ('00000000-0000-0000-0004-000000000014','00000000-0000-0000-0003-000000000031','https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80&auto=format&fit=crop',0),
+  -- P32 Áo sơ mi nam — Đức Nguyễn (active home feed, 2_1_1 item 6)
+  ('00000000-0000-0000-0004-000000000015','00000000-0000-0000-0003-000000000032','https://images.unsplash.com/photo-1598522325074-042db73aa4e5?w=800&q=80&auto=format&fit=crop',0),
+  -- P33 Ghế ăn gỗ (active home feed, 2_1_1 item 7)
+  ('00000000-0000-0000-0004-000000000016','00000000-0000-0000-0003-000000000033','https://images.unsplash.com/photo-1503602642458-232111445657?w=800&q=80&auto=format&fit=crop',0),
+  -- P34 Sách kinh doanh (active home feed, 2_1_1 item 8)
+  ('00000000-0000-0000-0004-000000000017','00000000-0000-0000-0003-000000000034','https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=800&q=80&auto=format&fit=crop',0);
 
 -- ── 13. BUSINESS_MEMBERS & ORG_MEMBERS ───────────────────────────────────────
 -- Migration 006 backfills from businesses/organizations tables automatically,
