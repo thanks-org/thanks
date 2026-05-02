@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thanks — User Journey Diagrams</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --cream: #FDF6ED;
+    --cream-deep: #F5EAD8;
+    --terracotta: #C85A3A;
+    --forest: #2D5A3D;
+    --mustard: #D4A017;
+    --indigo: #3D4F8A;
+    --ink: #1A1A1A;
+    --ink-soft: #6B6B6B;
+    --paper: #FFFFFF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    padding: 32px 24px 64px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 24px; font-weight: 800;
+    color: var(--terracotta);
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    font-size: 14px; color: var(--ink-soft);
+    margin-bottom: 40px;
+  }
+  h2 {
+    font-size: 18px; font-weight: 700;
+    margin: 48px 0 6px;
+    color: var(--forest);
+    border-left: 4px solid var(--forest);
+    padding-left: 12px;
+  }
+  h3 {
+    font-size: 14px; font-weight: 600;
+    margin: 28px 0 8px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .note {
+    font-size: 13px; color: var(--ink-soft);
+    background: var(--cream-deep);
+    border-left: 3px solid var(--mustard);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 16px;
+  }
+  .diagram-wrap {
+    background: var(--paper);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 12px 0 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    overflow-x: auto;
+  }
+  .mermaid { text-align: center; }
+  .legend {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    font-size: 12px; margin-top: 10px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .dot-giver   { background: var(--terracotta); }
+  .dot-receiver{ background: var(--forest); }
+  .dot-app     { background: var(--indigo); }
+  .dot-biz     { background: var(--mustard); }
+  hr { border: none; border-top: 1px solid var(--cream-deep); margin: 40px 0; }
+</style>
+</head>
+<body>
+
+<h1>Thanks — User Journey Diagrams</h1>
+<p class="subtitle">Visual flow cho các hành trình người dùng chính. Cập nhật: 2026-05-02</p>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<h2>① Giver thấy gì khi vào app?</h2>
+
+<p class="note">
+  Câu hỏi: giver mở Thanks ra, thấy gì trên từng tab? Họ không nhận đồ được — vậy Home Feed có ích gì với họ?
+</p>
+
+<h3>Tab-by-tab overview — Giver personal</h3>
+<div class="diagram-wrap">
+<div class="mermaid">
+flowchart LR
+    subgraph Home["🏠 Home Feed"]
+        H1["Browse items\ncủa givers khác\n(để biết người khác\nđang cho gì)"]
+        H2["FAB ➕\n'Đăng đồ'\n← hành động chính"]
+        H3["Top Givers\n(leaderboard nhỏ)"]
+        H4["Search + filter\ntheo category"]
+    end
+
+    subgraph Give["📦 (không có tab riêng)"]
+        G1["Đăng đồ\nqua FAB\ntrên Home"]
+    end
+
+    subgraph Msgs["💬 Tin nhắn"]
+        M1["Chat với receivers\nđang claim đồ\ncủa mình"]
+    end
+
+    subgraph Givers["🏆 Leaderboard"]
+        L1["Xem thứ hạng\nTop Givers\ntuần/tháng/all-time"]
+    end
+
+    subgraph Profile["👤 Hồ sơ (Giver)"]
+        P1["Đồ tôi đăng\n(My Items)"]
+        P2["Doanh nghiệp\ncủa tôi"]
+        P3["Thanks & Ratings\nnhận được"]
+        P4["Settings"]
+    end
+
+    Home -.->|"⚠️ Nút 'Nhận'\nẩn với givers"| Home
+</div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="dot dot-giver"></div> Giver actions</div>
+  <div class="legend-item"><div class="dot dot-app"></div> App behavior</div>
+</div>
+
+<h3>Home Feed: tại sao giver cần thấy items của người khác?</h3>
+<div class="diagram-wrap">
+<div class="mermaid">
+flowchart TD
+    A["Giver mở Home Feed"] --> B{"Mục đích?"}
+    B --> C["Xem community đang cho gì\n→ cảm hứng để tiếp tục tặng"]
+    B --> D["Kiểm tra hàng xóm\ntặng gì tương tự\n→ tránh đăng trùng"]
+    B --> E["Leaderboard motivation\n→ thấy top givers\n→ muốn leo rank"]
+    B --> F["Nếu role='both'\n→ vẫn xem được\nvà nhận được"]
+
+    C --> G["Scroll feed\nxem item cards"]
+    D --> G
+    G --> H["Bấm item → Item Detail\n(nhưng không có nút Nhận)"]
+    H --> I["Xem địa chỉ, mô tả\ncủa giver khác"]
+</div>
+</div>
+
+<hr>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<h2>② Journey 1 — Giver cá nhân tặng đồ cũ</h2>
+
+<p class="note">
+  <b>Personas:</b> Nam (Giver, 32 tuổi, Q.3) muốn tặng quần áo trẻ em còn tốt.
+  Hoa (Receiver, 28 tuổi, Q.1) đang tìm đồ cho con.
+</p>
+
+<div class="diagram-wrap">
+<div class="mermaid">
+sequenceDiagram
+    actor Nam as 👤 Nam (Giver)
+    participant App as 📱 Thanks App
+    actor Hoa as 👤 Hoa (Receiver)
+
+    Note over Nam: Dọn nhà, có 10 bộ áo<br/>trẻ em còn tốt
+
+    Nam->>App: Đăng ký Google → chọn role Giver
+    App-->>Nam: Home Feed (browse, không có nút Nhận)
+
+    Nam->>App: Bấm FAB ➕ "Đăng đồ"
+    Nam->>App: Step 1: chụp 3 ảnh, nhập tiêu đề + mô tả
+    Nam->>App: Step 2: Clothes, SL=10, Thứ 7–CN 8h–12h, đóng sau 14 ngày
+    App-->>Nam: ✅ Post live trên feed
+
+    Note over Hoa: Đang tìm đồ cho con
+
+    Hoa->>App: Browse feed → thấy áo trẻ em của Nam (2.3km)
+    Hoa->>App: Xem Item Detail → bấm "Nhận"
+    App-->>Hoa: Claim Confirmed — pickup code X3K9P1<br/>địa chỉ + cửa sổ pickup
+    App-->>Nam: 🔔 "Hoa muốn nhận 1 phần"
+
+    Nam->>App: Xem Who's Claimed → Xác nhận claim Hoa
+    App-->>Hoa: 🔔 "Claim confirmed — đến nhận Thứ 7"
+
+    Hoa->>App: Nhắn tin Nam: "Em đến 9h, lấy 3 bộ nhé"
+    Nam->>App: Trả lời: "Ok em, anh để sẵn"
+
+    Note over Nam,Hoa: Thứ 7, Hoa đến nhà Nam
+
+    Hoa->>Nam: Show pickup code X3K9P1
+    Nam->>App: Pickup Confirmation Screen → nhập X3K9P1
+    App-->>Nam: ✅ Pickup confirmed
+    App-->>Hoa: ✅ Claim hoàn thành
+
+    App-->>Nam: Mời rate Hoa ⭐
+    App-->>Hoa: Mời rate Nam ⭐
+    Hoa->>App: Rate ★5 + note "Cảm ơn anh! Con em thích lắm"
+    App-->>Nam: 🔔 Thanks & Ratings — nhận note từ Hoa
+</div>
+</div>
+
+<h3>State machine — Claim status</h3>
+<div class="diagram-wrap">
+<div class="mermaid">
+stateDiagram-v2
+    [*] --> pending: Receiver bấm Nhận
+    pending --> confirmed: Giver xác nhận
+    pending --> cancelled: Receiver huỷ / Giver từ chối
+    confirmed --> picked_up: Giver verify pickup code
+    confirmed --> no_show: Giver đánh dấu không đến
+    picked_up --> [*]: Rating + Thanks note
+    cancelled --> [*]
+    no_show --> [*]: Rating (penalty cho receiver)
+
+    note right of pending
+        SL còn lại giảm 1<br/>khi tạo claim
+    end note
+    note right of cancelled
+        SL hoàn lại<br/>khi huỷ
+    end note
+</div>
+</div>
+
+<hr>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<h2>③ Journey 2 — Business Giver (quán ăn tặng cơm thừa)</h2>
+
+<p class="note">
+  <b>Personas:</b> Phượng (chủ Cơm Tấm Phượng, Q.1) muốn tặng cơm thừa mỗi trưa thay vì đổ đi.
+</p>
+
+<div class="diagram-wrap">
+<div class="mermaid">
+flowchart TD
+    A["Phượng tải Thanks\nĐăng ký Google\nChọn role: Giver"] --> B["Home Feed\n(giống giver cá nhân)"]
+
+    B --> C["Profile → Doanh nghiệp\n→ '+ Thêm doanh nghiệp'"]
+    C --> D["Điền: tên, category=restaurant\nlogo, địa chỉ, phone"]
+    D --> E["Business status:\npending_review ⏳"]
+
+    E --> F{"Admin duyệt\n(1-2 ngày)"}
+    F -->|Approved| G["🔔 Notification: Business verified ✓"]
+    F -->|Rejected| H["🔔 Rejection reason\n→ Sửa và gửi lại"]
+
+    G --> I["Bấm FAB ➕ Đăng đồ\nChọn identity: Cơm Tấm Phượng"]
+    I --> J["Step 1: Ảnh cơm tấm\ntên: '25 phần cơm tấm'\nmô tả"]
+    J --> K["Step 2: Food, SL=25\nlimit 1/người\nT2-T6, 13h30–14h\nRecurring: mỗi ngày"]
+    K --> L["Post recurring live\n→ tự tạo lại mỗi ngày"]
+
+    L --> M["Mỗi ngày:\nReceivers claim sáng\n→ đến lấy 13h30–14h"]
+    M --> N["Nhân viên quán\ncheckin pickup code\ntrên app"]
+    N --> O["Rating tích lũy\n→ leo Leaderboard Businesses"]
+
+    style E fill:#D4A017,color:#fff
+    style G fill:#2D5A3D,color:#fff
+    style H fill:#C85A3A,color:#fff
+</div>
+</div>
+
+<h3>Business vs Personal Giver — so sánh</h3>
+<div class="diagram-wrap">
+<div class="mermaid">
+flowchart LR
+    subgraph Personal["👤 Giver cá nhân"]
+        PA["Đăng ký → Đăng đồ\nngay (không cần duyệt)"]
+        PB["Post dưới tên cá nhân"]
+        PC["SL thường nhỏ\n1-10 items"]
+    end
+
+    subgraph Business["🏪 Giver business"]
+        BA["Cần thêm business\n→ chờ verified (1-2 ngày)"]
+        BB["Post dưới tên business\n(badge ✓ verified)"]
+        BC["SL lớn hơn\nhàng ngày/recurring"]
+        BD["Xuất hiện trong\nLeaderboard Businesses"]
+    end
+
+    subgraph Common["Chung"]
+        CA["Home Feed\n(xem + tìm givers khác)"]
+        CB["Who's Claimed\n(quản lý claimants)"]
+        CC["Pickup Confirmation\n(verify code)"]
+        CD["Rating sau pickup"]
+    end
+
+    Personal --- Common
+    Business --- Common
+</div>
+</div>
+
+<hr>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<h2>④ Role matrix — Ai được làm gì?</h2>
+
+<div class="diagram-wrap">
+<div class="mermaid">
+flowchart TD
+    subgraph Roles["Role types"]
+        R1["role_type = giver\n(personal)"]
+        R2["role_type = receiver"]
+        R3["role_type = both"]
+        R4["giver_type = business\n(owner/member)"]
+    end
+
+    subgraph Actions["Actions"]
+        A1["✅ POST /posts\n(đăng đồ)"]
+        A2["✅ POST /claims\n(nhận đồ)"]
+        A3["✅ POST /posts\ndưới business identity"]
+        A4["❌ POST /claims\n(403 forbidden_role)"]
+    end
+
+    R1 --> A1
+    R1 --> A4
+    R2 --> A2
+    R2 -.->|"403 forbidden_role"| A1
+    R3 --> A1
+    R3 --> A2
+    R4 --> A3
+    R4 --> A4
+
+    style A4 fill:#C85A3A,color:#fff
+    style A1 fill:#2D5A3D,color:#fff
+    style A2 fill:#2D5A3D,color:#fff
+    style A3 fill:#2D5A3D,color:#fff
+</div>
+</div>
+
+<p class="note">
+  <b>Bug hiện tại (B-new-17):</b> Backend chưa enforce role guard trên /claims và /posts.
+  Giver vẫn gọi được POST /claims thành công. Fix: check <code>role_type</code> trong handler.
+</p>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#FDF6ED',
+      primaryTextColor: '#1A1A1A',
+      primaryBorderColor: '#C85A3A',
+      lineColor: '#6B6B6B',
+      secondaryColor: '#F5EAD8',
+      tertiaryColor: '#FFFFFF',
+      background: '#FFFFFF',
+      mainBkg: '#FDF6ED',
+      nodeBorder: '#C85A3A',
+      clusterBkg: '#F5EAD8',
+      titleColor: '#1A1A1A',
+      edgeLabelBackground: '#FFFFFF',
+      attributeBackgroundColorEven: '#FDF6ED',
+      attributeBackgroundColorOdd: '#F5EAD8',
+    },
+    flowchart: { curve: 'basis', padding: 20 },
+    sequence: { actorMargin: 80, messageAlign: 'left' },
+  });
+</script>
+</body>
+</html>
