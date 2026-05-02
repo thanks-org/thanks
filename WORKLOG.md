@@ -37,6 +37,7 @@
 
 | Task | Ai làm | Ngày xong | Commit / PR |
 |------|--------|-----------|-------------|
+| B-new-4 + B9-7 — PUT /me/notification-preferences + GET /me/businesses|orgs/:id | Claude | 2026-05-02 | backend [bc2a184](https://github.com/thanks-org/thanks-backend/commit/bc2a184) |
 | B-new-2 + B-new-6 — Leaderboard giver_type+period filters + PATCH /claims/:id/no-show | Claude | 2026-05-02 | backend [8e3a5fb](https://github.com/thanks-org/thanks-backend/commit/8e3a5fb) |
 | B-new-19 + B-new-18 + B-new-17 + B-new-1 + B8-11 — Role system enforcement (drop 'both', immutable role_type, guard claim/post by role), POST /claims/:id/thanks, GET /posts/:id/similar | Claude | 2026-05-02 | backend [f313cd8](https://github.com/thanks-org/thanks-backend/commit/f313cd8) |
 | F8-4 + F8-5 + F8-6 + F8-7 + F8-10 — Phase 8 complete: verify F8-4/5/6 done (real API screens, dev_seed post_images already correct); fix F8-7 dev_seed.sql post_images for My Items (P03→photo-1503602642458, P04 add photo-1556228720, P07→photo-1546069901, P08 add photo-1606787366850); F8-10 N/A (device picker) | Claude | 2026-05-02 | seed [8d82f4b](https://github.com/thanks-org/thanks/commit/8d82f4b) |
