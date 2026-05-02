@@ -37,6 +37,7 @@
 
 | Task | Ai làm | Ngày xong | Commit / PR |
 |------|--------|-----------|-------------|
+| F7-2 + F7-8 + F7-6 — RatingComposerScreen, OrgDashboardScreen, EditPostScreen + updatePost | Claude | 2026-05-02 | app [62c4051](https://github.com/thanks-org/thanks-app/commit/62c4051) |
 | F6-8 + F6-9 + F-new-7 — Similar items carousel in Item Detail + Đăng lại CTA in My Items (prefill title) | Claude | 2026-05-02 | app [a90d00b](https://github.com/thanks-org/thanks-app/commit/a90d00b) |
 | F7-4 + F7-5 + F6-6 — License upload field (biz+org), rejection feedback CTA, leaderboard giver-type filter tabs | Claude | 2026-05-02 | app [9796a5d](https://github.com/thanks-org/thanks-app/commit/9796a5d) |
 | F-new-1 + F-new-2 + F7-9 — Thanks button + No-show button + Notification prefs wire | Claude | 2026-05-02 | app [e9dd993](https://github.com/thanks-org/thanks-app/commit/e9dd993) |
