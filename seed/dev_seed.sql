@@ -764,26 +764,6 @@ INSERT INTO post_schedules (post_id, day_of_week, start_time, end_time) VALUES
   ('00000000-0000-0000-0003-000000000006', 6, '10:00', '18:00'),
   ('00000000-0000-0000-0003-000000000006', 0, '10:00', '18:00');
 
--- ── 7. POST IMAGES ────────────────────────────────────────────────────────────
-INSERT INTO post_images (id, post_id, url, position) VALUES
-  ('00000000-0000-0000-0004-000000000001','00000000-0000-0000-0003-000000000001','https://picsum.photos/seed/lacoste1/800/600',0),
-  ('00000000-0000-0000-0004-000000000002','00000000-0000-0000-0003-000000000001','https://picsum.photos/seed/lacoste2/800/600',1),
-  ('00000000-0000-0000-0004-000000000003','00000000-0000-0000-0003-000000000002','https://picsum.photos/seed/kemei1/800/600',0),
-  ('00000000-0000-0000-0004-000000000004','00000000-0000-0000-0003-000000000003','https://picsum.photos/seed/books_biz/800/600',0),
-  ('00000000-0000-0000-0004-000000000005','00000000-0000-0000-0003-000000000006','https://picsum.photos/seed/bento_ga1/800/600',0),
-  ('00000000-0000-0000-0004-000000000006','00000000-0000-0000-0003-000000000006','https://picsum.photos/seed/bento_ga2/800/600',1),
-  ('00000000-0000-0000-0004-000000000007','00000000-0000-0000-0003-000000000007','https://picsum.photos/seed/soup_mix/800/600',0),
-  ('00000000-0000-0000-0004-000000000008','00000000-0000-0000-0003-000000000012','https://picsum.photos/seed/iced_latte/800/600',0),
-  ('00000000-0000-0000-0004-000000000009','00000000-0000-0000-0003-000000000015','https://picsum.photos/seed/baguette/800/600',0),
-  ('00000000-0000-0000-0004-000000000010','00000000-0000-0000-0003-000000000017','https://picsum.photos/seed/pizza4ps/800/600',0),
-  ('00000000-0000-0000-0004-000000000011','00000000-0000-0000-0003-000000000018','https://picsum.photos/seed/kids_books/800/600',0),
-  ('00000000-0000-0000-0004-000000000012','00000000-0000-0000-0003-000000000005','https://picsum.photos/seed/stroller/800/600',0),
-  ('00000000-0000-0000-0004-000000000013','00000000-0000-0000-0003-000000000024','https://picsum.photos/seed/iced_latte2/800/600',0),
-  ('00000000-0000-0000-0004-000000000014','00000000-0000-0000-0003-000000000031','https://picsum.photos/seed/baguettes/800/600',0),
-  ('00000000-0000-0000-0004-000000000015','00000000-0000-0000-0003-000000000032','https://picsum.photos/seed/mens_shirts/800/600',0),
-  ('00000000-0000-0000-0004-000000000016','00000000-0000-0000-0003-000000000033','https://picsum.photos/seed/wooden_chair/800/600',0),
-  ('00000000-0000-0000-0004-000000000017','00000000-0000-0000-0003-000000000034','https://picsum.photos/seed/biz_books/800/600',0);
-
 -- ── 8. CLAIMS ─────────────────────────────────────────────────────────────────
 -- Leaderboard (SUM claim.quantity WHERE status IN confirmed/picked_up/completed):
 --   Bento Cooky  (P06 14+P08 12+P09 8+P10 12+P11 13+P26 1+P27 1+P30 1) = 62  rank #1
@@ -1730,84 +1710,6 @@ VALUES
    5, 'Latte ngon và mát! Cảm ơn Gam Coffee.',
    NOW()-INTERVAL '3 days'-INTERVAL '20 minutes');
 
--- ── 13e. ADDITIONAL THANKS ────────────────────────────────────────────────────
--- Brings thanks_received for Minh H. from 5 → 9 (to match "9 notes" in 2_1_4a profile)
-INSERT INTO thanks (id, claim_id, from_user_id, to_user_id,
-                    message, reaction_emoji, created_at)
-VALUES
-  -- T08: Phong V. → Minh H. (C12/P06 Bento, picked_up)
-  ('00000000-0000-0000-0008-000000000008',
-   '00000000-0000-0000-0005-000000000012',
-   '00000000-0000-0000-0000-000000000013',
-   '00000000-0000-0000-0000-000000000001',
-   'Cơm gà ngon lắm! Cảm ơn Bento Cooky đã tặng bữa trưa. Hôm nào ghé quán ủng hộ thêm nhé!',
-   '🍱', NOW()-INTERVAL '1 hour'),
-
-  -- T09: An H. → Minh H. (C11/P06 Bento, picked_up)
-  ('00000000-0000-0000-0008-000000000009',
-   '00000000-0000-0000-0005-000000000011',
-   '00000000-0000-0000-0000-000000000011',
-   '00000000-0000-0000-0000-000000000001',
-   'Bento ngon tuyệt! Cảm ơn anh/chị nhiều ạ. Rất vui được nhận.',
-   '🙏', NOW()-INTERVAL '48 minutes'),
-
-  -- T10: Linh H. → Minh H. (C17/P06 Bento, picked_up)
-  ('00000000-0000-0000-0008-000000000010',
-   '00000000-0000-0000-0005-000000000017',
-   '00000000-0000-0000-0000-000000000003',
-   '00000000-0000-0000-0000-000000000001',
-   'Cảm ơn Bento Cooky! Hộp cơm đẹp và ngon. Sẽ nhắc bạn bè ủng hộ.',
-   '❤️', NOW()-INTERVAL '75 minutes'),
-
-  -- T11: Khanh L. → Minh H. (C16/P06 Bento, picked_up)
-  ('00000000-0000-0000-0008-000000000011',
-   '00000000-0000-0000-0005-000000000016',
-   '00000000-0000-0000-0000-000000000005',
-   '00000000-0000-0000-0000-000000000001',
-   'Ngon quá! Bento đúng bữa trưa đói bụng. Cảm ơn anh nhiều!',
-   '👍', NOW()-INTERVAL '65 minutes'),
-
-  -- T12: Nam T. → Minh H. (C36/P13 Gam Coffee cà phê sáng)
-  -- Nam T. "6 notes to givers" count: T03(C23)+T12(C36)+T13(C43)+T14(C53)+T15(C55)+T16(C57)=6
-  ('00000000-0000-0000-0008-000000000012',
-   '00000000-0000-0000-0005-000000000036',
-   '00000000-0000-0000-0000-000000000002',
-   '00000000-0000-0000-0000-000000000001',
-   'Cà phê sáng ngon tuyệt! Cả nhà được buổi sáng thật ý nghĩa. Cảm ơn Gam Coffee nhiều!',
-   '☕', NOW()-INTERVAL '1 day'-INTERVAL '4 hours'),
-
-  -- T13: Nam T. → Phuong L. (C43/P19 Đồ gia dụng)
-  ('00000000-0000-0000-0008-000000000013',
-   '00000000-0000-0000-0005-000000000043',
-   '00000000-0000-0000-0000-000000000002',
-   '00000000-0000-0000-0000-000000000004',
-   'Đồ dùng rất tiện và còn tốt. Mái Ấm chúng mình dùng hàng ngày luôn. Cảm ơn chị Phương!',
-   '🏡', NOW()-INTERVAL '14 days'),
-
-  -- T14: Nam T. → Minh H. (C53/P26 Bento sườn)
-  ('00000000-0000-0000-0008-000000000014',
-   '00000000-0000-0000-0005-000000000053',
-   '00000000-0000-0000-0000-000000000002',
-   '00000000-0000-0000-0000-000000000001',
-   'Bento sườn nướng ngon hơn mình tưởng! Các bé ở Mái Ấm thích lắm. Cảm ơn Bento Cooky!',
-   '🍱', NOW()-INTERVAL '5 weeks'),
-
-  -- T15: Nam T. → Minh H. (C55/P28 Gam Coffee filter)
-  ('00000000-0000-0000-0008-000000000015',
-   '00000000-0000-0000-0005-000000000055',
-   '00000000-0000-0000-0000-000000000002',
-   '00000000-0000-0000-0000-000000000001',
-   'Cà phê filter thơm ngon, buổi sáng tuyệt vời cho anh chị em Mái Ấm. Cảm ơn Gam Coffee!',
-   '☕', NOW()-INTERVAL '6 weeks'),
-
-  -- T16: Nam T. → Minh H. (C57/P30 Bento cơm thịt kho)
-  ('00000000-0000-0000-0008-000000000016',
-   '00000000-0000-0000-0005-000000000057',
-   '00000000-0000-0000-0000-000000000002',
-   '00000000-0000-0000-0000-000000000001',
-   'Cơm thịt kho tàu đậm đà, đúng vị miền Nam. Trẻ em nhà Mái Ấm đều thích. Cảm ơn Bento Cooky!',
-   '❤️', NOW()-INTERVAL '10 weeks');
-
 -- ── 13f. NAM T. CLAIM HISTORY (for "1 active · 8 completed" in profile 2_1_4c) ─────
 -- Nam T. completed claims: C23(P08)+C36(P13)+C43(P19)+C53(P26)+C54(P27)+C55(P28)+C56(P29)+C57(P30)=8
 -- C52 is cancelled so P25 does not add to Minh H. personal leaderboard (stays at 7)
@@ -1958,6 +1860,84 @@ VALUES
    NOW()-INTERVAL '10 weeks'-INTERVAL '3 hours',
    NOW()-INTERVAL '10 weeks'-INTERVAL '1 hour');
 
+-- ── 13e. ADDITIONAL THANKS ────────────────────────────────────────────────────
+-- Brings thanks_received for Minh H. from 5 → 9 (to match "9 notes" in 2_1_4a profile)
+INSERT INTO thanks (id, claim_id, from_user_id, to_user_id,
+                    message, reaction_emoji, created_at)
+VALUES
+  -- T08: Phong V. → Minh H. (C12/P06 Bento, picked_up)
+  ('00000000-0000-0000-0008-000000000008',
+   '00000000-0000-0000-0005-000000000012',
+   '00000000-0000-0000-0000-000000000013',
+   '00000000-0000-0000-0000-000000000001',
+   'Cơm gà ngon lắm! Cảm ơn Bento Cooky đã tặng bữa trưa. Hôm nào ghé quán ủng hộ thêm nhé!',
+   '🍱', NOW()-INTERVAL '1 hour'),
+
+  -- T09: An H. → Minh H. (C11/P06 Bento, picked_up)
+  ('00000000-0000-0000-0008-000000000009',
+   '00000000-0000-0000-0005-000000000011',
+   '00000000-0000-0000-0000-000000000011',
+   '00000000-0000-0000-0000-000000000001',
+   'Bento ngon tuyệt! Cảm ơn anh/chị nhiều ạ. Rất vui được nhận.',
+   '🙏', NOW()-INTERVAL '48 minutes'),
+
+  -- T10: Linh H. → Minh H. (C17/P06 Bento, picked_up)
+  ('00000000-0000-0000-0008-000000000010',
+   '00000000-0000-0000-0005-000000000017',
+   '00000000-0000-0000-0000-000000000003',
+   '00000000-0000-0000-0000-000000000001',
+   'Cảm ơn Bento Cooky! Hộp cơm đẹp và ngon. Sẽ nhắc bạn bè ủng hộ.',
+   '❤️', NOW()-INTERVAL '75 minutes'),
+
+  -- T11: Khanh L. → Minh H. (C16/P06 Bento, picked_up)
+  ('00000000-0000-0000-0008-000000000011',
+   '00000000-0000-0000-0005-000000000016',
+   '00000000-0000-0000-0000-000000000005',
+   '00000000-0000-0000-0000-000000000001',
+   'Ngon quá! Bento đúng bữa trưa đói bụng. Cảm ơn anh nhiều!',
+   '👍', NOW()-INTERVAL '65 minutes'),
+
+  -- T12: Nam T. → Minh H. (C36/P13 Gam Coffee cà phê sáng)
+  -- Nam T. "6 notes to givers" count: T03(C23)+T12(C36)+T13(C43)+T14(C53)+T15(C55)+T16(C57)=6
+  ('00000000-0000-0000-0008-000000000012',
+   '00000000-0000-0000-0005-000000000036',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0000-000000000001',
+   'Cà phê sáng ngon tuyệt! Cả nhà được buổi sáng thật ý nghĩa. Cảm ơn Gam Coffee nhiều!',
+   '☕', NOW()-INTERVAL '1 day'-INTERVAL '4 hours'),
+
+  -- T13: Nam T. → Phuong L. (C43/P19 Đồ gia dụng)
+  ('00000000-0000-0000-0008-000000000013',
+   '00000000-0000-0000-0005-000000000043',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0000-000000000004',
+   'Đồ dùng rất tiện và còn tốt. Mái Ấm chúng mình dùng hàng ngày luôn. Cảm ơn chị Phương!',
+   '🏡', NOW()-INTERVAL '14 days'),
+
+  -- T14: Nam T. → Minh H. (C53/P26 Bento sườn)
+  ('00000000-0000-0000-0008-000000000014',
+   '00000000-0000-0000-0005-000000000053',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0000-000000000001',
+   'Bento sườn nướng ngon hơn mình tưởng! Các bé ở Mái Ấm thích lắm. Cảm ơn Bento Cooky!',
+   '🍱', NOW()-INTERVAL '5 weeks'),
+
+  -- T15: Nam T. → Minh H. (C55/P28 Gam Coffee filter)
+  ('00000000-0000-0000-0008-000000000015',
+   '00000000-0000-0000-0005-000000000055',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0000-000000000001',
+   'Cà phê filter thơm ngon, buổi sáng tuyệt vời cho anh chị em Mái Ấm. Cảm ơn Gam Coffee!',
+   '☕', NOW()-INTERVAL '6 weeks'),
+
+  -- T16: Nam T. → Minh H. (C57/P30 Bento cơm thịt kho)
+  ('00000000-0000-0000-0008-000000000016',
+   '00000000-0000-0000-0005-000000000057',
+   '00000000-0000-0000-0000-000000000002',
+   '00000000-0000-0000-0000-000000000001',
+   'Cơm thịt kho tàu đậm đà, đúng vị miền Nam. Trẻ em nhà Mái Ấm đều thích. Cảm ơn Bento Cooky!',
+   '❤️', NOW()-INTERVAL '10 weeks');
+
 -- ── 13g. HOME FEED ACTIVE POSTS (P31–P34) ────────────────────────────────────
 -- 4 thêm active posts để khớp 8 cards trong prototype 2_1_1 home feed:
 -- P31: Tous Les Jours "Baguettes & pastries (8)" qty 5/5 · closes in 5 days
@@ -2033,6 +2013,26 @@ VALUES
    'Hồ Chí Minh',
    'active', false, NULL,
    NOW() - INTERVAL '5 hours', NOW());
+
+-- ── 7. POST IMAGES ────────────────────────────────────────────────────────────
+INSERT INTO post_images (id, post_id, url, position) VALUES
+  ('00000000-0000-0000-0004-000000000001','00000000-0000-0000-0003-000000000001','https://picsum.photos/seed/lacoste1/800/600',0),
+  ('00000000-0000-0000-0004-000000000002','00000000-0000-0000-0003-000000000001','https://picsum.photos/seed/lacoste2/800/600',1),
+  ('00000000-0000-0000-0004-000000000003','00000000-0000-0000-0003-000000000002','https://picsum.photos/seed/kemei1/800/600',0),
+  ('00000000-0000-0000-0004-000000000004','00000000-0000-0000-0003-000000000003','https://picsum.photos/seed/books_biz/800/600',0),
+  ('00000000-0000-0000-0004-000000000005','00000000-0000-0000-0003-000000000006','https://picsum.photos/seed/bento_ga1/800/600',0),
+  ('00000000-0000-0000-0004-000000000006','00000000-0000-0000-0003-000000000006','https://picsum.photos/seed/bento_ga2/800/600',1),
+  ('00000000-0000-0000-0004-000000000007','00000000-0000-0000-0003-000000000007','https://picsum.photos/seed/soup_mix/800/600',0),
+  ('00000000-0000-0000-0004-000000000008','00000000-0000-0000-0003-000000000012','https://picsum.photos/seed/iced_latte/800/600',0),
+  ('00000000-0000-0000-0004-000000000009','00000000-0000-0000-0003-000000000015','https://picsum.photos/seed/baguette/800/600',0),
+  ('00000000-0000-0000-0004-000000000010','00000000-0000-0000-0003-000000000017','https://picsum.photos/seed/pizza4ps/800/600',0),
+  ('00000000-0000-0000-0004-000000000011','00000000-0000-0000-0003-000000000018','https://picsum.photos/seed/kids_books/800/600',0),
+  ('00000000-0000-0000-0004-000000000012','00000000-0000-0000-0003-000000000005','https://picsum.photos/seed/stroller/800/600',0),
+  ('00000000-0000-0000-0004-000000000013','00000000-0000-0000-0003-000000000024','https://picsum.photos/seed/iced_latte2/800/600',0),
+  ('00000000-0000-0000-0004-000000000014','00000000-0000-0000-0003-000000000031','https://picsum.photos/seed/baguettes/800/600',0),
+  ('00000000-0000-0000-0004-000000000015','00000000-0000-0000-0003-000000000032','https://picsum.photos/seed/mens_shirts/800/600',0),
+  ('00000000-0000-0000-0004-000000000016','00000000-0000-0000-0003-000000000033','https://picsum.photos/seed/wooden_chair/800/600',0),
+  ('00000000-0000-0000-0004-000000000017','00000000-0000-0000-0003-000000000034','https://picsum.photos/seed/biz_books/800/600',0);
 
 -- ── 13. BUSINESS_MEMBERS & ORG_MEMBERS ───────────────────────────────────────
 -- Migration 006 backfills from businesses/organizations tables automatically,
