@@ -234,11 +234,11 @@
 | # | Task | Assignee | Status | Ghi chú |
 |---|------|----------|--------|---------|
 | B-new-1 | `POST /claims/:id/thanks` — gửi thank-you note sau pickup | Claude | [x] | [f313cd8](https://github.com/thanks-org/thanks-backend/commit/f313cd8) — validate picked_up + UNIQUE(claim_id,from_user_id), 409 duplicate, 422 not picked_up |
-| B-new-2 | `GET /leaderboard` thêm `giver_type` + `period` filter | _unassigned_ | [ ] | Screen 2.1.2: tab All/Business/Personal × Week/Month/All-time. Backend hiện không có 2 params này. |
+| B-new-2 | `GET /leaderboard` thêm `giver_type` + `period` filter | Claude | [x] | [8e3a5fb](https://github.com/thanks-org/thanks-backend/commit/8e3a5fb) — giver_type=personal\|business + period=week\|month\|all_time; city unchanged |
 | B-new-3 | Migration: `ALTER TABLE organizations ADD COLUMN address_detail TEXT` | Luân | [x] | Done — trong `000006_invite_model_and_extras.up.sql`. api_doc updated (POST/PUT/GET orgs + public org detail). |
 | B-new-4 | `PUT /me/notification-preferences` — persist push/email toggle | _unassigned_ | [ ] | Screen 2.1.4d Settings: toggle hiện chỉ local state. Cần `users.notification_preferences JSONB` + endpoint. |
 | B-new-5 | Wire `POST /uploads` (B4-1) sang R2/S3 | TrungCD | [ ] | Phụ thuộc I1-1. Storage interface đã có trong `internal/storage` — chỉ cần swap implementation. |
-| B-new-6 | `PATCH /claims/:id/no-show` — giver đánh dấu receiver no-show | _unassigned_ | [ ] | Scenario D-07/K-08. Schema có `claims.no_show_at`. Cần handler set timestamp + tác động rating receiver. Flutter: F-new-2. |
+| B-new-6 | `PATCH /claims/:id/no-show` — giver đánh dấu receiver no-show | Claude | [x] | [8e3a5fb](https://github.com/thanks-org/thanks-backend/commit/8e3a5fb) — giver-only, idempotent, restore quantity_remaining, notify receiver |
 | B-new-7 | Emit notification row khi business/org bị rejected | _unassigned_ | [ ] | Scenario K-13. Backend không viết notification khi admin set status=rejected. Phụ thuộc: cần admin panel (gap G-05/H-05) để trigger đúng event. |
 | B-new-8 | Migration: bảng `business_members`, `org_members`, `invites` | Luân | [x] | Done — `000006_invite_model_and_extras.up.sql`. Backfill owner/admin rows cho existing data. Indexes đầy đủ incl. partial index cho pending invites. |
 | B-new-9 | `POST /businesses/:id/invites` — owner mời staff vào business | _unassigned_ | [ ] | Phụ thuộc B-new-8. Gửi invite row + notification. Scenario G-06. |
