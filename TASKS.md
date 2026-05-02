@@ -363,6 +363,12 @@
 > Mục tiêu: đồng bộ toàn bộ ảnh mock trong Flutter app với đúng Unsplash photo ID đã dùng trong prototype HTML.
 > Chỉ sửa mock data (URL strings) — không thay đổi layout hay logic.
 
+### Seed — Phase 8 extra
+
+| # | Task | Assignee | Status | Ghi chú |
+|---|------|----------|--------|---------|
+| F8-S1 | **Seed: replace picsum logos — 3 businesses + 3 orgs** — đổi 6 `picsum.photos` còn lại trong `dev_seed.sql` sang Unsplash: Pizza 4P's, Phở Hồng, Ngon Quán, Mái Ấm Hoa Sen, Saigon Animal Rescue, Lá Lành Group | Claude | [x] | Prototype không chỉ định ảnh cho các entity này. Pick theo theme: pizza/1513104890138, pho/1562802378, food/1540189549336, kids/1488521787991, dog/1587300003388, volunteers/1593113598332. `dev_seed.sql` không còn picsum URL nào. |
+
 ### Flutter — Phase 8
 
 | # | Task | Assignee | Status | Ghi chú |
