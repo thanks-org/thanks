@@ -37,6 +37,7 @@
 
 | Task | Ai làm | Ngày xong | Commit / PR |
 |------|--------|-----------|-------------|
+| F7-4 + F7-5 + F6-6 — License upload field (biz+org), rejection feedback CTA, leaderboard giver-type filter tabs | Claude | 2026-05-02 | app [9796a5d](https://github.com/thanks-org/thanks-app/commit/9796a5d) |
 | F-new-1 + F-new-2 + F7-9 — Thanks button + No-show button + Notification prefs wire | Claude | 2026-05-02 | app [e9dd993](https://github.com/thanks-org/thanks-app/commit/e9dd993) |
 | F-new-9 + F-new-10 — Role gating UI + Role onboarding screen | Claude | 2026-05-02 | app [eac35a9](https://github.com/thanks-org/thanks-app/commit/eac35a9) |
 | B9-5 + B9-6 — license_url on businesses+orgs + GET /organizations/:id/claims | Claude | 2026-05-02 | backend [bbb4921](https://github.com/thanks-org/thanks-backend/commit/bbb4921) |
