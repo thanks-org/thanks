@@ -337,8 +337,8 @@
 | B9-2 | `POST /claims/:id/confirm` — giver xác nhận claim trước pickup (`pending` → `confirmed`) | Claude Code | [x] | [634fae0](https://github.com/thanks-org/thanks-backend/commit/634fae0) — owner check, notification to receiver |
 | B9-3 | `POST /posts/:id/schedules` + cron worker — recurring post (daily/weekly), tự generate post mới mỗi chu kỳ | _unassigned_ | [ ] | Journey 2, 12. Bảng `post_schedules` đã có schema; thiếu CRUD endpoint + background worker. |
 | B9-4 | `GET /users/:id` + `/me` expose `no_show_count` field — derive from `COUNT(claims WHERE status='no_show' AND user_id=:id)` | Claude Code | [x] | [87883ee](https://github.com/thanks-org/thanks-backend/commit/87883ee) — subquery trong GetPublicProfile + loadMeStats, 1 round-trip |
-| B9-5 | `businesses` + `organizations` thêm `license_url` column + `POST /businesses` accept license upload | _unassigned_ | [ ] | Journey 4. Hiện chỉ có logo. Migration `ALTER TABLE businesses ADD COLUMN license_url TEXT` + parse từ `POST /uploads`. |
-| B9-6 | `GET /organizations/:id/claims` — list tất cả claims do bất kỳ member nào trong org đã claim | _unassigned_ | [ ] | Journey 6. Đức track dashboard org. JOIN `claims` × `organization_members` WHERE org_id. Member-only. |
+| B9-5 | `businesses` + `organizations` thêm `license_url` column + `POST /businesses` accept license upload | Claude | [x] | [bbb4921](https://github.com/thanks-org/thanks-backend/commit/bbb4921) — migration 000008; model+repo+request updated; POST+PUT accept license_url |
+| B9-6 | `GET /organizations/:id/claims` — list tất cả claims do bất kỳ member nào trong org đã claim | Claude | [x] | [bbb4921](https://github.com/thanks-org/thanks-backend/commit/bbb4921) — member-only, JOIN org_members, limit 100, claimer+post summary |
 | B9-7 | `GET /me/businesses/:id` + `/me/organizations/:id` expose `rejection_reason` field (đã có column) | Claude | [x] | [bc2a184](https://github.com/thanks-org/thanks-backend/commit/bc2a184) — new owner-only routes; rejection_reason đã có sẵn trong repo |
 
 ### Flutter — Phase 7

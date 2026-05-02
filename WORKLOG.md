@@ -37,6 +37,7 @@
 
 | Task | Ai làm | Ngày xong | Commit / PR |
 |------|--------|-----------|-------------|
+| B9-5 + B9-6 — license_url on businesses+orgs + GET /organizations/:id/claims | Claude | 2026-05-02 | backend [bbb4921](https://github.com/thanks-org/thanks-backend/commit/bbb4921) |
 | B-new-4 + B9-7 — PUT /me/notification-preferences + GET /me/businesses|orgs/:id | Claude | 2026-05-02 | backend [bc2a184](https://github.com/thanks-org/thanks-backend/commit/bc2a184) |
 | B-new-2 + B-new-6 — Leaderboard giver_type+period filters + PATCH /claims/:id/no-show | Claude | 2026-05-02 | backend [8e3a5fb](https://github.com/thanks-org/thanks-backend/commit/8e3a5fb) |
 | B-new-19 + B-new-18 + B-new-17 + B-new-1 + B8-11 — Role system enforcement (drop 'both', immutable role_type, guard claim/post by role), POST /claims/:id/thanks, GET /posts/:id/similar | Claude | 2026-05-02 | backend [f313cd8](https://github.com/thanks-org/thanks-backend/commit/f313cd8) |
