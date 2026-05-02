@@ -354,6 +354,27 @@
 
 ---
 
+## Phase 8 — UI Polish: Mock Images match Prototype (audit 2026-05-02)
+> Mục tiêu: đồng bộ toàn bộ ảnh mock trong Flutter app với đúng Unsplash photo ID đã dùng trong prototype HTML.
+> Chỉ sửa mock data (URL strings) — không thay đổi layout hay logic.
+
+### Flutter — Phase 8
+
+| # | Task | Assignee | Status | Ghi chú |
+|---|------|----------|--------|---------|
+| F8-1 | **Home Feed item cards — imageUrl + giverImageUrl** — update `mockItems` trong `models/item.dart`: thêm 2 items còn thiếu (bánh mì Pháp, áo sơ mi nam), đồng bộ photo IDs với prototype `2_1_1` | _unassigned_ | [ ] | File: `thanks-app/lib/models/item.dart` |
+| F8-2 | **Home Feed Top Givers — avatarUrl** — update `mockTopGivers` trong `models/giver.dart`: kiểm tra thứ tự + photo IDs với prototype `2_1_1` | _unassigned_ | [ ] | File: `thanks-app/lib/models/giver.dart` |
+| F8-3 | **Givers Leaderboard — avatars podium + list** — update mock data trong `givers_screen.dart` / `leaderboard_entry.dart` với photo IDs từ prototype `2_1_2` | _unassigned_ | [ ] | File: `thanks-app/lib/features/givers/givers_screen.dart` |
+| F8-4 | **Messages — item thumbnails + peer avatars** — update mock conversations với đúng photo IDs từ prototype `2_1_3a` + `2_1_3b` | _unassigned_ | [ ] | Files: `messages_screen.dart`, `conversation.dart` |
+| F8-5 | **Item Detail — hero images + giver avatar** — update mock images list (carousel) + giver avatar URL theo prototype `2_4_1` | _unassigned_ | [ ] | File: `thanks-app/lib/features/item_detail/item_detail_screen.dart` |
+| F8-6 | **Claim Confirmed — item image** — update mock item image URL theo prototype `2_4_2` | _unassigned_ | [ ] | File: `thanks-app/lib/features/claim_confirmed/claim_confirmed_screen.dart` |
+| F8-7 | **My Items Personal + Business — item thumbnails + business logo** — update mock data trong `my_items_personal_screen.dart` + `my_items_business_screen.dart` theo prototype `2_2_3` + `2_2_4` | _unassigned_ | [ ] | Files: `my_items_personal_screen.dart`, `my_items_business_screen.dart` |
+| F8-8 | **Manage Businesses — business logos** — update mock businesses với đúng logo photo IDs theo prototype `2_2_5` | _unassigned_ | [ ] | File: `thanks-app/lib/features/manage_businesses/manage_businesses_screen.dart` |
+| F8-9 | **Giver Public Profiles — business header + item images** — update mock data trong `giver_public_business_screen.dart` + `public_profile_screen.dart` theo prototype `2_2_1` + `2_2_2` | _unassigned_ | [ ] | Files: `giver_public_business_screen.dart`, `public_profile_screen.dart` |
+| F8-10 | **Submit Item Step 1 — photo upload previews** — update mock pre-selected thumbnails (3 ảnh) theo prototype `2_2_7` | _unassigned_ | [ ] | File: `thanks-app/lib/features/submit_item/submit_item_step1_screen.dart` |
+
+---
+
 ## Dependency map (tóm tắt)
 
 ```
