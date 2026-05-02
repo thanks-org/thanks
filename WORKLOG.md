@@ -37,6 +37,8 @@
 
 | Task | Ai làm | Ngày xong | Commit / PR |
 |------|--------|-----------|-------------|
+| F-new-1 + F-new-2 + F7-9 — Thanks button + No-show button + Notification prefs wire | Claude | 2026-05-02 | app [e9dd993](https://github.com/thanks-org/thanks-app/commit/e9dd993) |
+| F-new-9 + F-new-10 — Role gating UI + Role onboarding screen | Claude | 2026-05-02 | app [eac35a9](https://github.com/thanks-org/thanks-app/commit/eac35a9) |
 | B9-5 + B9-6 — license_url on businesses+orgs + GET /organizations/:id/claims | Claude | 2026-05-02 | backend [bbb4921](https://github.com/thanks-org/thanks-backend/commit/bbb4921) |
 | B-new-4 + B9-7 — PUT /me/notification-preferences + GET /me/businesses|orgs/:id | Claude | 2026-05-02 | backend [bc2a184](https://github.com/thanks-org/thanks-backend/commit/bc2a184) |
 | B-new-2 + B-new-6 — Leaderboard giver_type+period filters + PATCH /claims/:id/no-show | Claude | 2026-05-02 | backend [8e3a5fb](https://github.com/thanks-org/thanks-backend/commit/8e3a5fb) |
