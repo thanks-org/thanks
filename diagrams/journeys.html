@@ -84,7 +84,7 @@
 <body>
 
 <h1>Thanks — User Journey Diagrams</h1>
-<p class="subtitle">Visual flow cho các hành trình người dùng chính. Cập nhật: 2026-05-02</p>
+<p class="subtitle">Visual flow cho các hành trình người dùng chính. Cập nhật: 2026-05-02 — role_type chỉ giver/receiver (no both)</p>
 
 <!-- ══════════════════════════════════════════════════════════════════ -->
 <h2>① Giver thấy gì khi vào app?</h2>
@@ -140,11 +140,10 @@ flowchart TD
     B --> C["Xem community đang cho gì\n→ cảm hứng để tiếp tục tặng"]
     B --> D["Kiểm tra hàng xóm\ntặng gì tương tự\n→ tránh đăng trùng"]
     B --> E["Leaderboard motivation\n→ thấy top givers\n→ muốn leo rank"]
-    B --> F["Nếu role='both'\n→ vẫn xem được\nvà nhận được"]
 
     C --> G["Scroll feed\nxem item cards"]
     D --> G
-    G --> H["Bấm item → Item Detail\n(nhưng không có nút Nhận)"]
+    G --> H["Bấm item → Item Detail\n(không có nút Nhận\n— giver không nhận được)"]
     H --> I["Xem địa chỉ, mô tả\ncủa giver khác"]
 </div>
 </div>
@@ -299,30 +298,31 @@ flowchart LR
 <div class="diagram-wrap">
 <div class="mermaid">
 flowchart TD
-    subgraph Roles["Role types"]
-        R1["role_type = giver\n(personal)"]
+    subgraph Roles["Role types (cố định sau onboarding)"]
+        R1["role_type = giver"]
         R2["role_type = receiver"]
-        R3["role_type = both"]
-        R4["giver_type = business\n(owner/member)"]
+        R4["giver_type = business\n(owner/member của business)"]
+        RN["role_type = NULL\n(user mới, chưa chọn)"]
     end
 
     subgraph Actions["Actions"]
         A1["✅ POST /posts\n(đăng đồ)"]
         A2["✅ POST /claims\n(nhận đồ)"]
         A3["✅ POST /posts\ndưới business identity"]
-        A4["❌ POST /claims\n(403 forbidden_role)"]
+        A4["❌ 403 forbidden_role"]
+        A5["❌ 403 null_role\n(redirect onboarding)"]
     end
 
     R1 --> A1
-    R1 --> A4
+    R1 -.->|"không thể nhận"| A4
     R2 --> A2
-    R2 -.->|"403 forbidden_role"| A1
-    R3 --> A1
-    R3 --> A2
+    R2 -.->|"không thể đăng"| A4
     R4 --> A3
-    R4 --> A4
+    R4 -.->|"không thể nhận"| A4
+    RN -.->|"block hết"| A5
 
     style A4 fill:#C85A3A,color:#fff
+    style A5 fill:#C85A3A,color:#fff
     style A1 fill:#2D5A3D,color:#fff
     style A2 fill:#2D5A3D,color:#fff
     style A3 fill:#2D5A3D,color:#fff
@@ -330,8 +330,7 @@ flowchart TD
 </div>
 
 <p class="note">
-  <b>Bug hiện tại (B-new-17):</b> Backend chưa enforce role guard trên /claims và /posts.
-  Giver vẫn gọi được POST /claims thành công. Fix: check <code>role_type</code> trong handler.
+  <b>Pending (B-new-17/18/19):</b> Backend chưa enforce role guard. Cần: (1) migration 000007 drop 'both' khỏi CHECK constraint; (2) guard trên /claims (chỉ receiver), /posts (chỉ giver); (3) PUT /me nhận role_type khi onboarding. Role là cố định — không có "cả hai".
 </p>
 
 <script>

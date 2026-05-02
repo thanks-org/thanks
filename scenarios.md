@@ -29,7 +29,6 @@ Giver có thể là cá nhân hoặc doanh nghiệp. Receiver có thể là cá 
 | **Business Giver** | Tặng dưới danh nghĩa doanh nghiệp (cần verified). |
 | **Personal Receiver** | Cá nhân nhận đồ cho bản thân / gia đình. |
 | **Org Receiver** | Đại diện tổ chức nhận hàng loạt (cần verified org). |
-| **Both** | Vừa tặng vừa nhận (role_type = both). |
 
 ---
 
@@ -58,7 +57,7 @@ Giver có thể là cá nhân hoặc doanh nghiệp. Receiver có thể là cá 
 | # | Scenario | Actor | Screens | Status |
 |---|----------|-------|---------|--------|
 | B-01 | Xem Profile logged-out, bấm Đăng nhập | Guest | 2.1.5 | ✅ |
-| B-02 | Chọn role khi sign up: Người tặng / Người nhận / Cả hai | Guest | 2.1.6 | 🚧 UI có, nhưng hard-code "Người nhận" — onboarding role picker chưa wire (F5-10) |
+| B-02 | Chọn role khi sign up: Người tặng / Người nhận (chỉ 2 lựa chọn, cố định) | Guest | 2.1.6 | 🚧 UI có, nhưng hard-code "Người nhận" — onboarding role picker chưa wire (F5-10) |
 | B-03 | Sign up / login bằng Google | Guest | 2.1.6 | 🚧 Dev mode hoạt động (fake id_token); production cần Android/iOS Client ID |
 | B-04 | Sign up / login bằng Zalo | Guest | 2.1.6 | ⏸ "Coming soon" — cần Zalo Open API App ID |
 | B-05 | Sign up / login bằng Facebook | Guest | 2.1.6 | ⏸ "Coming soon" — cần FB App ID + Secret |
